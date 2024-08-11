@@ -745,9 +745,12 @@ MonoBehaviour:
   lobbyScene: {fileID: 1837066912}
   logginScene: {fileID: 1345285331}
   intrestScene: {fileID: 1356648605}
+  payDeptOrTakeLoan: {fileID: 0}
   pointsDonateScene: {fileID: 511720809}
   endGameScene: {fileID: 748212934}
   timer: {fileID: 377157892}
+  Round: 0
+  numGames: 0
 --- !u!4 &735315342
 Transform:
   m_ObjectHideFlags: 0
@@ -1223,14 +1226,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <CardLibrary>k__BackingField: {fileID: 11400000, guid: 687e0778e49cc7d4b8468d94fe0b8256, type: 2}
   PlayerName: 
-  Age: 
+  Age: 0
   Gender: 
   PlayerId: 456
   LobbyID: 65464
-  Balance: 20000
-  Points: 0
   Dept: 11000
   IntrestRemainder: 0
+  allPoints: 
   RoundIsActive: 1
   Cards: 
   <UiCards>k__BackingField: []
