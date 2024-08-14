@@ -9,7 +9,7 @@ namespace NATS
 {
     public abstract class Connection
     {
-        public string NATSURL = "nats://ec2-16-171-241-50.eu-north-1.compute.amazonaws.com:4222";
+        public string NATSURL = "nats://ec2-13-60-182-44.eu-north-1.compute.amazonaws.com:4222";
         /*public string NATSURL = "nats://localhost:5432";*/
 
         protected IConnection NATSConnection;
