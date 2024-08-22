@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         new NatsClient();
-
+        
         currentScene = logginScene;
         NatsClient.C.OnConfirmJoin += (sender, msg) => { ChangeScene(lobbyScene); };
         NatsClient.C.OnStartGame += (sender, msg) =>

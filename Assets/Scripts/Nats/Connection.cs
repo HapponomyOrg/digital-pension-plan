@@ -3,7 +3,6 @@ using NATS.Client;
 using System.Text;
 using System;
 using System.Collections.Generic;
-using System.Net;
 
 namespace NATS
 {
@@ -12,32 +11,19 @@ namespace NATS
         public string NATSURL = "nats://ec2-13-60-182-44.eu-north-1.compute.amazonaws.com:4222";
         /*public string NATSURL = "nats://localhost:5432";*/
 
-        protected IConnection NATSConnection;
+        public IConnection NATSConnection { get; private set; }
 
         protected AsyncSubscription AsyncSubscription;
-
-
-
+        
         public Queue<BaseMessage> EventsReceived = new Queue<BaseMessage>();
 
         public event EventHandler OnConnect;
-        // public event EventHandler OnDisconnect;
-        // public event EventHandler OnReconnect;
+        public event EventHandler<string> OnConnectError;
 
         protected Connection()
         {
             Connect();
             Subscribe();
-        }
-
-        protected void OnDestroy()
-        {
-            NATSConnection.Close();
-        }
-
-        protected void OnDisable()
-        {
-            NATSConnection.Close();
         }
 
         private void Connect()
@@ -46,9 +32,21 @@ namespace NATS
 
             Options opts = ConnectionFactory.GetDefaultOptions();
             opts.Url = NATSURL;
-            opts.Timeout = 10000;
+            opts.Timeout = 5000;
 
-            NATSConnection = new ConnectionFactory().CreateConnection(opts);
+            try
+            {
+                NATSConnection = new ConnectionFactory().CreateConnection(opts);
+            }
+            catch (Exception e)
+            {
+                string errorMessage = $"Oops! Your device could not connect with our servers. " +
+                                      "Please try again or contact your host. " +
+                                      $"Error code: {e.Message}";
+                /*OnConnectError?.Invoke(this,errorMessage);*/
+                Console.WriteLine(errorMessage);
+                throw;
+            }
 
             OnConnect?.Invoke(this, EventArgs.Empty);
             Debug.Log("Connected to NATS at " + NATSURL);
