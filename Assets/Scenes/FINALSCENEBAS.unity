@@ -1792,7 +1792,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5053635703113384486, guid: 8bcf0220de7f66446b3bba99672aad4b, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5129894113742386195, guid: 8bcf0220de7f66446b3bba99672aad4b, type: 3}
       propertyPath: m_UiScaleMode
@@ -3093,7 +3093,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8270525952066586467, guid: 8ca336c13707cce4e87e6f0561d1b214, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8309031478122707022, guid: 8ca336c13707cce4e87e6f0561d1b214, type: 3}
       propertyPath: m_AnchorMax.x
