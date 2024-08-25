@@ -8,12 +8,25 @@ namespace UI
     public class NotificationList : MonoBehaviour
     {
         [SerializeField] private NotificationDisplay NotificationDisplayPrefab;
+        
+        public static NotificationList Instance { get; private set; }
 
-        private Queue<NotificationDisplay> notifications = new Queue<NotificationDisplay>();
+        private readonly Queue<NotificationDisplay> notifications = new Queue<NotificationDisplay>();
 
         [SerializeField] private Transform notificationStack;
         [SerializeField] private Transform nextNotification;
         [SerializeField] private Transform displayedNotification;
+        
+        private void Awake()
+        {
+            if (Instance != null)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            Instance = this;
+        }
         
         private void Start()
         {
