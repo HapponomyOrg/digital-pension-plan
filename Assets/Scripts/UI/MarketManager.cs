@@ -77,6 +77,7 @@ namespace UI
             NatsClient.C.HandleMessages();
         }
 
+        // TODO() FIX event handlers
         private void AddListeners()
         {
             if (listenersAssigned)
@@ -132,6 +133,14 @@ namespace UI
                 {
                     listing.RemoveAllBiddings(true);
                     PlayerManager.Instance.AddCards(listing.Cards);
+                    NotificationList.Instance.AddNotification(
+                        new Notification(
+                            "Bidding accepted", 
+                            $"Your bidding of {msg.OfferAmount} was accepted.", 
+                            null, 
+                            NotificationColor.Green
+                            )
+                        );
                 }
                 else
                 {
@@ -160,6 +169,18 @@ namespace UI
                 if (l == null)
                     return;
 
+                if (msg.BidderID == PlayerManager.Instance.PlayerId)
+                {
+                    NotificationList.Instance.AddNotification(
+                        new Notification(
+                            "Bidding accepted", 
+                            "Your bidding has been rejected.", 
+                            null, 
+                            NotificationColor.Red
+                        )
+                    );
+                }
+                
                 l.RemoveAllBiddings(false);
 
                 var listingDisplay = activeListings[l].GetComponent<BuyListingDisplay>();
@@ -168,12 +189,38 @@ namespace UI
                     return;
                 listingDisplay.TurnOnBiddingButton();
             };
-            NatsClient.C.OnRespondBidding += OnRespondBidding;
+            NatsClient.C.OnRespondBidding += (sender, msg) =>
+            {
+                if (PlayerManager.Instance.PlayerId != msg.BidderID)
+                    return;
+                
+                NotificationList.Instance.AddNotification(
+                    new Notification(
+                        "Counter Bidding", 
+                        "You Received a counter bidding", 
+                        () => {
+                            counterOfferOverlay.Open(
+                                new Bidding(msg.PlayerID, msg.PlayerName, msg.AuctionID, msg.CounterOfferPrice),
+                                msg.OriginalOfferPrice);
+                        },
+                        NotificationColor.Yellow
+                        )
+                    );
+            };
+            
             NatsClient.C.OnAcceptCounterBidding += (sender, msg) =>
             {
                 if (PlayerManager.Instance.PlayerId == msg.CounterBidderID)
                 {
                     PlayerManager.Instance.Balance += msg.OfferAmount;
+                    NotificationList.Instance.AddNotification(
+                        new Notification(
+                            "Bidding accepted", 
+                            $"Your counter bidding of {msg.OfferAmount} was accepted.", 
+                            null, 
+                            NotificationColor.Green
+                        )
+                    );
                     UpdateBalance();
                 }
 
@@ -225,7 +272,7 @@ namespace UI
             private void OnDestroy()
             {
                 // Unsubscribe from the event to avoid memory leaks
-                NatsClient.C.OnRespondBidding -= OnRespondBidding;
+                //NatsClient.C.OnRespondBidding -= OnRespondBidding;
             }
         //}
 
@@ -293,6 +340,15 @@ namespace UI
 
             if (listing.Seller != PlayerManager.Instance.PlayerName)
                 return;
+            
+            NotificationList.Instance.AddNotification(
+                new Notification(
+                    "Bidding received",
+                    "You received a bidding.",
+                    null,
+                    NotificationColor.Yellow
+                    )
+                );
 
             var display = activeListings[listing].GetComponent<SellListingDisplay>();
             display.AddBidding(listing,bidding);
@@ -427,8 +483,6 @@ namespace UI
                 return;
             }
 
-            ;
-
             ConfirmCancelListing(listing);
             
             PlayerManager.Instance.CheckForSet();
@@ -499,6 +553,13 @@ namespace UI
             {
                 PlayerManager.Instance.Balance += listing.Price;
                 balanceDisplay.text = $"Balance: {PlayerManager.Instance.Balance}";
+                
+                NotificationList.Instance.AddNotification(
+                    new Notification(
+                        "Listing Sold", 
+                        $"Your listing sold for {listing.Price}", 
+                        null, 
+                        NotificationColor.Green));
             }
 
             Destroy(activeListings[listing]);
