@@ -12,7 +12,7 @@ namespace NATS
         public string NATSURL = "nats://ec2-13-60-182-44.eu-north-1.compute.amazonaws.com:4222";
         /*public string NATSURL = "nats://localhost:5432";*/
 
-        protected IConnection NATSConnection;
+        public IConnection NATSConnection;
 
         protected AsyncSubscription AsyncSubscription;
 
