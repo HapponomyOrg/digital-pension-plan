@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/BUILDSCENE.unity
     guid: 791e543e8a2e2a14c9bda1504e264342
   - enabled: 1
-    path: Assets/Scenes/HostScene.unity
+    path: Assets/Legacy/Scenes/HostScene.unity
     guid: 2840e8d8351494b40bd7058735895f61
   - enabled: 0
     path: Assets/Scenes/LoginAndLobby.unity
@@ -21,6 +21,6 @@ EditorBuildSettings:
     path: Assets/Scenes/DragCards 1.unity
     guid: 45ff99a6b8b6c22468983a46a65f774f
   - enabled: 0
-    path: Assets/Scenes/FINALSCENEBAS.unity
+    path: Assets/Legacy/Scenes/FINALSCENEBAS.unity
     guid: fd1419173f485034aba6ff7277529d04
   m_configObjects: {}
