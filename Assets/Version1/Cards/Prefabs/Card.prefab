@@ -34,10 +34,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 141.20262, y: 108.69043}
-  m_SizeDelta: {x: 78.2319, y: 108.0198}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 80, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6975088061184853045
 CanvasRenderer:
@@ -130,3 +130,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da9b28057ce2dd045a959b20e5543182, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EndDragEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBeginDragEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  isDraging: 0
+  RectTransform: {fileID: 0}
