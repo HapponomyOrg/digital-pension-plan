@@ -20,14 +20,14 @@ public class EndScreen : MonoBehaviour
         PlayerManager.Instance.allPoints.Add(PlayerManager.Instance.Points);
         players = new Dictionary<int, PlayerDataEnd>();
         endScreenPoints = new List<EndScreenPoint>();
-        if (NatsClient.C == null)
+        if (NatsClient.Instance == null)
         {
             NatsHost.C.OnHeartBeat += HandleHeartbeat;
             //GenerateColumnNames(NatsHost.C.numGames);
         }
         else
         {
-            NatsClient.C.OnHeartBeat += HandleHeartbeat;
+            NatsClient.Instance.OnHeartBeat += HandleHeartbeat;
            // GenerateColumnNames(GameManager.Instance.numGames);
             var playerData = new PlayerDataEnd();
             playerData.Name = PlayerManager.Instance.PlayerName;
@@ -102,7 +102,7 @@ public class EndScreen : MonoBehaviour
     public void Update()
     {
         if (NatsHost.C != null) NatsHost.C.HandleMessages();
-        if (NatsClient.C != null) NatsClient.C.HandleMessages();
+        if (NatsClient.Instance != null) NatsClient.Instance.HandleMessages();
     }
 }
 

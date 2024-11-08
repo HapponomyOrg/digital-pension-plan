@@ -22,7 +22,7 @@ namespace UI
 
         private void Awake()
         {
-            NatsClient.C.OnStopRound += (sender, msg) => { RemoveBiddings(); };
+            NatsClient.Instance.OnStopRound += (sender, msg) => { RemoveBiddings(); };
         }
 
         public void SetDisplay(Listing listing)

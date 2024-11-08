@@ -67,6 +67,6 @@ public class DonateMoneyOverlay : MonoBehaviour
         var msg = new DonateMoneyMessage(DateTime.Now.ToString("o"), sessionId, PlayerManager.Instance.PlayerId,
             currentDonation);
 
-        NatsClient.C.Publish(sessionId.ToString(), msg);
+        NatsClient.Instance.Publish(sessionId.ToString(), msg);
     }
 }

@@ -8,14 +8,14 @@ public class TimerTestScript : MonoBehaviour
     private void Start()
     {
         new NatsClient();
-        NatsClient.C.StartHeartbeat();
+        NatsClient.Instance.StartHeartbeat();
 
-        NatsClient.C.OnStartRound += (sender, msg) =>
+        NatsClient.Instance.OnStartRound += (sender, msg) =>
         {
             Debug.Log("StartTimer");
             timer.StartTimer(msg.Duration);
         };
-        NatsClient.C.OnStopRound += (sender, msg) =>
+        NatsClient.Instance.OnStopRound += (sender, msg) =>
         {
             Debug.Log("StopTimer");
             timer.StopTimer();
@@ -37,15 +37,15 @@ public class TimerTestScript : MonoBehaviour
         
         
         
-        NatsClient.C.HandleMessages();
+        NatsClient.Instance.HandleMessages();
     }
     private void OnDestroy()
     {
-        NatsClient.C.StopHeartbeat();
+        NatsClient.Instance.StopHeartbeat();
     }
 
     private void OnDisable()
     {
-        NatsClient.C.StopHeartbeat();
+        NatsClient.Instance.StopHeartbeat();
     }
 }

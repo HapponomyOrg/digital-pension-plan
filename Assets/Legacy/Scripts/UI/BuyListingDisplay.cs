@@ -20,7 +20,7 @@ namespace UI
 
         private void Awake()
         {
-            NatsClient.C.OnStartRound += (sender, msg) =>
+            NatsClient.Instance.OnStartRound += (sender, msg) =>
             {
                 if (buyButton)
                 {

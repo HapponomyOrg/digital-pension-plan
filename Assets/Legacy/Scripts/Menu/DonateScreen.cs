@@ -41,7 +41,7 @@ public class DonateScreen : MonoBehaviour
             GenerateDisplays();
         };
 
-        NatsClient.C.OnDonatePoints += (sender, msg) =>
+        NatsClient.Instance.OnDonatePoints += (sender, msg) =>
         {
             clientPointsDisplay.text = $"Points: {PlayerManager.Instance.Points.ToString()}";
             foreach (var display in donationDisplays)
@@ -57,7 +57,7 @@ public class DonateScreen : MonoBehaviour
     {
         donationDisplays = new List<DonationDisplay>();
         players = new Dictionary<int, PlayerData>();
-        NatsClient.C.OnHeartBeat += HandleHeartbeat;
+        NatsClient.Instance.OnHeartBeat += HandleHeartbeat;
     }
 
     void HandleHeartbeat(object sender, HeartBeatMessage msg)
@@ -121,7 +121,7 @@ public class DonateScreen : MonoBehaviour
 
         var donateMessage = new DonatePointsMessage(DateTime.Now.ToString("o"), PlayerManager.Instance.LobbyID,
             PlayerManager.Instance.PlayerId, selectedPlayer, pointsToDonate);
-        NatsClient.C.Publish(PlayerManager.Instance.LobbyID.ToString(), donateMessage);
+        NatsClient.Instance.Publish(PlayerManager.Instance.LobbyID.ToString(), donateMessage);
     }
 
     private void OpenConfirmation(int playerId)

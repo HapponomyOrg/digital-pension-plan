@@ -60,6 +60,6 @@ public class Player2 : MonoBehaviour
                     new int[] { 1, 4, 8, 2 }));
                     */
 
-        NatsClient.C.HandleMessages();
+        NatsClient.Instance.HandleMessages();
     }
 }

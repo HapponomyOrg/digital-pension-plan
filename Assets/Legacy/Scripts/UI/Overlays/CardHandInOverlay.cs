@@ -34,7 +34,7 @@ namespace UI
                     var sessionId = PlayerManager.Instance.LobbyID;
                     CardHandInMessage cardHandInMessage = new CardHandInMessage(DateTime.Now.ToString("o"), sessionId,
                         PlayerManager.Instance.PlayerId, card.ID, card.Value);
-                    NatsClient.C.Publish(sessionId.ToString(), cardHandInMessage);
+                    NatsClient.Instance.Publish(sessionId.ToString(), cardHandInMessage);
 
                     var uicards = new List<UICard>();
                     foreach (var uiCard in PlayerManager.Instance.UiCards)

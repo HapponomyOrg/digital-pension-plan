@@ -380,7 +380,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2147139305}
-  - {fileID: 1567247366}
+  - {fileID: 1707844296}
   - {fileID: 1194038318}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -424,7 +424,7 @@ RectTransform:
   m_AnchoredPosition: {x: -27.906982, y: -15.705795}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1001 &1567247365
+--- !u!1001 &1707844295
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -489,17 +489,25 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5930062977599897061, guid: f644041ced52ec942be47dee1a093de6, type: 3}
     - target: {fileID: 4912227589663884331, guid: 495563b1467716344b39d7e0b6d882f8, type: 3}
+      propertyPath: maxSpacing
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4912227589663884331, guid: 495563b1467716344b39d7e0b6d882f8, type: 3}
+      propertyPath: minSpacing
+      value: -50
+      objectReference: {fileID: 0}
+    - target: {fileID: 4912227589663884331, guid: 495563b1467716344b39d7e0b6d882f8, type: 3}
       propertyPath: layoutGroup
       value: 
-      objectReference: {fileID: 1567247368}
+      objectReference: {fileID: 1707844298}
     - target: {fileID: 4912227589663884331, guid: 495563b1467716344b39d7e0b6d882f8, type: 3}
       propertyPath: RectTransform
       value: 
-      objectReference: {fileID: 1567247367}
+      objectReference: {fileID: 1707844297}
     - target: {fileID: 4912227589663884331, guid: 495563b1467716344b39d7e0b6d882f8, type: 3}
       propertyPath: rectTransform
       value: 
-      objectReference: {fileID: 1567247367}
+      objectReference: {fileID: 1707844297}
     - target: {fileID: 4912227589663884331, guid: 495563b1467716344b39d7e0b6d882f8, type: 3}
       propertyPath: cardList.Array.size
       value: 0
@@ -574,7 +582,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5780284647204262116, guid: 495563b1467716344b39d7e0b6d882f8, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 168
+      value: 157.62
       objectReference: {fileID: 0}
     - target: {fileID: 5780284647204262116, guid: 495563b1467716344b39d7e0b6d882f8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -597,20 +605,20 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 495563b1467716344b39d7e0b6d882f8, type: 3}
---- !u!224 &1567247366 stripped
+--- !u!224 &1707844296 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5780284647204262116, guid: 495563b1467716344b39d7e0b6d882f8, type: 3}
-  m_PrefabInstance: {fileID: 1567247365}
+  m_PrefabInstance: {fileID: 1707844295}
   m_PrefabAsset: {fileID: 0}
---- !u!224 &1567247367 stripped
+--- !u!224 &1707844297 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3992484779362708461, guid: 495563b1467716344b39d7e0b6d882f8, type: 3}
-  m_PrefabInstance: {fileID: 1567247365}
+  m_PrefabInstance: {fileID: 1707844295}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1567247368 stripped
+--- !u!114 &1707844298 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1396631417095136449, guid: 495563b1467716344b39d7e0b6d882f8, type: 3}
-  m_PrefabInstance: {fileID: 1567247365}
+  m_PrefabInstance: {fileID: 1707844295}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -784,6 +792,14 @@ PrefabInstance:
       propertyPath: cardPrefab
       value: 
       objectReference: {fileID: 5930062977599897061, guid: f644041ced52ec942be47dee1a093de6, type: 3}
+    - target: {fileID: 4912227589663884331, guid: 495563b1467716344b39d7e0b6d882f8, type: 3}
+      propertyPath: maxSpacing
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4912227589663884331, guid: 495563b1467716344b39d7e0b6d882f8, type: 3}
+      propertyPath: minSpacing
+      value: -50
+      objectReference: {fileID: 0}
     - target: {fileID: 4912227589663884331, guid: 495563b1467716344b39d7e0b6d882f8, type: 3}
       propertyPath: layoutGroup
       value: 

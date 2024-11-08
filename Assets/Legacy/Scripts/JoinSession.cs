@@ -17,7 +17,7 @@ public class JoinSession : MonoBehaviour
     private void Start()
     {
         new NatsClient();
-        NatsClient.C.OnConfirmJoin += (sender, msg) =>
+        NatsClient.Instance.OnConfirmJoin += (sender, msg) =>
         {
             print("ConfirmMessage");
             print(msg.ToString());
@@ -35,6 +35,6 @@ public class JoinSession : MonoBehaviour
 
     private void Update()
     {
-        NatsClient.C.HandleMessages();
+        NatsClient.Instance.HandleMessages();
     }
 }

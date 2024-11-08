@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
+using UnityEngine.Serialization;
 
 namespace Version1.Cards.Scripts
 {
-    public class SelectableCard : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler, IPointerDownHandler
+    public class UiCard : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler, IPointerDownHandler
     {
-        public Card card;
+        public CardData cardData;
         
         public bool isDragging = false;
+        public bool isHovering = false;
 
         private Vector3 _target;
     
@@ -22,10 +23,17 @@ namespace Version1.Cards.Scripts
     
         [HideInInspector] public HorizontalListBox currentBox;
         [HideInInspector] public HorizontalListBox oldBox;
+        
+        public UiCard Initialize(CardData data)
+        {
+            cardData = data;
+            return this;
+        }
+
 
         private void OnEnable()
         {
-            GetComponent<Image>().sprite = card.Art;
+//            GetComponent<Image>().sprite = card.Art;
             
             rectTransform = GetComponent<RectTransform>();
             _cardLayer = GameObject.FindWithTag("cardLayer");
@@ -61,9 +69,15 @@ namespace Version1.Cards.Scripts
             StartCoroutine(MoveToParent(nextParent));
         }
 
-        public void OnPointerEnter(PointerEventData eventData) { }
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            isHovering = true;
+        }
 
-        public void OnPointerExit(PointerEventData eventData) { }
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            isHovering = false;
+        }
 
         public void OnPointerUp(PointerEventData eventData)
         {
@@ -72,6 +86,8 @@ namespace Version1.Cards.Scripts
 
         public void OnPointerDown(PointerEventData eventData)
         {
+            
+            // TODO When click it doesnt move
             isDragging = true;
         }
 
