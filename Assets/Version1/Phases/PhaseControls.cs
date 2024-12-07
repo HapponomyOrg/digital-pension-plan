@@ -12,6 +12,8 @@ namespace Version1
     {
         private Phase phase = new TradingPhase();
 
+        private int phaseCount;
+
         // Start is called before the first frame update
         void Start()
         {
@@ -31,7 +33,7 @@ namespace Version1
 
         public void LoadNextPhase()
         {
-            Utilities.GameManager.Instance.InitPhase(0);
+            Utilities.GameManager.Instance.InitPhase(phaseCount++);
         }
     }
 }

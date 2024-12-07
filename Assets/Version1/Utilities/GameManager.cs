@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Version1.Phases;
+using Version1.Phases.BalanceModification;
+using Version1.Phases.Interest;
 using Version1.Phases.Trading;
 
 
@@ -44,8 +46,8 @@ namespace Version1.Utilities
         private readonly Phase[] testPhases =
         {
             new TradingPhase(),
-            new TradingPhase(),
-            new TradingPhase(),
+            new InterestPhase(),
+            new BalanceModificationPhase(),
             new TradingPhase()
         };
 

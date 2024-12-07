@@ -9,7 +9,7 @@ namespace Version1.Phases.Trading
 {
     public class TradingPhase : Phase
     {
-        private const string tradingScene = "test";
+        private const string tradingScene = "TradingScene";
 
         private Timer timer;
         private MarketUiManager market;
@@ -22,10 +22,10 @@ namespace Version1.Phases.Trading
             SceneManager.LoadScene(tradingScene);
             SceneManager.sceneLoaded += (scene, mode) =>
             {
-                market = Object.FindObjectOfType<MarketUiManager>();
-                timer = Object.FindObjectOfType<Timer>();
-                
-                timer.Init(300);
+                // market = Object.FindObjectOfType<MarketUiManager>();
+                // timer = Object.FindObjectOfType<Timer>();
+                //
+                // timer.Init(300);
                 
                 InitFinished?.Invoke(this, EventArgs.Empty);
                 InitFinished = null;
@@ -35,12 +35,12 @@ namespace Version1.Phases.Trading
 
         public override void Start()
         {
-            timer.StartTimer();
+            //timer.StartTimer();
         }
 
         public override void End()
         {
-            timer.StopTimer();
+            //timer.StopTimer();
         }
     }
 }
