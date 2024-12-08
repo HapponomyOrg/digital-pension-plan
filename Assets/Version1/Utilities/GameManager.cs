@@ -87,6 +87,7 @@ namespace Version1.Utilities
         {
             if (currentPhase >= phases.Length)
                 return;
+            
             if (phases[currentPhase].InitComplete)
                 phases[currentPhase].Start();
             else
