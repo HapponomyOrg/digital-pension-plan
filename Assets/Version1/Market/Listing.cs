@@ -1,46 +1,56 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace Version1.Market
 {
     public class Listing
     {
-        public int Lister { get; private set; }
         public Guid ListingId { get; private set; }
+        public int Lister { get; private set; }
         public DateTime TimeStamp { get; private set; }
         
         public int Price { get; private set; }
         public int[] Cards { get; private set; }
-        public List<BidHistory> BidHistories { get; private set; }
+        public Dictionary<int, BidHistory> BidHistories { get; private set; } = new Dictionary<int, BidHistory>();
 
-        public void AddBid(int bidderId, int offeredPrice)
+        public Listing(Guid listingId, int lister, DateTime timeStamp, int price, int[] cards)
         {
-            var bidderHistory = BidHistories.FirstOrDefault(h => h.Bidder == bidderId);
-            
+            ListingId = listingId;
+            Lister = lister;
+            TimeStamp = timeStamp;
+            Price = price;
+            Cards = cards;
+        }
+
+        public void AddBuyerBid(int buyer, int offeredAmount)
+        {
+            BidHistories.TryGetValue(buyer, out var bidderHistory);
+
             if (bidderHistory == null)
             {
-                bidderHistory = new BidHistory();
-                BidHistories.Add(bidderHistory);
+                bidderHistory = new BidHistory(Lister, buyer);
+                bidderHistory.AddBid(offeredAmount);
+                BidHistories.Add(buyer, bidderHistory);
             }
-
-            bidderHistory.AddBidding(bidderId, offeredPrice);
+            else
+                bidderHistory.AddBid(offeredAmount);
         }
         
-        public void RemoveBid(int bidderId, Guid biddingId) 
+        public void AddListerBid(int buyer, int offeredAmount)
         {
-            var bidderHistory = BidHistories.FirstOrDefault(h => h.Bidder == bidderId);
-            
+            BidHistories.TryGetValue(buyer, out var bidderHistory);
+
             if (bidderHistory == null)
                 return;
 
-            bidderHistory.RemoveBid(biddingId);
+            bidderHistory.AddBid(offeredAmount, true);
         }
-        
-        public void RemoveAllBids()
+
+        public override string ToString()
         {
-            foreach (var history in BidHistories)
-                history.RemoveAllBids();
+            return $"ListingId: {ListingId.ToString()}, ListerId: {Lister}, Timestamp: {TimeStamp}, Price: {Price}";
         }
     }
 }

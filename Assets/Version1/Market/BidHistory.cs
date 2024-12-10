@@ -1,37 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace Version1.Market
 {
     public class BidHistory
     {
         public int Lister { get; private set; }
-        public int Bidder { get; private set; }
+        public int Buyer { get; private set; }
 
-        private readonly List<Tuple<Bidding, int>> bids = new List<Tuple<Bidding, int>>();
+        private readonly List<Bid> bids = new List<Bid>();
 
-        public void AddBidding(int bidderId, int offeredPrice)
+        public BidHistory(int lister, int buyer)
         {
-            if (bidderId != Lister || bidderId != Bidder)
-                return;
-            
-            bids.Add(new Tuple<Bidding, int>(new Bidding(new Guid(), offeredPrice, DateTime.Now), bidderId));
+            Lister = lister;
+            Buyer = buyer;
         }
 
-        public void RemoveBid(Guid biddingId) 
+        public void AddBid(int offeredAmount, bool bidByLister = false)
         {
-            bids.RemoveAll(b => b.Item1.BidId == biddingId);
+            bids.Add(new Bid(Guid.NewGuid(), bidByLister ? Lister : Buyer, offeredAmount, DateTime.Now));
         }
 
-        public void RemoveAllBids()
+        public Bid[] GetSortedBiddingHistory()
         {
-            bids.Clear();
-        }
-
-        public Tuple<Bidding, int>[] GetSortedBiddingHistory()
-        {
-            return bids.OrderBy(h => h.Item1.TimeStamp).ToArray();
+            return bids.OrderBy(b => b.TimeStamp).ToArray();
         }
     }
 }
