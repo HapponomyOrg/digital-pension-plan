@@ -60,48 +60,29 @@ namespace Version1.Cards.Scripts
         
         private void AdjustSpacing()
         {
-            // Calculate the total width of all cards (including their spacing)
             float totalCardWidth = cardList.Sum(card => card.GetComponent<RectTransform>().sizeDelta.x);
-    
-            // Get the available width from the parent RectTransform
+            
             float availableWidth = rectTransform.rect.width;
-
-            Debug.Log($"Total Card Width: {totalCardWidth}, Available Width: {availableWidth}");
-
-            // If the total width of the cards exceeds the available width, adjust spacing
+            
             if (totalCardWidth > availableWidth)
             {
-                // Calculate how much the cards need to reduce their spacing
                 float excessWidth = totalCardWidth - availableWidth;
 
-                // Calculate the total number of gaps between cards
                 int gapsCount = cardList.Count - 1;
 
-                // Avoid division by zero for cases with a single card
                 if (gapsCount <= 0)
                 {
-                    layoutGroup.spacing = 0; // No gaps if there's only one card
+                    layoutGroup.spacing = 0;
                     return;
                 }
-
-                // Calculate the new spacing based on the excess width divided by the number of gaps
                 float newSpacing = Mathf.Max(minSpacing, 0 - (excessWidth / gapsCount));
 
                 layoutGroup.spacing = newSpacing;
-
-                Debug.Log($"Adjusted Spacing (overflow): {layoutGroup.spacing}");
             }
             else
             {
-                // If there's enough space, use the maximum spacing value (which is 0)
                 layoutGroup.spacing = 0;
-                Debug.Log($"Adjusted Spacing (comfortable): 0");
             }
         }
-
-
-
-
-
     }
 }

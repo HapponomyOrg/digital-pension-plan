@@ -130,11 +130,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da9b28057ce2dd045a959b20e5543182, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EndDragEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnBeginDragEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  isDraging: 0
-  RectTransform: {fileID: 0}
+  cardData: {fileID: 11400000, guid: d262a3d311c917c4996ac1528f0b9fca, type: 2}
+  isDragging: 0
+  isHovering: 0
+  rectTransform: {fileID: 0}
+  currentBox: {fileID: 0}
+  oldBox: {fileID: 0}

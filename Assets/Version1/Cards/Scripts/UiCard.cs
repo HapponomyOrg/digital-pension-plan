@@ -3,38 +3,38 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 namespace Version1.Cards.Scripts
 {
-    public class UiCard : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler, IPointerDownHandler
+    public class UiCard : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerEnterHandler,
+        IPointerExitHandler, IPointerUpHandler, IPointerDownHandler
     {
         public CardData cardData;
-        
+
         public bool isDragging = false;
         public bool isHovering = false;
 
         private Vector3 _target;
-    
+
         [HideInInspector] public RectTransform rectTransform;
-    
+
         private GameObject _cardLayer;
         private List<HorizontalListBox> _possibleBoxes;
-    
+
         [HideInInspector] public HorizontalListBox currentBox;
         [HideInInspector] public HorizontalListBox oldBox;
-        
+
         public UiCard Initialize(CardData data)
         {
             cardData = data;
             return this;
         }
-
-
+        
         private void OnEnable()
         {
-//            GetComponent<Image>().sprite = card.Art;
-            
+            GetComponent<Image>().sprite = cardData.Art;
+
             rectTransform = GetComponent<RectTransform>();
             _cardLayer = GameObject.FindWithTag("cardLayer");
             _possibleBoxes = GameObject.FindGameObjectsWithTag("listBox")
@@ -64,19 +64,30 @@ namespace Version1.Cards.Scripts
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            HorizontalListBox nextParent = _possibleBoxes.FirstOrDefault(box => RectOverlaps(rectTransform, box.rectTransform));
+            HorizontalListBox nextParent =
+                _possibleBoxes.FirstOrDefault(box => RectOverlaps(rectTransform, box.rectTransform));
 
             StartCoroutine(MoveToParent(nextParent));
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            isHovering = true;
+            if (!isHovering && !isDragging)
+            {
+                isHovering = true;
+                Vector3 currentPosition = rectTransform.localPosition;
+                rectTransform.localPosition = new Vector3(currentPosition.x, currentPosition.y + 10, currentPosition.z);
+            }
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            isHovering = false;
+            if (isHovering)
+            {
+                isHovering = false;
+                Vector3 currentPosition = rectTransform.localPosition;
+                rectTransform.localPosition = new Vector3(currentPosition.x, currentPosition.y - 10, currentPosition.z);
+            }
         }
 
         public void OnPointerUp(PointerEventData eventData)
@@ -86,8 +97,8 @@ namespace Version1.Cards.Scripts
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            
             // TODO When click it doesnt move
+            _target = Input.mousePosition;
             isDragging = true;
         }
 
@@ -110,8 +121,7 @@ namespace Version1.Cards.Scripts
                 parent.AddCard(this);
             }
         }
-
-
+        
         private static bool RectOverlaps(RectTransform rectTrans1, RectTransform rectTrans2)
         {
             Rect rect1 = GetWorldRect(rectTrans1);
@@ -123,7 +133,7 @@ namespace Version1.Cards.Scripts
         {
             Vector3[] corners = new Vector3[4];
             rt.GetWorldCorners(corners);
-        
+
             Vector2 size = corners[2] - corners[0];
             return new Rect(corners[0].x, corners[0].y, size.x, size.y);
         }
