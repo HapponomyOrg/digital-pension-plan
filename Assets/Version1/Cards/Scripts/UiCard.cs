@@ -20,14 +20,23 @@ namespace Version1.Cards.Scripts
         [HideInInspector] public RectTransform rectTransform;
 
         private GameObject _cardLayer;
-        private List<HorizontalListBox> _possibleBoxes;
+        private List<PlayerHand> _possibleBoxes;
 
-        [HideInInspector] public HorizontalListBox currentBox;
-        [HideInInspector] public HorizontalListBox oldBox;
-
+        [HideInInspector] public PlayerHand currentBox;
+        [HideInInspector] public PlayerHand oldBox;
+        
         public UiCard Initialize(CardData data)
         {
             cardData = data;
+            
+            GetComponent<Image>().sprite = cardData.Art;
+    
+            rectTransform = GetComponent<RectTransform>();
+            _cardLayer = GameObject.FindWithTag("cardLayer");
+            _possibleBoxes = GameObject.FindGameObjectsWithTag("listBox")
+                .Select(box => box.GetComponent<PlayerHand>())
+                .ToList();
+
             return this;
         }
         
@@ -38,7 +47,7 @@ namespace Version1.Cards.Scripts
             rectTransform = GetComponent<RectTransform>();
             _cardLayer = GameObject.FindWithTag("cardLayer");
             _possibleBoxes = GameObject.FindGameObjectsWithTag("listBox")
-                .Select(box => box.GetComponent<HorizontalListBox>())
+                .Select(box => box.GetComponent<PlayerHand>())
                 .ToList();
         }
 
@@ -64,7 +73,7 @@ namespace Version1.Cards.Scripts
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            HorizontalListBox nextParent =
+            PlayerHand nextParent =
                 _possibleBoxes.FirstOrDefault(box => RectOverlaps(rectTransform, box.rectTransform));
 
             StartCoroutine(MoveToParent(nextParent));
@@ -102,7 +111,7 @@ namespace Version1.Cards.Scripts
             isDragging = true;
         }
 
-        private IEnumerator MoveToParent(HorizontalListBox parent)
+        private IEnumerator MoveToParent(PlayerHand parent)
         {
             parent = parent ?? oldBox;
 

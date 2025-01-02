@@ -33,7 +33,7 @@ namespace Version1.NetworkManager
         {
             _natsClient = new Nats.NatsClient();
             
-            _natsClient.OnJoinrequest += NatsClientOnOnJoinrequest;
+            //_natsClient.OnJoinrequest += NatsClientOnOnJoinrequest;
             _natsClient.OnRejected += NatsClientOnOnRejected;
             _natsClient.OnAcceptBidding += NatsClientOnOnAcceptBidding;
             _natsClient.OnBuyCards += NatsClientOnOnBuyCards;
@@ -41,12 +41,12 @@ namespace Version1.NetworkManager
             _natsClient.OnCancelListing += NatsClientOnOnCancelListing;
             _natsClient.OnConfirmBuy += NatsClientOnOnConfirmBuy;
             _natsClient.OnConfirmJoin += NatsClientOnOnConfirmJoin;
-            _natsClient.OnCreateSession += NatsClientOnOnCreateSession;
-            _natsClient.OnDeptUpdate += NatsClientOnOnDeptUpdate;
-            _natsClient.OnDonateMoney += NatsClientOnOnDonateMoney;
+            //_natsClient.OnCreateSession += NatsClientOnOnCreateSession;
+            //_natsClient.OnDeptUpdate += NatsClientOnOnDeptUpdate;
+            //_natsClient.OnDonateMoney += NatsClientOnOnDonateMoney;
             _natsClient.OnDonatePoints += NatsClientOnOnDonatePoints;
             _natsClient.OnEndGame += NatsClientOnOnEndGame;
-            _natsClient.OnHeartBeat += NatsClientOnOnHeartBeat;
+            //_natsClient.OnHeartBeat += NatsClientOnOnHeartBeat;
             _natsClient.OnListCards += NatsClientOnOnListCards;
             _natsClient.OnMakeBidding += NatsClientOnOnMakeBidding;
             _natsClient.OnRejectBidding += NatsClientOnOnRejectBidding;
@@ -55,11 +55,11 @@ namespace Version1.NetworkManager
             _natsClient.OnStartRound += NatsClientOnOnStartRound;
             _natsClient.OnStopRound += NatsClientOnOnStopRound;
             _natsClient.OnAcceptCounterBidding += NatsClientOnOnAcceptCounterBidding;
-            _natsClient.OnCardHandIn += NatsClientOnOnCardHandIn;
+            //_natsClient.OnCardHandIn += NatsClientOnOnCardHandIn;
             _natsClient.OnConfirmCancelListing += NatsClientOnOnConfirmCancelListing;
             _natsClient.OnConfirmHandIn += NatsClientOnOnConfirmHandIn;
             _natsClient.OnEndOfRounds += NatsClientOnOnEndOfRounds;
-            _natsClient.OnConnect += NatsClientOnOnConnect;
+            //_natsClient.OnConnect += NatsClientOnOnConnect;
             
             _natsClient.SubscribeToSubject("*");
         }
@@ -74,100 +74,116 @@ namespace Version1.NetworkManager
         {
             NatsClient.Instance.StopHeartbeat();
         }
-        private void NatsClientOnOnConnect(object sender, EventArgs e)
+        
+        // No idea where we use this
+        /*private void NatsClientOnOnConnect(object sender, EventArgs e)
         {
             throw new NotImplementedException();
-        }
+        }*/
 
         private void NatsClientOnOnEndOfRounds(object sender, EndOfRoundsMessage e)
         {
+            // TODO game phase system
             throw new NotImplementedException();
         }
 
         private void NatsClientOnOnConfirmHandIn(object sender, ConfirmHandInMessage e)
         {
-            throw new NotImplementedException();
+            PlayerData.PlayerData.Instance.ConfirmHandIn(e);
         }
 
         private void NatsClientOnOnConfirmCancelListing(object sender, ConfirmCancelListingMessage e)
         {
+            // TODO MARKET FUNCTION
             throw new NotImplementedException();
         }
 
-        private void NatsClientOnOnCardHandIn(object sender, CardHandInMessage e)
+        // Host function
+        /*private void NatsClientOnOnCardHandIn(object sender, CardHandInMessage e)
         {
             throw new NotImplementedException();
-        }
+        }*/
 
         private void NatsClientOnOnAcceptCounterBidding(object sender, AcceptCounterBiddingMessage e)
         {
+            // TODO MARKET FUNCTION
             throw new NotImplementedException();
         }
 
         private void NatsClientOnOnStopRound(object sender, StopRoundMessage e)
         {
+            // TODO game phase system
             throw new NotImplementedException();
         }
 
         private void NatsClientOnOnStartRound(object sender, StartRoundMessage e)
         {
+            // TODO game phase system
             throw new NotImplementedException();
         }
 
         private void NatsClientOnOnStartGame(object sender, StartGameMessage e)
         {
-            throw new NotImplementedException();
+            PlayerData.PlayerData.Instance.StartGame(e);
         }
 
         private void NatsClientOnOnRespondBidding(object sender, RespondBiddingMessage e)
         {
+            // TODO MARKET FUNCTION
             throw new NotImplementedException();
         }
 
         private void NatsClientOnOnRejectBidding(object sender, RejectBiddingMessage e)
         {
+            // TODO MARKET FUNCTION
             throw new NotImplementedException();
         }
 
         private void NatsClientOnOnMakeBidding(object sender, MakeBiddingMessage e)
         {
+            // TODO MARKET FUNCTION 
             throw new NotImplementedException();
         }
 
         private void NatsClientOnOnListCards(object sender, ListCardsmessage e)
         {
+            // TODO MARKET FUNCTION
             throw new NotImplementedException();
         }
 
-        private void NatsClientOnOnHeartBeat(object sender, HeartBeatMessage e)
+        // Host Function
+        /*private void NatsClientOnOnHeartBeat(object sender, HeartBeatMessage e)
         {
-            throw new NotImplementedException();
-        }
+            return;
+        }*/
 
         private void NatsClientOnOnEndGame(object sender, EndGameMessage e)
         {
-            throw new NotImplementedException();
+            PlayerData.PlayerData.Instance.Reset();
         }
 
         private void NatsClientOnOnDonatePoints(object sender, DonatePointsMessage e)
         {
-            throw new NotImplementedException();
+            PlayerData.PlayerData.Instance.PointsDonated(e);
         }
 
-        private void NatsClientOnOnDonateMoney(object sender, DonateMoneyMessage e)
+        // Database function
+        /*private void NatsClientOnOnDonateMoney(object sender, DonateMoneyMessage e)
         {
             throw new NotImplementedException();
-        }
+        }*/
+        
+        // No clue where we use this for
+        /*private void NatsClientOnOnDeptUpdate(object sender, DeptUpdateMessage e)
+        {
+            throw new NotImplementedException();
+        }*/
 
-        private void NatsClientOnOnDeptUpdate(object sender, DeptUpdateMessage e)
+        // Database function
+        /*private void NatsClientOnOnCreateSession(object sender, CreateSessionMessage e)
         {
             throw new NotImplementedException();
-        }
-
-        private void NatsClientOnOnCreateSession(object sender, CreateSessionMessage e)
-        {
-            throw new NotImplementedException();
-        }
+        }*/
 
         private void NatsClientOnOnConfirmJoin(object sender, ConfirmJoinMessage e)
         {
@@ -176,37 +192,43 @@ namespace Version1.NetworkManager
 
         private void NatsClientOnOnConfirmBuy(object sender, ConfirmBuyMessage e)
         {
+            // TODO MARKET FUNCTION
             throw new NotImplementedException();
         }
 
         private void NatsClientOnOnCancelListing(object sender, CancelListingMessage e)
         {
+            // TODO MARKET FUNCTION
             throw new NotImplementedException();
         }
 
         private void NatsClientOnOnCancelBidding(object sender, CancelBiddingMessage e)
         {
+            // TODO MARKET FUNCTION
             throw new NotImplementedException();
         }
 
         private void NatsClientOnOnBuyCards(object sender, BuyCardsRequestMessage e)
         {
+            // TODO MARKET FUNCTION
             throw new NotImplementedException();
         }
 
         private void NatsClientOnOnAcceptBidding(object sender, AcceptBiddingMessage e)
         {
+            // TODO MARKET FUNCTION
             throw new NotImplementedException();
         }
 
         private void NatsClientOnOnRejected(object sender, RejectedMessage e)
         {
+            // TODO MARKET FUNCTION
             throw new NotImplementedException();
         }
 
-        private void NatsClientOnOnJoinrequest(object sender, JoinRequestMessage e)
+        /*private void NatsClientOnOnJoinrequest(object sender, JoinRequestMessage e)
         {
             throw new NotImplementedException();
-        }
+        }*/
     }
 }

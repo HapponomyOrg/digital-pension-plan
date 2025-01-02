@@ -3,23 +3,28 @@ using UnityEngine;
 
 namespace Version1.Cards.Scripts
 {
-[CreateAssetMenu(fileName = "CardList", menuName ="Version2/Cards/CardList")]
+[CreateAssetMenu(fileName = "CardLibrary", menuName ="Version2/Cards/CardLibrary")]
     public class CardLibrary : ScriptableObject
     {
-        public Card[] cards;
+        public CardData[] cards;
 
-        private Dictionary<byte, Card> cardList;
+        private Dictionary<int, CardData> cardList;
 
         private void FillCardList()
         {
-            cardList = new Dictionary<byte, Card>();
+            cardList = new Dictionary<int, CardData>();
             foreach (var card in cards)
             {
                 cardList.Add(card.ID, card);
             }
         }
 
-        public Card CardData(byte id)
+        /// <summary>
+        /// CardData is a way to get all the information of a card with only its id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public CardData CardData(int id)
         {
             if (cardList.ContainsKey(id))
             {
