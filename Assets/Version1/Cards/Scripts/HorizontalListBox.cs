@@ -1,16 +1,15 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HorizontalListBox : MonoBehaviour
+namespace Version1.Cards.Scripts
 {
-    [SerializeField] private HorizontalLayoutGroup LayoutGroup;
-
-    private void Update()
+    public class HorizontalListBox : MonoBehaviour
     {
-        print(LayoutGroup.transform.childCount);
+        [SerializeField] private HorizontalLayoutGroup LayoutGroup;
+
+        private void Update()
+        {
+            print(LayoutGroup.transform.childCount);
+        }
     }
 }
