@@ -13,7 +13,7 @@ namespace Version1.Market
         
         public int Price { get; private set; }
         public int[] Cards { get; private set; }
-        public Dictionary<int, BidHistory> BidHistories { get; private set; } = new Dictionary<int, BidHistory>();
+        public Dictionary<int, BidHistory> BidHistories { get; private set; }
 
         public Listing(Guid listingId, int lister, DateTime timeStamp, int price, int[] cards)
         {
@@ -22,6 +22,7 @@ namespace Version1.Market
             TimeStamp = timeStamp;
             Price = price;
             Cards = cards;
+            BidHistories = new Dictionary<int, BidHistory>();
         }
 
         public void AddBuyerBid(int buyer, int offeredAmount)
@@ -43,7 +44,7 @@ namespace Version1.Market
             BidHistories.TryGetValue(buyer, out var bidderHistory);
 
             if (bidderHistory == null)
-                return;
+                return; // TODO error handling
 
             bidderHistory.AddBid(offeredAmount, true);
         }

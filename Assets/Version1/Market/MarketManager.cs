@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Version1.Market
 {
+    // TODO error handling
     public class MarketManager
     {
         private readonly Dictionary<Guid, Listing> listings = new Dictionary<Guid, Listing>();
@@ -56,11 +57,13 @@ namespace Version1.Market
             
         }
 
+        // The player's own listings
         public Listing[] PlayerListings(int playerId)
         {
             return listings.Values.Where(l => l.Lister == playerId).OrderBy(l => l.TimeStamp).ToArray();
         }
 
+        // Other player's listings
         public Listing[] NonPlayerListings(int playerId)
         {
             return listings.Values.Where(l => l.Lister != playerId).OrderBy(l => l.TimeStamp).ToArray();
