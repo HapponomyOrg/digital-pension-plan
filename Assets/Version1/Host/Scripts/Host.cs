@@ -1,5 +1,4 @@
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,8 +25,6 @@ namespace Version1.Host.Scripts
         [SerializeField] private TMP_InputField gameCodeInputField;
 
         [SerializeField] private Button createSession;
-        
-        
 
         private void Start()
         {
@@ -35,10 +32,10 @@ namespace Version1.Host.Scripts
             regenerateButton.onClick.AddListener(RegenerateButtonOnClick);
             createSession.onClick.AddListener(CreateSessionOnClick);
         }
-
+        
         private void CreateSessionOnClick()
         {
-            // TODO NATS CODE
+            
             HostScene.SetActive(true);
             CreateScene.SetActive(false);
         }

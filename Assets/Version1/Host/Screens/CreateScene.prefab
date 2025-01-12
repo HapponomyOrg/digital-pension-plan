@@ -152,9 +152,9 @@ RectTransform:
   - {fileID: 567882806436106280}
   - {fileID: 1225308026190905096}
   - {fileID: 8334226506300482081}
-  - {fileID: 3995701216383482185}
   - {fileID: 3600301543578220241}
   - {fileID: 5560392022032102807}
+  - {fileID: 3995701216383482185}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -1520,6 +1520,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3995701216383482185}
     m_Modifications:
+    - target: {fileID: 833296657593200452, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
+      propertyPath: m_Size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 833296657593200452, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
+      propertyPath: m_Value
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1043766063295604012, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1600,9 +1608,49 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1599655959232253993, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 1790404883963299488, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5062449074504788644, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
       propertyPath: m_Name
       value: Dropdown
+      objectReference: {fileID: 0}
+    - target: {fileID: 5627263018344372514, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
+      propertyPath: m_fontSize
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 5627263018344372514, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 5627263018344372514, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4281479730
+      objectReference: {fileID: 0}
+    - target: {fileID: 5627263018344372514, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 6265515094420647004, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
+      propertyPath: m_VerticalScrollbarSpacing
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6331921785810512230, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6331921785810512230, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6331921785810512230, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7046917170965905598, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
       propertyPath: m_Colors.m_NormalColor.b
@@ -1639,6 +1687,18 @@ PrefabInstance:
     - target: {fileID: 7046917170965905598, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
       propertyPath: m_Colors.m_HighlightedColor.r
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9141363067687706189, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9141363067687706189, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9141363067687706189, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
