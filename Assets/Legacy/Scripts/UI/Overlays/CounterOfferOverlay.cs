@@ -52,7 +52,7 @@ namespace UI.Overlays
                     PlayerManager.Instance.PlayerName,
                     bidding.SenderId
                 );
-                NatsClient.C.Publish(PlayerManager.Instance.LobbyID.ToString(), msg);
+                NatsClient.Instance.Publish(PlayerManager.Instance.LobbyID.ToString(), msg);
                 
                 l.RemoveAllBiddings(false);
                 gameObject.SetActive(false);

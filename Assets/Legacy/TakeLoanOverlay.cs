@@ -29,7 +29,7 @@ public class TakeLoanOverlay : MonoBehaviour
         cancelButton.onClick.RemoveAllListeners();
         cancelButton.onClick.AddListener(() =>
         {
-            if (GameManager.Instance.Round == 4) ;
+            if (GameManager.Instance.Round == 4)
             {
                 GameManager.Instance.ChangeScene(GameManager.Instance.pointsDonateScene);   
             }

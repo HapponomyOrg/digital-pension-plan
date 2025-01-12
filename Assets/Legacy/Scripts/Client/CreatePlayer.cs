@@ -25,7 +25,7 @@ namespace Client
 
         private void Start()
         {
-            NatsClient.C.OnRejected += (sender,msg) =>
+            NatsClient.Instance.OnRejected += (sender,msg) =>
             {
                 if (PlayerManager.Instance.PlayerName == msg.TargetPlayer && PlayerManager.Instance.PlayerId == 456)
                 {
@@ -115,10 +115,10 @@ namespace Client
             PlayerManager.Instance.Age = age;
             PlayerManager.Instance.Gender = gender;
             PlayerManager.Instance.LobbyID = code;
-            NatsClient.C.SubscribeToSubject(codeString);
+            NatsClient.Instance.SubscribeToSubject(codeString);
             JoinRequestMessage msg =
                 new JoinRequestMessage(DateTime.Now.ToString("o"), code, byte.MaxValue, playerName, age, gender);
-            NatsClient.C.Publish(codeString, msg);
+            NatsClient.Instance.Publish(codeString, msg);
         }
     }
 

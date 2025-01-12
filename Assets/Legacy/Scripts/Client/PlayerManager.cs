@@ -97,7 +97,7 @@ public class PlayerManager : MonoBehaviour
 
     private void Start()
     {
-        NatsClient.C.OnStartGame += (sender, msg) =>
+        NatsClient.Instance.OnStartGame += (sender, msg) =>
         {
             if (msg.OtherPlayerID != PlayerId)
                 return;
@@ -109,7 +109,7 @@ public class PlayerManager : MonoBehaviour
             CreateCards(Cards);
         };
 
-        NatsClient.C.OnConfirmJoin += (sender, msg) =>
+        NatsClient.Instance.OnConfirmJoin += (sender, msg) =>
         {
             if (PlayerName != msg.PlayerName) return;
 
@@ -124,10 +124,10 @@ public class PlayerManager : MonoBehaviour
                     $"LobbyID : {msg.LobbyID.ToString().Substring(0, 3)} {msg.LobbyID.ToString().Substring(3, 3)} {msg.LobbyID.ToString().Substring(6, 3)}";
             }
 
-            NatsClient.C.StartHeartbeat();
+            NatsClient.Instance.StartHeartbeat();
         };
 
-        NatsClient.C.OnDonatePoints += (sender, msg) =>
+        NatsClient.Instance.OnDonatePoints += (sender, msg) =>
         {
             if (msg.Receiver != PlayerManager.Instance.PlayerId)
                 return;
@@ -135,12 +135,12 @@ public class PlayerManager : MonoBehaviour
             OnPointsChange?.Invoke(null, null);
         };
 
-        NatsClient.C.OnStartRound += (sender,msg) =>
+        NatsClient.Instance.OnStartRound += (sender,msg) =>
         {
             CheckForSet();
         };
 
-        NatsClient.C.OnConfirmHandIn += (sender, msg) =>
+        NatsClient.Instance.OnConfirmHandIn += (sender, msg) =>
         {
             if (msg.Receiver == PlayerManager.Instance.PlayerId)
             {
@@ -148,7 +148,7 @@ public class PlayerManager : MonoBehaviour
             }
         };
 
-        NatsClient.C.OnEndOfRounds += (sender, msg) =>
+        NatsClient.Instance.OnEndOfRounds += (sender, msg) =>
         {
             if (GameManager.Instance.GameMode == 1)
             {
@@ -180,12 +180,12 @@ public class PlayerManager : MonoBehaviour
 
     public void OnDestroy()
     {
-        NatsClient.C.StopHeartbeat();
+        NatsClient.Instance.StopHeartbeat();
     }
 
     public void OnDisable()
     {
-        NatsClient.C.StopHeartbeat();
+        NatsClient.Instance.StopHeartbeat();
     }
 
     private void CreateCards(List<int> cards)
