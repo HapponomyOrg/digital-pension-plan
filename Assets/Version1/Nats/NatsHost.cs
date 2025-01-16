@@ -3,6 +3,7 @@ using UnityEngine;
 using System;
 using Version1.Nats.Messages;
 using Version1.Nats.Messages.Client;
+using Version1.Nats.Messages.Host;
 
 namespace Version1.Nats
 {
@@ -70,7 +71,7 @@ namespace Version1.Nats
                     break;
                 case MessageSubject.JoinRequest:
                     OnJoinrequest?.Invoke(null, (JoinRequestMessage)message);
-                    break;
+                    break;                
                 default:
                     Debug.Log($"{message.Subject} is not a known subject");
                     break;

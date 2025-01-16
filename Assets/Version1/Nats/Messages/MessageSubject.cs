@@ -29,6 +29,8 @@ namespace Version1.Nats.Messages
             StopRound = "StopRound",
             EndOfRounds = "EndOfRounds",
             EndGame = "EndGame",
+            AbortSession = "AbortSession",
+            SkipRounds = "SkipRound", 
             // Host Misc.
             ConfirmJoin = "ConfirmJoin",
             Rejected = "Rejected",

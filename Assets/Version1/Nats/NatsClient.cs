@@ -230,6 +230,8 @@ namespace Version1.Nats
         public event EventHandler<RejectBiddingMessage> OnRejectBidding;
         public event EventHandler<RespondBiddingMessage> OnRespondBidding;
         public event EventHandler<AcceptCounterBiddingMessage> OnAcceptCounterBidding;
+        public event EventHandler<AbortSessionMessage> OnAbortSession;
+        public event EventHandler<SkipRoundMessage> OnSkipRound;
 
         public void StartHeartbeat()
         {
@@ -363,6 +365,13 @@ namespace Version1.Nats
                 case MessageSubject.AcceptCounterBidding:
                     OnAcceptCounterBidding?.Invoke(this, (AcceptCounterBiddingMessage)message);
                     break;
+                case MessageSubject.AbortSession:
+                    OnAbortSession?.Invoke(this, (AbortSessionMessage)message);
+                    break;                
+                case MessageSubject.SkipRounds:
+                    OnSkipRound?.Invoke(this, (SkipRoundMessage)message);
+                    break;
+                
                 default:
                     Debug.LogWarning($"Unknown message subject: {message.Subject}");
                     break;
