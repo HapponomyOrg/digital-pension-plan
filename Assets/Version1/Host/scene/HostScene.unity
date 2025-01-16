@@ -4352,7 +4352,7 @@ MonoBehaviour:
   abortSession: {fileID: 1627005956}
   startSession: {fileID: 1979822966}
   stopRound: {fileID: 2059367385}
-  continue: {fileID: 1545617732}
+  skipRound: {fileID: 1545617732}
   startRound: {fileID: 1660053103}
 --- !u!4 &762983560
 Transform:
