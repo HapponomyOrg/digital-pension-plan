@@ -274,19 +274,101 @@ namespace Version1.Nats
             NATSConnection.SubscribeAsync(fullSubject, (sender, args) => { QueueMsg(args); });
         }
 
-        private void QueueMsg(MsgHandlerEventArgs args)
-        {
-            if (args.Message.Subject == null) return;
+  private void QueueMsg(MsgHandlerEventArgs args)
+         {
+             string stringReceived = Encoding.UTF8.GetString(args.Message.Data);
 
-            string stringReceived = Encoding.UTF8.GetString(args.Message.Data);
-            string subjectKey = args.Message.Subject.Split('.')[^1];
+             if (args.Message.Subject == null) return;
 
-            if (messageTypes.TryGetValue(subjectKey, out Type messageType))
-            {
-                BaseMessage msg = (BaseMessage)JsonUtility.FromJson(stringReceived, messageType);
-                EventsReceived.Enqueue(msg);
-            }
-        }
+             string[] subjects = args.Message.Subject.Split('.');
+
+             BaseMessage msg;
+
+             switch (subjects[^1])
+             {
+                 case MessageSubject.ConfirmJoin:
+                     msg = JsonUtility.FromJson<ConfirmJoinMessage>(stringReceived);
+                     break;
+                 case MessageSubject.DeptUpdate:
+                     msg = JsonUtility.FromJson<DeptUpdateMessage>(stringReceived);
+                     break;
+                 case MessageSubject.StartGame:
+                     msg = JsonUtility.FromJson<StartGameMessage>(stringReceived);
+                     break;
+                 case MessageSubject.CardHandIn:
+                     msg = JsonUtility.FromJson<CardHandInMessage>(stringReceived);
+                     break;
+                 case MessageSubject.StopRound:
+                     msg = JsonUtility.FromJson<StopRoundMessage>(stringReceived);
+                     break;
+                 case MessageSubject.StartRound:
+                     msg = JsonUtility.FromJson<StartRoundMessage>(stringReceived);
+                     break;
+                 case MessageSubject.Rejected:
+                     msg = JsonUtility.FromJson<RejectedMessage>(stringReceived);
+                     break;
+                 case MessageSubject.BuyCards:
+                     msg = JsonUtility.FromJson<BuyCardsRequestMessage>(stringReceived);
+                     break;
+                 case MessageSubject.CancelListing:
+                     msg = JsonUtility.FromJson<CancelListingMessage>(stringReceived);
+                     break;
+                 case MessageSubject.ConfirmBuy:
+                     msg = JsonUtility.FromJson<ConfirmBuyMessage>(stringReceived);
+                     break;
+                 case MessageSubject.CreateSession:
+                     msg = JsonUtility.FromJson<CreateSessionMessage>(stringReceived);
+                     break;
+                 case MessageSubject.DonateMoney:
+                     msg = JsonUtility.FromJson<DonateMoneyMessage>(stringReceived);
+                     break;
+                 case MessageSubject.DonatePoints:
+                     msg = JsonUtility.FromJson<DonatePointsMessage>(stringReceived);
+                     break;
+                 case MessageSubject.EndGame:
+                     msg = JsonUtility.FromJson<EndGameMessage>(stringReceived);
+                     break;
+                 case MessageSubject.HeartBeat: 
+                     msg = JsonUtility.FromJson<HeartBeatMessage>(stringReceived);
+                     break;
+                 case MessageSubject.JoinRequest:
+                     msg = JsonUtility.FromJson<JoinRequestMessage>(stringReceived);
+                     break;
+                 case MessageSubject.EndOfRounds:
+                     msg = JsonUtility.FromJson<EndOfRoundsMessage>(stringReceived);
+                     break;
+                 case MessageSubject.ConfirmCancelListing:
+                     msg = JsonUtility.FromJson<ConfirmCancelListingMessage>(stringReceived);
+                     break;
+                 case MessageSubject.ConfirmHandIn:
+                     msg = JsonUtility.FromJson<ConfirmHandInMessage>(stringReceived);
+                     break;
+                 case MessageSubject.ListCards:
+                     msg = JsonUtility.FromJson<ListCardsmessage>(stringReceived);
+                     break;
+                 case MessageSubject.MakeBidding:
+                     msg = JsonUtility.FromJson<MakeBiddingMessage>(stringReceived);
+                     break;
+                 case MessageSubject.AcceptBidding:
+                     msg = JsonUtility.FromJson<AcceptBiddingMessage>(stringReceived);
+                     break;
+                 case MessageSubject.CancelBidding:
+                     msg = JsonUtility.FromJson<CancelBiddingMessage>(stringReceived);
+                     break;
+                 case MessageSubject.RejectBidding:
+                     msg = JsonUtility.FromJson<RejectBiddingMessage>(stringReceived);
+                     break;
+                 case MessageSubject.RespondBidding:
+                     msg = JsonUtility.FromJson<RespondBiddingMessage>(stringReceived);
+                     break;
+                 case MessageSubject.AcceptCounterBidding:
+                     msg = JsonUtility.FromJson<AcceptCounterBiddingMessage>(stringReceived);
+                     break;
+                 default:
+                     return;
+             }
+             EventsReceived.Enqueue(msg);
+         }
 
         public void Publish(string sessionID, BaseMessage baseMessage, bool flushImmediately = true)
         {

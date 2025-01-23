@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6578398499502636513
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4446701039901753904}
+  - component: {fileID: 4875673366109347001}
+  m_Layer: 0
+  m_Name: Host
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4446701039901753904
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6578398499502636513}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 576.2434, y: 310.04236, z: -2.804668}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4875673366109347001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6578398499502636513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1c224f27679f024f9748c41c980c885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CreateScene: {fileID: 0}
+  HostScene: {fileID: 0}
+  checkMarkSprite: {fileID: 21300000, guid: 3bafdbc263a5dba4ebd93d90747eca48, type: 3}
+  penSprite: {fileID: 21300000, guid: 1349e5647d5ab53489fba5bbd5e2447d, type: 3}
+  hostInputField: {fileID: 0}
+  editButton: {fileID: 0}
+  seedInputField: {fileID: 0}
+  gameModeDropDown: {fileID: 0}
+  regenerateButton: {fileID: 0}
+  gameCodeInputField: {fileID: 0}
+  createSession: {fileID: 0}
+  abortSession: {fileID: 0}
+  startSession: {fileID: 0}
+  stopRound: {fileID: 0}
+  skipRound: {fileID: 0}
+  startRound: {fileID: 0}
+  playerListPrefab: {fileID: 7771523459308475172, guid: 6c9de8c3681124440a64ce1f2210318a, type: 3}
+  playerScrolView: {fileID: 0}
+  activityPrefab: {fileID: 7972239708806463167, guid: e01e570fc540f2a48b5da3831e40e84a, type: 3}
+  activityScrollView: {fileID: 0}

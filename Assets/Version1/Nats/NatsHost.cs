@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.AI;
 using Version1.Nats.Messages;
 using Version1.Nats.Messages.Client;
 using Version1.Nats.Messages.Host;
@@ -23,6 +24,9 @@ namespace Version1.Nats
         public event EventHandler<CardHandInMessage> OnCardHandIn;
         public event EventHandler<HeartBeatMessage> OnHeartBeat;
         public event EventHandler<JoinRequestMessage> OnJoinrequest;
+        public event EventHandler<string> MessageLog;
+        
+
 
 
         public NatsHost()
@@ -42,7 +46,9 @@ namespace Version1.Nats
         {
             if (EventsReceived.Count < 1) return;
             var message = EventsReceived.Dequeue();
-
+            
+            MessageLog?.Invoke(null,message.ToString());
+            
             switch (message.Subject)
             {
                 case MessageSubject.ListCards:
