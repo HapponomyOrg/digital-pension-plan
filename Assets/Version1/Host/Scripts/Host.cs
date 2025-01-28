@@ -2,13 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Version1.Nats.Messages.Client;
 using Version1.Nats.Messages.Host;
-using Random = UnityEngine.Random;
 
 namespace Version1.Host.Scripts
 {
@@ -16,58 +13,30 @@ namespace Version1.Host.Scripts
     {
         [SerializeField] private GameObject natsError;
         [SerializeField] private TMP_Text natsErrorTMP;
-        
-        private string _hostName = "";
-        private int _seed = 0;
-        private int _gameMode = 0; //TODO change this to enum types
-        private int _lobby = 0;
 
-        private int _roundDuration = 4; // in minutes
         private Stopwatch _sessionDuration;
         private bool _sessionIsActive = false;
 
-
-        // CreateScene
+        // scenes
         [SerializeField] private GameObject CreateScene;
-        [SerializeField] private GameObject HostScene;
 
-        [SerializeField] private Sprite checkMarkSprite;
-        [SerializeField] private Sprite penSprite;
-
-        [SerializeField] private TMP_InputField hostInputField;
-
-        [SerializeField] private Button editButton;
-        [SerializeField] private TMP_InputField seedInputField;
-
-        [SerializeField] private TMP_Dropdown gameModeDropDown;
-
-        [SerializeField] private Button regenerateButton;
-        [SerializeField] private TMP_InputField gameCodeInputField;
-
-        [SerializeField] private Button createSession;
-
+        // things from the hostscene
         [SerializeField] private Button abortSession;
         [SerializeField] private Button startSession;
         [SerializeField] private Button stopRound;
         [SerializeField] private Button skipRound;
         [SerializeField] private Button startRound;
 
+        // things from the hostscene
         private int playerId = 0;
         private Dictionary<int, playerlistprefab> players;
         [SerializeField] private Transform playerListPrefab;
         [SerializeField] private GameObject playerScrolView;
 
+        // things from the hostscene
         private List<GameObject> activities;
         [SerializeField] private GameObject activityPrefab;
         [SerializeField] private GameObject activityScrollView;
-
-        [SerializeField] private GameObject seedInputError;
-        [SerializeField] private GameObject gameCodeError;
-        
-
-
-        // HostScene
-
         [SerializeField] private TMP_Text hostNameTMP;
         [SerializeField] private TMP_Text gameModeTMP;
         [SerializeField] private TMP_Text seedTMP;
@@ -82,79 +51,37 @@ namespace Version1.Host.Scripts
 
         private void Start()
         {
-            new Nats.NatsHost();
-            
-            Nats.NatsHost.C.onError += (sender, s) =>
-            {
-                natsError.SetActive(true);
-                natsErrorTMP.text = s;
-            };
-
-            Nats.NatsHost.C.Connect();
-            
-            activities = new List<GameObject>();
-            editButton.onClick.AddListener(EditButtonOnClick);
-            regenerateButton.onClick.AddListener(RegenerateButtonOnClick);
-            createSession.onClick.AddListener(CreateSessionOnClick);
-
             abortSession.onClick.AddListener(AbortSessionOnClick);
             startSession.onClick.AddListener(StartSessionOnClick);
             stopRound.onClick.AddListener(StopRoundOnClick);
             skipRound.onClick.AddListener(ContinueOnClick);
             startRound.onClick.AddListener(StartRoundOnClick);
 
+            // hostscene
             Nats.NatsHost.C.OnHeartBeat += OnOnHeartBeat;
             Nats.NatsHost.C.OnJoinrequest += OnOnJoinrequest;
             Nats.NatsHost.C.MessageLog += OnMessageLog;
+        }
 
-            hostInputField.onValueChanged.AddListener((val) => { _hostName = val; });
-
-            seedInputField.onValueChanged.AddListener((val) => {
-                if (int.TryParse(val, out int result))
-                {
-                    _seed = result;
-                    seedInputError.SetActive(false);
-                }
-                else
-                {
-                   seedInputError.SetActive(true);
-                }});
-
-            gameModeDropDown.onValueChanged.AddListener((val) => { _gameMode = val; });
-            
-            gameCodeInputField.onValueChanged.AddListener((val) =>
-                {
-
-                    var str = val.Replace(" ", "");
-                    
-                    if (int.TryParse(str, out int result))
-                    {
-                        // Check if the input contains only digits (0-9)
-                        if (!System.Text.RegularExpressions.Regex.IsMatch(str, @"^\d*$"))
-                        {
-                            gameCodeError.SetActive(true);
-                        }
-                        
-                        _lobby = result;
-                        gameCodeError.SetActive(false);
-                    }
-                    else
-                    {
-                        gameCodeError.SetActive(true);
-                    }
-                })
-                ;
+        private void OnEnable()
+        {
+            activities = new List<GameObject>();
 
             _sessionDuration = new Stopwatch();
 
-            _hostName = "";
-            _seed = 0;
-            _gameMode = 0;
-            _lobby = Random.Range(100000000, 999999999);
-            
-            gameCodeInputField.text =
-                $"{_lobby.ToString().Substring(0, 3)} {_lobby.ToString().Substring(3, 3)} {_lobby.ToString().Substring(6, 3)}";
-            
+            players = new Dictionary<int, playerlistprefab>();
+
+            playerScrolView = GameObject.Find("PlayerScrollView");
+
+            hostNameTMP.text = SessionData.Instance.HostName;
+            gameModeTMP.text = SessionData.Instance.GameMode.ToString(); //TODO enum type oid
+            seedTMP.text = SessionData.Instance.Seed.ToString();
+            gameCodeTMP.text =
+                $"{SessionData.Instance.LobbyCode.ToString().Substring(0, 3)} {SessionData.Instance.LobbyCode.ToString().Substring(3, 3)} {SessionData.Instance.LobbyCode.ToString().Substring(6, 3)}";
+            roundDurationTMP.text = SessionData.Instance.RoundDuration.ToString();
+            creationTime.text = DateTime.Now.ToString("HH:mm:ss");
+            _sessionDuration.Start();
+            _sessionIsActive = true;
         }
 
         private void OnMessageLog(object sender, string e)
@@ -173,7 +100,8 @@ namespace Version1.Host.Scripts
 
         private void OnOnJoinrequest(object sender, JoinRequestMessage e)
         {
-            Nats.NatsHost.C.Publish(_lobby.ToString(), new ConfirmJoinMessage(DateTime.Now.ToString("o"), _lobby,
+            Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(), new ConfirmJoinMessage(
+                DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode,
                 -1,
                 playerId,
                 e.PlayerName,
@@ -206,51 +134,17 @@ namespace Version1.Host.Scripts
             }
         }
 
-        private void CreateSessionOnClick()
-        {
-            Nats.NatsHost.C.Publish(_lobby.ToString(), new CreateSessionMessage(DateTime.Now.ToString("o"), _lobby,
-                -1,
-                _lobby));
-            Nats.NatsHost.C.SubscribeToSubject(_lobby.ToString());
-
-            players = new Dictionary<int, playerlistprefab>();
-
-            HostScene.SetActive(true);
-            CreateScene.SetActive(false);
-
-            playerScrolView = GameObject.Find("PlayerScrollView");
-
-            hostNameTMP.text = _hostName;
-            gameModeTMP.text = _gameMode.ToString(); //TODO enum type oid
-            seedTMP.text = _seed.ToString();
-            gameCodeTMP.text =
-                $"{_lobby.ToString().Substring(0, 3)} {_lobby.ToString().Substring(3, 3)} {_lobby.ToString().Substring(6, 3)}";
-            roundDurationTMP.text = _roundDuration.ToString();
-            creationTime.text = DateTime.Now.ToString("HH:mm:ss");
-            _sessionDuration.Start();
-            _sessionIsActive = true;
-        }
-
-
-        private void RegenerateButtonOnClick()
-        {
-            _lobby = Random.Range(100000000, 999999999);
-
-            gameCodeInputField.text =
-                $"{_lobby.ToString().Substring(0, 3)} {_lobby.ToString().Substring(3, 3)} {_lobby.ToString().Substring(6, 3)}";
-        }
-
-        private void EditButtonOnClick()
-        {
-            editButton.image.sprite = editButton.image.sprite == penSprite ? checkMarkSprite : penSprite;
-
-            seedInputField.interactable = !seedInputField.interactable;
-        }
-
         private void AbortSessionOnClick()
         {
-            Nats.NatsHost.C.Publish(_lobby.ToString(), new AbortSessionMessage(DateTime.Now.ToString("o"), _lobby,
+            // TODO maybe confirmation
+
+            Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(), new AbortSessionMessage(
+                DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode,
                 -1));
+
+            CreateScene.SetActive(true);
+
+            gameObject.SetActive(false);
         }
 
         private void StartSessionOnClick()
@@ -263,9 +157,9 @@ namespace Version1.Host.Scripts
 
         private void StopRoundOnClick()
         {
-            Nats.NatsHost.C.Publish(_lobby.ToString(), new StopRoundMessage(
+            Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(), new StopRoundMessage(
                 DateTime.Now.ToString("o"),
-                _lobby,
+                SessionData.Instance.LobbyCode,
                 -1,
                 1 //TODO CHANGE TO ROUND NUMBER OR CHANGE TO STRING WITH PHASE NAME
             ));
@@ -273,17 +167,17 @@ namespace Version1.Host.Scripts
 
         private void ContinueOnClick()
         {
-            Nats.NatsHost.C.Publish(_lobby.ToString(), new SkipRoundMessage(
+            Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(), new SkipRoundMessage(
                 DateTime.Now.ToString("o"),
-                _lobby,
+                SessionData.Instance.LobbyCode,
                 -1));
         }
 
         private void StartRoundOnClick()
         {
-            Nats.NatsHost.C.Publish(_lobby.ToString(), new StartRoundMessage(
+            Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(), new StartRoundMessage(
                 DateTime.Now.ToString("o"),
-                _lobby,
+                SessionData.Instance.LobbyCode,
                 -1,
                 1, //TODO CHANGE TO ROUND NUMBER OR PHASE NAME
                 100 // TODO CHANGE TO DURATION OF PHASE, GET FROM PHASE SYSTEM OF LUUK
@@ -320,16 +214,6 @@ namespace Version1.Host.Scripts
                     players.Remove(key);
                 }
             }
-
-            if (_hostName == "" || _lobby == 0)
-            {
-                createSession.interactable = false;
-            }
-            else
-            {
-                createSession.interactable = true;
-            }
-
 
             Nats.NatsHost.C.HandleMessages();
         }
