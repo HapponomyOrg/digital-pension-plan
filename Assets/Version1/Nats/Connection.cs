@@ -205,6 +205,7 @@ namespace Version1.Nats
         public Queue<BaseMessage> EventsReceived = new Queue<BaseMessage>();
 
         public event EventHandler OnConnect;
+        public event EventHandler<string> onError;
 
         private readonly Dictionary<string, Type> messageTypes = new()
         {
@@ -239,7 +240,6 @@ namespace Version1.Nats
 
         protected Connection()
         {
-            Connect();
             Subscribe();
         }
 
@@ -247,7 +247,7 @@ namespace Version1.Nats
 
         protected void OnDisable() => CloseConnection();
 
-        private void Connect()
+        public void Connect()
         {
             Debug.Log("Connecting to NATS at " + NATSURL);
             try
@@ -261,6 +261,7 @@ namespace Version1.Nats
             }
             catch (Exception ex)
             {
+                onError?.Invoke(this,ex.Message);
                 Debug.LogError("Failed to connect to NATS: " + ex.Message);
             }
         }
@@ -386,6 +387,7 @@ namespace Version1.Nats
             }
             catch (Exception ex)
             {
+                onError?.Invoke(this,ex.Message);
                 Debug.LogError("Failed to publish message: " + ex.Message);
             }
         }
