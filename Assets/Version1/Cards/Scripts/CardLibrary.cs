@@ -32,10 +32,5 @@ namespace Version1.Cards.Scripts
             }
             return null;
         }
-
-        private void OnEnable()
-        {
-            FillCardList();
-        }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Version1.Nats.Messages.Client;
 using Version1.Nats.Messages.Host;
@@ -11,6 +12,9 @@ namespace Version1.Host.Scripts
 {
     public class Host : MonoBehaviour
     {
+        [SerializeField] private Cards.Scripts.CardLibrary cardLibrary;
+        private CardManager _cardManager;
+        
         [SerializeField] private GameObject natsError;
         [SerializeField] private TMP_Text natsErrorTMP;
 
@@ -74,7 +78,7 @@ namespace Version1.Host.Scripts
             playerScrolView = GameObject.Find("PlayerScrollView");
 
             hostNameTMP.text = SessionData.Instance.HostName;
-            gameModeTMP.text = SessionData.Instance.GameMode.ToString(); //TODO enum type oid
+            gameModeTMP.text = SessionData.Instance.InterestMode.ToString(); //TODO enum type oid
             seedTMP.text = SessionData.Instance.Seed.ToString();
             gameCodeTMP.text =
                 $"{SessionData.Instance.LobbyCode.ToString().Substring(0, 3)} {SessionData.Instance.LobbyCode.ToString().Substring(3, 3)} {SessionData.Instance.LobbyCode.ToString().Substring(6, 3)}";
@@ -88,7 +92,8 @@ namespace Version1.Host.Scripts
         {
             var activity = Instantiate(activityPrefab, activityScrollView.transform);
             activity.GetComponentInChildren<TMP_Text>().text = e;
-
+            activity.SetActive(true);
+            
             activities.Add(activity);
 
             if (activities.Count > 20)
@@ -98,17 +103,30 @@ namespace Version1.Host.Scripts
             }
         }
 
-        private void OnOnJoinrequest(object sender, JoinRequestMessage e)
+        private void OnOnJoinrequest(object sender, JoinRequestMessage msg)
         {
+            foreach (var record in players)
+            {
+                if (record.Value.Name == msg.PlayerName)
+                {
+                    RejectedMessage rejectedMessage = new RejectedMessage(DateTime.Now.ToString("o"), msg.LobbyID,
+                        -1, msg.PlayerName, "PlayerNameAlreadyTaken",
+                        $"{msg.PlayerName} is already taken in the session you are trying to join. \n Please fill in another name and try again.");
+                    
+                    Nats.NatsHost.C.Publish(msg.LobbyID.ToString(),rejectedMessage);
+                    return;
+                }
+            }
+            
             Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(), new ConfirmJoinMessage(
                 DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode,
                 -1,
                 playerId,
-                e.PlayerName,
-                e.Age,
-                e.Gender));
+                msg.PlayerName,
+                msg.Age,
+                msg.Gender));
 
-            players.Add(playerId, new playerlistprefab(e.PlayerName, playerId, 0, DateTime.Now));
+            players.Add(playerId, new playerlistprefab(msg.PlayerName, playerId, 0, DateTime.Now));
         }
 
         private void OnOnHeartBeat(object sender, HeartBeatMessage e)
@@ -117,7 +135,9 @@ namespace Version1.Host.Scripts
 
             if (!players.ContainsKey(e.PlayerID))
             {
+                print("HIERO");
                 var player = Instantiate(playerListPrefab, playerScrolView.transform);
+                player.gameObject.SetActive(true);
                 player.GetComponent<playerlistprefab>().LastPing = parsedDate;
                 player.GetComponent<playerlistprefab>().Name = e.PlayerName;
                 player.GetComponent<playerlistprefab>().Balance = e.Balance;
@@ -127,6 +147,7 @@ namespace Version1.Host.Scripts
             }
             else
             {
+                print("Daaro");
                 players[e.PlayerID].LastPing = parsedDate;
                 players[e.PlayerID].Name = e.PlayerName;
                 players[e.PlayerID].Balance = e.Balance;
@@ -149,10 +170,9 @@ namespace Version1.Host.Scripts
 
         private void StartSessionOnClick()
         {
-            // TODO SEND A MESSAGE TO ALL PLAYERS WITH THEIR INFO
-            /*Nats.NatsHost.C.Publish(Lobby.ToString(), new (DateTime.Now.ToString("o"), Lobby,
-                1,
-                Lobby));*/
+            _cardManager = new CardManager(cardLibrary);
+            
+            _cardManager.StartGame(players.Count);
         }
 
         private void StopRoundOnClick()
@@ -208,7 +228,7 @@ namespace Version1.Host.Scripts
                         keysToRemove.Add(player.Key);
                     }
                 }
-
+                
                 foreach (var key in keysToRemove)
                 {
                     players.Remove(key);

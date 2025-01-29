@@ -48,7 +48,7 @@ namespace Version1.Host.Scripts
 
             hostInputField.text = SessionData.Instance.HostName;
             seedInputField.text = SessionData.Instance.Seed.ToString();
-            gameModeDropDown.value = SessionData.Instance.GameMode;
+            gameModeDropDown.value = SessionData.Instance.InterestMode;
 
             gameCodeInputField.text =
                 $"{SessionData.Instance.LobbyCode.ToString().Substring(0, 3)} {SessionData.Instance.LobbyCode.ToString().Substring(3, 3)} {SessionData.Instance.LobbyCode.ToString().Substring(6, 3)}";
@@ -75,7 +75,7 @@ namespace Version1.Host.Scripts
                 }
             });
 
-            gameModeDropDown.onValueChanged.AddListener((val) => { SessionData.Instance.GameMode = val; });
+            gameModeDropDown.onValueChanged.AddListener((val) => { SessionData.Instance.InterestMode = val; });
 
             gameCodeInputField.onValueChanged.AddListener((val) =>
             {
@@ -127,6 +127,11 @@ namespace Version1.Host.Scripts
             editButton.image.sprite = editButton.image.sprite == penSprite ? checkMarkSprite : penSprite;
 
             seedInputField.interactable = !seedInputField.interactable;
+        }
+
+        public void ToggleMoneyInbalance(bool inbalance)
+        {
+            SessionData.Instance.InbalanceMode = inbalance;
         }
 
         private void Update()

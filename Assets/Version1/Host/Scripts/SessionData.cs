@@ -21,7 +21,8 @@ namespace Version1.Host.Scripts
 
         public string HostName { get; set; }
         public int LobbyCode { get; set; }
-        public int GameMode { get; set; }
+        public int InterestMode { get; set; }
+        public bool InbalanceMode { get; set; }
         public int Seed { get; set; }
         public int RoundDuration { get; set; }
 
@@ -29,7 +30,8 @@ namespace Version1.Host.Scripts
         {
             HostName = "";
             LobbyCode = Random.Range(100000000, 999999999);
-            GameMode = 0;
+            InterestMode = 0;
+            InbalanceMode = true;
             Seed = 0;
             RoundDuration = 4;
         }
@@ -37,19 +39,21 @@ namespace Version1.Host.Scripts
         /// <summary>
         /// Resets values to default values.
         /// <para>
-        /// The following session values are reset to their default values:
+        /// The following session values are reset to their desfault values:
         /// </para>
         /// </summary>
         /// <param name="HostName"> ""</param>
         /// <param name="LobbyCode"> 0</param>
-        /// <param name="GameMode"> New lobby code</param>
+        /// <param name="InterestMode"> New lobby code</param>
+        /// <param name="InbalanceMode"> true</param>
         /// <param name="Seed"> 0</param>
         /// <param name="RoundDuration"> 4 minutes</param>
         public void Reset()
         {
             HostName = "";
             LobbyCode = Random.Range(100000000, 999999999);
-            GameMode = 0;
+            InterestMode = 0;
+            InbalanceMode = true;
             Seed = 0;
             RoundDuration = 4;
         }
