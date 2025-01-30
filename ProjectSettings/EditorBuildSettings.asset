@@ -23,4 +23,16 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Legacy/Scenes/FINALSCENEBAS.unity
     guid: fd1419173f485034aba6ff7277529d04
+  - enabled: 1
+    path: Assets/Version1/Phases/Interest/InterestScene.unity
+    guid: 236f93351a1e3cb41b9be8f21e72f9e8
+  - enabled: 1
+    path: Assets/Version1/Phases/BalanceModification/BalanceModificationScene.unity
+    guid: 682c3ed33c6455d49a1fb0e8d27ccad6
+  - enabled: 1
+    path: Assets/Version1/Phases/Trading/TradingScene.unity
+    guid: 81f2f81c8c7845f4797e183e825fcbdb
+  - enabled: 1
+    path: Assets/Version1/Phases/test.unity
+    guid: e2c9dc27ad339c0459c03621edc1b0ab
   m_configObjects: {}
