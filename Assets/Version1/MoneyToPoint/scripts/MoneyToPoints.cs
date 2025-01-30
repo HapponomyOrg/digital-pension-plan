@@ -54,7 +54,7 @@ namespace Version1.MoneyToPoint.scripts
                 Balance -= 1000;
                 yield return new WaitForSeconds(0.2f);
 
-                if (Balance % 1000 == 0)
+                if (Balance % 2000 == 0)
                 {
                     Points += 1;
                 }

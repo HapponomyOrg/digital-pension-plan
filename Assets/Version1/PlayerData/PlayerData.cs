@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Version1.Nats.Messages.Client;
 using Version1.Nats.Messages.Host;
 
@@ -31,13 +32,17 @@ namespace Version1.PlayerData
         [SerializeField] private string gender = "Unknown";
         [SerializeField] private int playerId = 456;
         [SerializeField] private int dept = 0;
+        [SerializeField] private int interestRemainder = 0;
         [SerializeField] private List<int> cards = new List<int>();
         [SerializeField] private List<int> allPoints = new List<int>();
+        
+        [SerializeField] private MoneySystems currentMoneySystem = 0;
+        
 
         // Private fields for balance, points, lobby ID
-        private int _balance = 0;
-        private int _points = 0;
-        private int _lobbyID = 0;
+        [SerializeField] private int balance = 0;
+        [SerializeField] private int points = 0;
+        [SerializeField] private int lobbyID = 0;
 
         // Events
         public event EventHandler<int> OnBalanceChange;
@@ -86,6 +91,18 @@ namespace Version1.PlayerData
             get => dept;
             set => dept = value;
         }
+        
+        public int InterestRemainder
+        {
+            get => interestRemainder;
+            set => interestRemainder = value;
+        }
+
+        public MoneySystems CurrentMoneySystem
+        {
+            get => currentMoneySystem;
+            set => currentMoneySystem = value;
+        }
 
         public List<int> Cards => new List<int>(cards);
 
@@ -93,20 +110,20 @@ namespace Version1.PlayerData
 
         public int Balance
         {
-            get => _balance;
-            set => SetAndInvoke(ref _balance, value, OnBalanceChange);
+            get => balance;
+            set => SetAndInvoke(ref balance, value, OnBalanceChange);
         }
 
         public int Points
         {
-            get => _points;
-            set => SetAndInvoke(ref _points, value, OnPointsChange);
+            get => points;
+            set => SetAndInvoke(ref points, value, OnPointsChange);
         }
 
         public int LobbyID
         {
-            get => _lobbyID;
-            set => SetAndInvoke(ref _lobbyID, value, OnLobbyIDChange);
+            get => lobbyID;
+            set => SetAndInvoke(ref lobbyID, value, OnLobbyIDChange);
         }
         #endregion
 
@@ -160,22 +177,22 @@ namespace Version1.PlayerData
 
         public void AddPoints(int points)
         {
-            _points += points;
-            OnPointsChange?.Invoke(this, _points);
+            this.points += points;
+            OnPointsChange?.Invoke(this, this.points);
         }
 
         public void AddToBalance(int amount)
         {
-            _balance += amount;
-            OnBalanceChange?.Invoke(this, _balance);
+            balance += amount;
+            OnBalanceChange?.Invoke(this, balance);
         }
 
         public void SubtractFromBalance(int amount)
         {
-            if (_balance >= amount)
+            if (balance >= amount)
             {
-                _balance -= amount;
-                OnBalanceChange?.Invoke(this, _balance);
+                balance -= amount;
+                OnBalanceChange?.Invoke(this, balance);
             }
             else
             {
