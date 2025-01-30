@@ -35,8 +35,8 @@ public class GameManager : MonoBehaviour
         new NatsClient();
 
         currentScene = logginScene;
-        NatsClient.C.OnConfirmJoin += (sender, msg) => { ChangeScene(lobbyScene); };
-        NatsClient.C.OnStartGame += (sender, msg) =>
+        NatsClient.Instance.OnConfirmJoin += (sender, msg) => { ChangeScene(lobbyScene); };
+        NatsClient.Instance.OnStartGame += (sender, msg) =>
         {
             numGames++;
             PlayerManager.Instance.RoundIsActive = false;
@@ -45,31 +45,31 @@ public class GameManager : MonoBehaviour
             ChangeScene(gameScene);
             MarketManager.Instance.UpdateBalance();
         };
-        NatsClient.C.OnStopRound += (sender, msg) =>
+        NatsClient.Instance.OnStopRound += (sender, msg) =>
         {
             MarketManager.Instance.RemoveAllBiddings();
             PlayerManager.Instance.RoundIsActive = false;
             timer.StopTimer();
             intrestScene.SetActive(true);
         };
-        NatsClient.C.OnStartRound += (sender, msg) =>
+        NatsClient.Instance.OnStartRound += (sender, msg) =>
         {
             PlayerManager.Instance.RoundIsActive = true;
             intrestScene.SetActive(false);
             StartCoroutine(timer.StartTimer(msg.Duration));
             Round++;
         };
-        NatsClient.C.OnEndOfRounds += (sender, msg) =>
+        NatsClient.Instance.OnEndOfRounds += (sender, msg) =>
         {
             PlayerManager.Instance.RoundIsActive = false;
-            NatsClient.C.StopHeartbeat();
-            NatsClient.C.HeartbeatInterval = 300;
-            NatsClient.C.StartHeartbeat();
+            NatsClient.Instance.StopHeartbeat();
+            NatsClient.Instance.HeartbeatInterval = 300;
+            NatsClient.Instance.StartHeartbeat();
             // TODO here set to point removeal screen after dept
             ChangeScene(pointsDonateScene);
         };
         
-        NatsClient.C.OnEndGame += (sender, msg) =>
+        NatsClient.Instance.OnEndGame += (sender, msg) =>
         {
             PlayerManager.Instance.allPoints.Add(PlayerManager.Instance.Points);
             ChangeScene(endGameScene);
@@ -85,11 +85,11 @@ public class GameManager : MonoBehaviour
 
     public void Update()
     {
-        NatsClient.C.HandleMessages();
+        NatsClient.Instance.HandleMessages();
     }
 
     public void OnDestroy()
     {
-        NatsClient.C.StopHeartbeat();
+        NatsClient.Instance.StopHeartbeat();
     }
 }

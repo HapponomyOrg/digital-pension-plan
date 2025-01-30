@@ -72,9 +72,9 @@ namespace UI
 
         private void Update()
         {
-            if (NatsClient.C == null)
+            if (NatsClient.Instance == null)
                 return;
-            NatsClient.C.HandleMessages();
+            NatsClient.Instance.HandleMessages();
         }
 
         // TODO() FIX event handlers
@@ -82,14 +82,14 @@ namespace UI
         {
             if (listenersAssigned)
                 return;
-            if (NatsClient.C == null)
+            if (NatsClient.Instance == null)
                 return;
-            NatsClient.C.OnListCards += (sender, msg) =>
+            NatsClient.Instance.OnListCards += (sender, msg) =>
             {
                 AddBuyListing(msg.PlayerName, msg.AuctionID, msg.Amount, msg.Cards);
             };
-            NatsClient.C.OnBuyCards += (sender, msg) => { SoldListing(msg.AuctionID); };
-            NatsClient.C.OnCancelListing += (sender, msg) =>
+            NatsClient.Instance.OnBuyCards += (sender, msg) => { SoldListing(msg.AuctionID); };
+            NatsClient.Instance.OnCancelListing += (sender, msg) =>
             {
                 if (msg.PlayerID == PlayerManager.Instance.PlayerId) return;
 
@@ -118,11 +118,11 @@ namespace UI
                 balanceDisplay.text = $"Balance: {PlayerManager.Instance.Balance}";
             };
 
-            NatsClient.C.OnMakeBidding += (sender, msg) =>
+            NatsClient.Instance.OnMakeBidding += (sender, msg) =>
             {
                 BiddingReceived(new Bidding(msg.PlayerID, msg.PlayerName, msg.AuctionID, msg.OfferPrice));
             };
-            NatsClient.C.OnAcceptBidding += (sender, msg) =>
+            NatsClient.Instance.OnAcceptBidding += (sender, msg) =>
             {
                 var listing = GetListing(msg.AuctionID);
 
@@ -150,7 +150,7 @@ namespace UI
                 Destroy(activeListings[listing]);
                 activeListings.Remove(listing);
             };
-            NatsClient.C.OnCancelBidding += (sender, msg) =>
+            NatsClient.Instance.OnCancelBidding += (sender, msg) =>
             {
                 var l = GetListing(msg.AuctionID);
 
@@ -162,7 +162,7 @@ namespace UI
 
                 Destroy(bidDisplay.gameObject);
             };
-            NatsClient.C.OnRejectBidding += (sender, msg) =>
+            NatsClient.Instance.OnRejectBidding += (sender, msg) =>
             {
                 var l = GetListing(msg.AuctionID);
 
@@ -189,7 +189,7 @@ namespace UI
                     return;
                 listingDisplay.TurnOnBiddingButton();
             };
-            NatsClient.C.OnRespondBidding += (sender, msg) =>
+            NatsClient.Instance.OnRespondBidding += (sender, msg) =>
             {
                 if (PlayerManager.Instance.PlayerId != msg.BidderID)
                     return;
@@ -208,7 +208,7 @@ namespace UI
                     );
             };
             
-            NatsClient.C.OnAcceptCounterBidding += (sender, msg) =>
+            NatsClient.Instance.OnAcceptCounterBidding += (sender, msg) =>
             {
                 if (PlayerManager.Instance.PlayerId == msg.CounterBidderID)
                 {
@@ -318,7 +318,7 @@ namespace UI
                 bidding.OfferPrice,
                 bidding.SenderId
             );
-            NatsClient.C.Publish(PlayerManager.Instance.LobbyID.ToString(), msg);
+            NatsClient.Instance.Publish(PlayerManager.Instance.LobbyID.ToString(), msg);
 
             listing.RemoveAllBiddings(true);
 
@@ -366,7 +366,7 @@ namespace UI
                 PlayerManager.Instance.PlayerId, bidding.AuctionId,
                 bidding.OfferPrice, bidding.SenderId);
 
-            NatsClient.C.Publish(PlayerManager.Instance.LobbyID.ToString(), message);
+            NatsClient.Instance.Publish(PlayerManager.Instance.LobbyID.ToString(), message);
         }
 
         public void RespondToBidding(ReceivedBiddingDisplay biddingDisplay, Bidding bidding, int originalSender)
@@ -383,7 +383,7 @@ namespace UI
                 biddingDisplay.Bid,
                 bidding.OfferPrice);
 
-            NatsClient.C.Publish(PlayerManager.Instance.LobbyID.ToString(), message);
+            NatsClient.Instance.Publish(PlayerManager.Instance.LobbyID.ToString(), message);
         }
 
         public void MakeBidding(Bidding bidding)
@@ -396,7 +396,7 @@ namespace UI
                 PlayerManager.Instance.PlayerId, bidding.AuctionId,
                 PlayerManager.Instance.PlayerName, bidding.OfferPrice);
 
-            NatsClient.C.Publish(PlayerManager.Instance.LobbyID.ToString(), message);
+            NatsClient.Instance.Publish(PlayerManager.Instance.LobbyID.ToString(), message);
         }
 
         public void BiddingRejected(ReceivedBiddingDisplay biddingDisplay, Bidding bidding)
@@ -407,7 +407,7 @@ namespace UI
                 PlayerManager.Instance.PlayerId, bidding.AuctionId,
                 PlayerManager.Instance.PlayerName, bidding.SenderId);
 
-            NatsClient.C.Publish(PlayerManager.Instance.LobbyID.ToString(), message);
+            NatsClient.Instance.Publish(PlayerManager.Instance.LobbyID.ToString(), message);
         }
 
         public void CancelBidding(Bidding bidding, GameObject display)
@@ -420,7 +420,7 @@ namespace UI
             var message = new CancelBiddingMessage(DateTime.Now.ToString("o"), PlayerManager.Instance.LobbyID,
                 PlayerManager.Instance.PlayerId, bidding.AuctionId);
 
-            NatsClient.C.Publish(PlayerManager.Instance.LobbyID.ToString(), message);
+            NatsClient.Instance.Publish(PlayerManager.Instance.LobbyID.ToString(), message);
         }
 
         public void OpenMakeBiddingOverlay(BuyListingDisplay buyDisplay, Listing listing)
@@ -459,7 +459,7 @@ namespace UI
             var msg = new ListCardsmessage(DateTime.Now.ToString("o"), sessionId, PlayerManager.Instance.PlayerId,
                 PlayerManager.Instance.PlayerName,
                 listing.AuctionId, listing.Cards, listing.Price);
-            NatsClient.C.Publish(sessionId.ToString(), msg);
+            NatsClient.Instance.Publish(sessionId.ToString(), msg);
         }
 
         public void OpenCancelOverlay(string auctionId)
@@ -473,7 +473,7 @@ namespace UI
             var msg = new CancelListingMessage(DateTime.Now.ToString("o"), sessionId, PlayerManager.Instance.PlayerId,
                 auctionId);
 
-            NatsClient.C.Publish(sessionId.ToString(), msg);
+            NatsClient.Instance.Publish(sessionId.ToString(), msg);
 
             var listing = activeListings.Keys.FirstOrDefault(key => key.AuctionId == msg.AuctionID);
 
@@ -510,7 +510,7 @@ namespace UI
             var msg = new BuyCardsRequestMessage(DateTime.Now.ToString("o"), sessionId, PlayerManager.Instance.PlayerId,
                 auctionId);
 
-            NatsClient.C.Publish(sessionId.ToString(), msg);
+            NatsClient.Instance.Publish(sessionId.ToString(), msg);
 
             ConfirmBuyListing(auctionId);
             

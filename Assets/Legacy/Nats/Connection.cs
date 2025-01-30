@@ -1,4 +1,4 @@
-using UnityEngine;
+/*using UnityEngine;
 using NATS.Client;
 using System.Text;
 using System;
@@ -10,7 +10,7 @@ namespace NATS
     public abstract class Connection
     {
         public string NATSURL = "nats://ec2-13-60-182-44.eu-north-1.compute.amazonaws.com:4222";
-        /*public string NATSURL = "nats://localhost:5432";*/
+        /*public string NATSURL = "nats://localhost:5432";#1#
 
         protected IConnection NATSConnection;
 
@@ -177,6 +177,138 @@ namespace NATS
                 return;
 
             Debug.Log("Message sent " + messageSerialized + ", subject " + subject);
+        }
+    }
+}*/
+
+using UnityEngine;
+using NATS.Client;
+using System.Text;
+using System;
+using System.Collections.Generic;
+
+namespace NATS
+{
+    public abstract class Connection
+    {
+        private const string DefaultNATSURL = "nats://ec2-13-60-182-44.eu-north-1.compute.amazonaws.com:4222";
+        private const int ConnectionTimeout = 10000;
+
+        public string NATSURL = DefaultNATSURL;
+        protected IConnection NATSConnection;
+        protected AsyncSubscription AsyncSubscription;
+        public Queue<BaseMessage> EventsReceived = new Queue<BaseMessage>();
+
+        public event EventHandler OnConnect;
+
+        private readonly Dictionary<string, Type> messageTypes = new()
+        {
+            { MessageSubject.ConfirmJoin, typeof(ConfirmJoinMessage) },
+            { MessageSubject.DeptUpdate, typeof(DeptUpdateMessage) },
+            { MessageSubject.StartGame, typeof(StartGameMessage) },
+            { MessageSubject.CardHandIn, typeof(CardHandInMessage) },
+            { MessageSubject.StopRound, typeof(StopRoundMessage) },
+            { MessageSubject.StartRound, typeof(StartRoundMessage) },
+            { MessageSubject.Rejected, typeof(RejectedMessage) },
+            { MessageSubject.BuyCards, typeof(BuyCardsRequestMessage) },
+            { MessageSubject.CancelListing, typeof(CancelListingMessage) },
+            { MessageSubject.ConfirmBuy, typeof(ConfirmBuyMessage) },
+            { MessageSubject.CreateSession, typeof(CreateSessionMessage) },
+            { MessageSubject.DonateMoney, typeof(DonateMoneyMessage) },
+            { MessageSubject.DonatePoints, typeof(DonatePointsMessage) },
+            { MessageSubject.EndGame, typeof(EndGameMessage) },
+            { MessageSubject.HeartBeat, typeof(HeartBeatMessage) },
+            { MessageSubject.JoinRequest, typeof(JoinRequestMessage) },
+            { MessageSubject.EndOfRounds, typeof(EndOfRoundsMessage) },
+            { MessageSubject.ConfirmCancelListing, typeof(ConfirmCancelListingMessage) },
+            { MessageSubject.ConfirmHandIn, typeof(ConfirmHandInMessage) },
+            { MessageSubject.ListCards, typeof(ListCardsmessage) },
+            { MessageSubject.MakeBidding, typeof(MakeBiddingMessage) },
+            { MessageSubject.AcceptBidding, typeof(AcceptBiddingMessage) },
+            { MessageSubject.CancelBidding, typeof(CancelBiddingMessage) },
+            { MessageSubject.RejectBidding, typeof(RejectBiddingMessage) },
+            { MessageSubject.RespondBidding, typeof(RespondBiddingMessage) },
+            { MessageSubject.AcceptCounterBidding, typeof(AcceptCounterBiddingMessage) }
+        };
+
+        protected Connection()
+        {
+            Connect();
+            Subscribe();
+        }
+
+        protected void OnDestroy() => CloseConnection();
+
+        protected void OnDisable() => CloseConnection();
+
+        private void Connect()
+        {
+            Debug.Log("Connecting to NATS at " + NATSURL);
+            try
+            {
+                Options opts = ConnectionFactory.GetDefaultOptions();
+                opts.Url = NATSURL;
+                opts.Timeout = ConnectionTimeout;
+                NATSConnection = new ConnectionFactory().CreateConnection(opts);
+                OnConnect?.Invoke(this, EventArgs.Empty);
+                Debug.Log("Connected to NATS at " + NATSURL);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError("Failed to connect to NATS: " + ex.Message);
+            }
+        }
+
+        protected abstract void Subscribe();
+
+        public void SubscribeToSubject(string subject)
+        {
+            string fullSubject = $"{subject}.>";
+            Debug.Log("Subscribing to: " + fullSubject);
+            NATSConnection.SubscribeAsync(fullSubject, (sender, args) => { QueueMsg(args); });
+        }
+
+        private void QueueMsg(MsgHandlerEventArgs args)
+        {
+            if (args.Message.Subject == null) return;
+
+            string stringReceived = Encoding.UTF8.GetString(args.Message.Data);
+            string subjectKey = args.Message.Subject.Split('.')[^1];
+
+            if (messageTypes.TryGetValue(subjectKey, out Type messageType))
+            {
+                BaseMessage msg = (BaseMessage)JsonUtility.FromJson(stringReceived, messageType);
+                EventsReceived.Enqueue(msg);
+            }
+        }
+
+        public void Publish(string sessionID, BaseMessage baseMessage, bool flushImmediately = true)
+        {
+            string subject = $"{sessionID}.{baseMessage.Subject}";
+            string messageSerialized = JsonUtility.ToJson(baseMessage);
+            byte[] messageEncoded = Encoding.UTF8.GetBytes(messageSerialized);
+
+            try
+            {
+                NATSConnection.Publish(subject, messageEncoded);
+                if (flushImmediately) NATSConnection.Flush();
+
+                if (baseMessage.Subject != MessageSubject.HeartBeat)
+                    Debug.Log("Message sent: " + messageSerialized + ", subject: " + subject);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError("Failed to publish message: " + ex.Message);
+            }
+        }
+
+        private void CloseConnection()
+        {
+            if (NATSConnection != null && !NATSConnection.IsClosed())
+            {
+                NATSConnection.Close();
+                Debug.Log("NATS connection closed.");
+            }
         }
     }
 }
