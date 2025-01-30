@@ -1,20 +1,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using UnityEngine.AI;
 using Version1.Nats.Messages;
 using Version1.Nats.Messages.Client;
-using Version1.Nats.Messages.Host;
 
 namespace Version1.Nats
 {
     public class NatsHost : Connection
     {
-        public int LobbyID = 0;
-        public int numGames = 0;
 
         public static NatsHost C { get; private set; }
+        public NatsHost()
+        {
+            if (C != null) return;
 
+            C = this;
+            EventsReceived = new Queue<BaseMessage>();
+        }
+        
         public event EventHandler<ListCardsmessage> OnListCards;
         public event EventHandler<BuyCardsRequestMessage> OnBuyCards;
         public event EventHandler<CancelListingMessage> OnCancelListing;
@@ -25,17 +28,6 @@ namespace Version1.Nats
         public event EventHandler<HeartBeatMessage> OnHeartBeat;
         public event EventHandler<JoinRequestMessage> OnJoinrequest;
         public event EventHandler<string> MessageLog;
-        
-
-
-
-        public NatsHost()
-        {
-            if (C != null) return;
-
-            C = this;
-            EventsReceived = new Queue<BaseMessage>();
-        }
 
         protected override void Subscribe()
         {

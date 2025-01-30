@@ -1,4 +1,5 @@
-﻿using Version1.Nats.Messages;
+﻿using Version1.Donate.points.scripts;
+using Version1.Nats.Messages;
 using Version1.Nats.Messages.Client;
 using Version1.Nats.Messages.Host;
 

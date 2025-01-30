@@ -203,7 +203,15 @@ namespace Version1.Nats
         private CancellationTokenSource _cancellationTokenSource;
         public int HeartbeatInterval = 5000;
 
-        // Event declarations
+        public static NatsClient C { get; private set; }
+        
+        public NatsClient()
+        {
+            if (C != null) return;
+
+            C = this;
+            EventsReceived = new Queue<BaseMessage>();
+        }
         public event EventHandler<ListCardsmessage> OnListCards;
         public event EventHandler<BuyCardsRequestMessage> OnBuyCards;
         public event EventHandler<CancelListingMessage> OnCancelListing;
@@ -267,19 +275,15 @@ namespace Version1.Nats
 
         protected override void Subscribe()
         {
-            // Add your subscription logic here if needed.
         }
-
-        
-        // TODO check if this works if we just can move it to a callback function in some way.
         
         public void HandleMessages()
         {
             if (EventsReceived.Count < 1) return;
-
+            
             var message = EventsReceived.Dequeue();
             if (message == null || message.PlayerID == PlayerManager.Instance.PlayerId) return;
-
+            
             DispatchMessage(message);
         }
 

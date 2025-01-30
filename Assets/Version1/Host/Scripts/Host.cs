@@ -135,19 +135,19 @@ namespace Version1.Host.Scripts
 
             if (!players.ContainsKey(e.PlayerID))
             {
-                print("HIERO");
                 var player = Instantiate(playerListPrefab, playerScrolView.transform);
                 player.gameObject.SetActive(true);
-                player.GetComponent<playerlistprefab>().LastPing = parsedDate;
-                player.GetComponent<playerlistprefab>().Name = e.PlayerName;
-                player.GetComponent<playerlistprefab>().Balance = e.Balance;
-                player.GetComponent<playerlistprefab>().Points = e.Points;
+                var plistprefab = player.GetComponent<playerlistprefab>();
+                plistprefab.LastPing = parsedDate;
+                plistprefab.ID = e.PlayerID;
+                plistprefab.Name = e.PlayerName;
+                plistprefab.Balance = e.Balance;
+                plistprefab.Points = e.Points;
 
-                players.Add(e.PlayerID, player.GetComponent<playerlistprefab>());
+                players.Add(e.PlayerID, plistprefab);
             }
             else
             {
-                print("Daaro");
                 players[e.PlayerID].LastPing = parsedDate;
                 players[e.PlayerID].Name = e.PlayerName;
                 players[e.PlayerID].Balance = e.Balance;
