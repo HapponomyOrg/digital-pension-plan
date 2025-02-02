@@ -10,8 +10,12 @@ namespace Version1.Cards.Scripts
 
         private Dictionary<int, CardData> cardList;
 
-        private void FillCardList()
+        public void FillCardList()
         {
+            // Safety to only fill once
+            if (cardList.Count > 0)
+                return;
+            
             cardList = new Dictionary<int, CardData>();
             foreach (var card in cards)
             {

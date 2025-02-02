@@ -15,6 +15,8 @@ namespace Version1.Utilities
         
         public static GameManager Instance => instance ??= new GameManager();
 
+        public Cards.Scripts.CardLibrary CardLibrary { get; }
+        
         private readonly Phase[] debtBasedPhases =
         {
             // Trading
@@ -57,6 +59,9 @@ namespace Version1.Utilities
 
         private GameManager()
         {
+            CardLibrary = Resources.Load<Cards.Scripts.CardLibrary>("CardList");
+            CardLibrary.FillCardList();
+            Debug.Log($"card lib: {CardLibrary}");
             phases = testPhases;
         }
         
