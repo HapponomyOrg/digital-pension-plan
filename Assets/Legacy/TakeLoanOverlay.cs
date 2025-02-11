@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
+[Obsolete]
 public class TakeLoanOverlay : MonoBehaviour
 {
     [SerializeField] private Button confirmButton;

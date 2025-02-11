@@ -1,8 +1,9 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-
+[Obsolete]
 public class EndScreenPoint : MonoBehaviour
 {
     [SerializeField] private TMP_Text playerName;

@@ -8,7 +8,7 @@ using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace Host
-{
+{[Obsolete]
     public class CreateSession : MonoBehaviour
     {
         [SerializeField] private Deck.Deck deck;

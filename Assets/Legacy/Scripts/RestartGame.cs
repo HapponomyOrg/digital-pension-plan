@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using NATS;
 using System;
-
+[Obsolete]
 public class RestartGame : MonoBehaviour
 {
     [SerializeField] private GameObject createSession;

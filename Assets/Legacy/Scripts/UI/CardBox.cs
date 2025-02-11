@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    
+    [Obsolete]
     public class CardBox : MonoBehaviour
     {
         [SerializeField] private RectTransform cardDetection;

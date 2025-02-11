@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
+[Obsolete]
 public class PayDeptOverlay : MonoBehaviour
 {
     [SerializeField] private Button confirmButton;

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using NATS;
 using System;
-
+[Obsolete]
 public class NatsHost : Connection
 {
     public int LobbyID = 0;

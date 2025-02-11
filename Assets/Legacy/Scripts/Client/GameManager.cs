@@ -5,7 +5,7 @@ using System.Linq;
 using UI;
 using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
-
+[Obsolete]
 public class GameManager : MonoBehaviour
 {
     [SerializeField]

@@ -491,7 +491,7 @@ GameObject:
   - component: {fileID: 3205149834637127300}
   - component: {fileID: 3627938575213605658}
   m_Layer: 5
-  m_Name: PayInterestOverlay
+  m_Name: MoneyCorrectionOverlay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

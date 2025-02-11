@@ -6,6 +6,7 @@ using Random = UnityEngine.Random;
 
 namespace Deck
 {
+    [Obsolete]
     public class Deck : MonoBehaviour
     {
         [SerializeField] private DeckCards[] deckCards;

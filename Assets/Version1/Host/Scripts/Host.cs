@@ -51,8 +51,7 @@ namespace Version1.Host.Scripts
         [SerializeField] private TMP_Text timeLeftTMP;
         [SerializeField] private TMP_Text phaseTypeTMP;
         [SerializeField] private TMP_Text nextPhaseTMP;
-
-
+        
         private void Start()
         {
             abortSession.onClick.AddListener(AbortSessionOnClick);

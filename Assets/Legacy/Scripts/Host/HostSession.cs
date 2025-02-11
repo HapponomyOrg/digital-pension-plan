@@ -8,7 +8,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
-
+[Obsolete]
 public class HostSession : MonoBehaviour
 {
     public int RoundNumber = 1;
