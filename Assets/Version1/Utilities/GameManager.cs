@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Version1.Phases;
 using Version1.Phases.BalanceModification;
 using Version1.Phases.Interest;
 using Version1.Phases.Trading;
+using MarketManager = Version1.Market.Scripts.MarketManager;
 
 
 namespace Version1.Utilities
@@ -16,6 +15,9 @@ namespace Version1.Utilities
         public static GameManager Instance => instance ??= new GameManager();
 
         public Cards.Scripts.CardLibrary CardLibrary { get; }
+        
+        public MarketManager MarketManager { get; } = new();
+
         
         private readonly Phase[] debtBasedPhases =
         {
@@ -61,7 +63,6 @@ namespace Version1.Utilities
         {
             CardLibrary = Resources.Load<Cards.Scripts.CardLibrary>("CardList");
             CardLibrary.FillCardList();
-            Debug.Log($"card lib: {CardLibrary}");
             phases = testPhases;
         }
         

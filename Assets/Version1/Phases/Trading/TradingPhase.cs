@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Version1.Market.Scripts;
+using Version1.Market.Scripts.UI;
 using Object = UnityEngine.Object;
 
 namespace Version1.Phases.Trading
@@ -15,7 +17,7 @@ namespace Version1.Phases.Trading
         
         
         private Timer timer;
-        private MarketUiManager market;
+        private MarketUIManager market;
         
         
         public override void Init()
@@ -27,6 +29,9 @@ namespace Version1.Phases.Trading
                 timer = Object.FindObjectOfType<Timer>();
                 
                 timer.Init(300);
+
+                market = Object.FindObjectOfType<MarketUIManager>();
+
                 
                 InitComplete = true;
                 InitFinished?.Invoke(this, EventArgs.Empty);

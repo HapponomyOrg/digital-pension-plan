@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
 
-namespace Version1.Market
+namespace Version1.Market.Scripts
 {
     public class Listing
     {

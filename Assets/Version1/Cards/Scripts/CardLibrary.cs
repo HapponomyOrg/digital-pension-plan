@@ -8,7 +8,7 @@ namespace Version1.Cards.Scripts
     {
         public CardData[] cards;
 
-        private Dictionary<int, CardData> cardList;
+        private Dictionary<int, CardData> cardList = new Dictionary<int, CardData>();
 
         public void FillCardList()
         {

@@ -4,9 +4,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Version1.Market.Scripts.UI
+namespace Version1.Market.Scripts.UI.Displays
 {
-    public class MarketListingDisplay : MonoBehaviour
+    public class MarketListingDisplay : MonoBehaviour, IListingDisplay
     {
         private Listing listing;
         
@@ -14,22 +14,28 @@ namespace Version1.Market.Scripts.UI
         [SerializeField] private TMP_Text price;
         [SerializeField] private Button buy;
         [SerializeField] private Button bid;
+        [SerializeField] private Button selectButton;
 
         [SerializeField] private Transform cardList;
         [SerializeField] private ListingCardDisplay cardDisplay;
         
-        public void Init(Listing marketListing, Action buyMethod, Action bidMethod)
+        public void Init(Listing l, Dictionary<ListingDisplayAction, Action> displayActions)
         {
-            listing = marketListing;
+            listing = l;
             
             sellerName.text = listing.Lister.ToString();
             price.text = listing.Price.ToString();
 
             GenerateCardDisplays();
-            
-            buy.onClick.AddListener(buyMethod.Invoke);
-            bid.onClick.AddListener(bidMethod.Invoke);
+
+            buy.interactable = PlayerData.PlayerData.Instance.Balance >= listing.Price;
+
+            buy.onClick.AddListener(displayActions[ListingDisplayAction.Buy].Invoke);
+            bid.onClick.AddListener(displayActions[ListingDisplayAction.Bid].Invoke);
+            selectButton.onClick.AddListener(displayActions[ListingDisplayAction.Select].Invoke);
         }
+
+        public GameObject GameObject() => gameObject;
 
         private void GenerateCardDisplays()
         {
@@ -46,6 +52,11 @@ namespace Version1.Market.Scripts.UI
                 var obj = Instantiate(cardDisplay, cardList);
                 obj.Init(cardAmount.Key, cardAmount.Value);
             }
+        }
+
+        public void UpdateDisplay()
+        {
+            buy.interactable = PlayerData.PlayerData.Instance.Balance >= listing.Price;
         }
     }
 }

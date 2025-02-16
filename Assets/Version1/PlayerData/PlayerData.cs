@@ -22,7 +22,6 @@ namespace Version1.PlayerData
                 return _instance;
             }
         }
-        
         // TODO dont destroy on load
         
 
@@ -161,6 +160,15 @@ namespace Version1.PlayerData
                 cards.Add(card);
                 OnCardsChange?.Invoke(this, new List<int>(cards));
         }
+        
+        public void AddCards(int[] c)
+        {
+            foreach (var card in c)
+            {
+                cards.Add(card);
+            }
+            OnCardsChange?.Invoke(this, new List<int>(cards));
+        }
 
         public void RemoveCard(int card)
         {
@@ -175,6 +183,16 @@ namespace Version1.PlayerData
             }
         }
 
+        public void RemoveCards(int[] c)
+        {
+            foreach (var card in c)
+            {
+                cards.Remove(card);
+            }
+            
+            OnCardsChange?.Invoke(this, new List<int>(cards));
+        }
+        
         public void AddPoints(int points)
         {
             this.points += points;
@@ -219,7 +237,8 @@ namespace Version1.PlayerData
             AddPoints(msg.Amount);
         }
 
-        public void Reset()
+        // TODO() Rename to non-event function
+        public void ResetData()
         {
             // TODO RESET EVERYTHING
             throw new NotImplementedException();

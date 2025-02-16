@@ -1122,7 +1122,7 @@ GameObject:
   - component: {fileID: 4763845987772266310}
   - component: {fileID: 7684942508142980782}
   - component: {fileID: 4302670786083133375}
-  - component: {fileID: 6062836763484347870}
+  - component: {fileID: 8179896063940809603}
   - component: {fileID: 1642182310382471839}
   m_Layer: 5
   m_Name: MarketListing
@@ -1194,7 +1194,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &6062836763484347870
+--- !u!114 &8179896063940809603
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1203,7 +1203,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8327157911286953465}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a98125502f715b4b83cfb77b434e436, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -1235,6 +1235,9 @@ MonoBehaviour:
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 4302670786083133375}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1642182310382471839
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1251,6 +1254,7 @@ MonoBehaviour:
   price: {fileID: 4115620162186576855}
   buy: {fileID: 8852460987027918344}
   bid: {fileID: 6763809916522896857}
+  selectButton: {fileID: 8179896063940809603}
   cardList: {fileID: 9019215804966928246}
   cardDisplay: {fileID: -8222426205000192782, guid: 7dfe49bc7665d2c4180e9331ff23187b, type: 3}
 --- !u!1 &8601148411218913907

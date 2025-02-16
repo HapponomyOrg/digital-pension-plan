@@ -159,7 +159,7 @@ namespace Version1.NetworkManager
 
         private void NatsClientOnOnEndGame(object sender, EndGameMessage e)
         {
-            PlayerData.PlayerData.Instance.Reset();
+            PlayerData.PlayerData.Instance.ResetData();
         }
 
         private void NatsClientOnOnDonatePoints(object sender, DonatePointsMessage e)

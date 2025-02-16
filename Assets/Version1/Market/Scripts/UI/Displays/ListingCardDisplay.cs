@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Version1.Market.Scripts.UI
+namespace Version1.Market.Scripts.UI.Displays
 {
     public class ListingCardDisplay : MonoBehaviour
     {
@@ -11,7 +11,6 @@ namespace Version1.Market.Scripts.UI
 
         public void Init(int cardId, int amount)
         {
-            Debug.Log($"card: {Utilities.GameManager.Instance.CardLibrary.CardData(cardId)}        Id:{cardId}");
             icon.sprite = Utilities.GameManager.Instance.CardLibrary.CardData(cardId).Icon;
             amountDisplay.text = amount.ToString();
         }
