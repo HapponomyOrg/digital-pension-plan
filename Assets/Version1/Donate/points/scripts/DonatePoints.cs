@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using Version1.Host.Scripts;
@@ -13,24 +12,25 @@ namespace Version1.Donate.points.scripts
     {
         [SerializeField] private TMP_Text ownPointsTMP;
         [SerializeField] private TMP_Text otherPointsTMP;
+        [SerializeField] private TMP_Text descriptionText;
         [SerializeField] private TMP_Text otherNameTMP;
-        [SerializeField] private TMP_Text otherName2TMP;
 
         [SerializeField] private Button increaseButton;
         [SerializeField] private Button decreaseButton;
-        
+
         [SerializeField] private Button donateButton;
 
         private int _pointsToDonate;
 
         private PlayerData.PlayerData _otherPlayer;
-        
+
         private Dictionary<int, playerlistprefab> players;
         [SerializeField] private Transform playerListPrefab;
         [SerializeField] private GameObject playerScrolView;
-        
+
         private int _ownPoints;
-        private int OwnPoints 
+
+        private int OwnPoints
         {
             get => _ownPoints;
             set
@@ -39,9 +39,10 @@ namespace Version1.Donate.points.scripts
                 ownPointsTMP.text = _ownPoints.ToString();
             }
         }
-        
+
         private int _otherPoints;
-        private int OtherPoints 
+
+        private int OtherPoints
         {
             get => _otherPoints;
             set
@@ -53,29 +54,26 @@ namespace Version1.Donate.points.scripts
 
         private string _otherName;
 
-        private string OtherName        {
+        private string OtherName
+        {
             get => _otherName;
             set
             {
                 _otherName = value;
+                descriptionText.text = _otherName;
                 otherNameTMP.text = _otherName;
-                otherName2TMP.text = _otherName;
             }
         }
 
         private void Start()
         {
-            
-            
-            
-            
             // TODO place this heres
             //Nats.NatsClient.C.OnHeartBeat += OnOnHeartBeat;
-            
+
             increaseButton.onClick.RemoveAllListeners();
             decreaseButton.onClick.RemoveAllListeners();
             donateButton.onClick.RemoveAllListeners();
-            
+
             increaseButton.onClick.AddListener(OnIncreases);
             decreaseButton.onClick.AddListener(OnDecrease);
             donateButton.onClick.AddListener(OnDonate);
@@ -86,10 +84,10 @@ namespace Version1.Donate.points.scripts
             if (_pointsToDonate == 0) return;
 
             PlayerData.PlayerData.Instance.Points = OwnPoints;
-            
-            Nats.NatsClient.C.Publish(PlayerData.PlayerData.Instance.LobbyID.ToString(), 
-                new DonatePointsMessage( DateTime.Now.ToString("o"),PlayerData.PlayerData.Instance.LobbyID,PlayerData.PlayerData.Instance.PlayerId,_otherPlayer.PlayerId,_pointsToDonate));
 
+            Nats.NatsClient.C.Publish(PlayerData.PlayerData.Instance.LobbyID.ToString(),
+                new DonatePointsMessage(DateTime.Now.ToString("o"), PlayerData.PlayerData.Instance.LobbyID,
+                    PlayerData.PlayerData.Instance.PlayerId, _otherPlayer.PlayerId, _pointsToDonate));
         }
 
         private void OnDecrease()
@@ -110,16 +108,8 @@ namespace Version1.Donate.points.scripts
 
         private void OnOnHeartBeat(object sender, HeartBeatMessage e)
         {
-            // TODO logic of the listing of players from the host screen
-            // when clicked on record set otherpoints to points of that player
-            // make a donate button with a listener
-            // make a continue button to go to next screen
-            // set the name of the other player somewhere on the screen
-            
-            print("CALLED");
-            
             DateTime parsedDate = DateTime.Parse(e.DateTimeStamp);
-            
+
             if (!players.ContainsKey(e.PlayerID))
             {
                 var player = Instantiate(playerListPrefab, playerScrolView.transform);
@@ -133,7 +123,7 @@ namespace Version1.Donate.points.scripts
                 var button = player.GetComponent<Button>();
                 button.onClick.RemoveAllListeners();
                 button.onClick.AddListener(() => OnPlayerClick(plistprefab));
-                
+
                 players.Add(e.PlayerID, plistprefab);
             }
             else
@@ -145,7 +135,6 @@ namespace Version1.Donate.points.scripts
 
                 if (OtherName != e.PlayerName || OtherPoints == e.Points) return;
                 OtherPoints = e.Points;
-
             }
         }
 
@@ -153,7 +142,9 @@ namespace Version1.Donate.points.scripts
         {
             OtherPoints = player.Points;
             OtherName = player.Name;
-            otherNameTMP.text = OwnPoints !>= 1 ? $"Do you want to donate your point to {OtherName}?" : $"Do you want to donate some of your points to {OtherName}?";
+            descriptionText.text = OwnPoints ! >= 1
+                ? $"Do you want to donate your point to {OtherName}?"
+                : $"Do you want to donate some of your points to {OtherName}?";
         }
 
         private void OnEnable()
@@ -161,17 +152,20 @@ namespace Version1.Donate.points.scripts
             new Nats.NatsClient();
             Nats.NatsClient.C.Connect();
             Nats.NatsClient.C.SubscribeToSubject("0");
-            
+
             Nats.NatsClient.C.OnHeartBeat += OnOnHeartBeat;
-            
-            
+            otherNameTMP.text = "";
+            otherPointsTMP.text = "0";
+
             players = new Dictionary<int, playerlistprefab>();
-            
+
             OwnPoints = PlayerData.PlayerData.Instance.Points;
 
-            otherNameTMP.text = OwnPoints !>= 1 ? "Do you want to donate your point?" : "Do you want to donate your points?";
+            descriptionText.text = OwnPoints ! >= 1
+                ? "Do you want to donate your point?"
+                : "Do you want to donate your points?";
         }
-        
+
         private void Update()
         {
             //TODO misschien is dit in de update een beetje een overkill
@@ -186,12 +180,12 @@ namespace Version1.Donate.points.scripts
                     keysToRemove.Add(player.Key);
                 }
             }
-                
+
             foreach (var key in keysToRemove)
             {
                 players.Remove(key);
             }
-            
+
             //TODO remove this
             Nats.NatsClient.C.HandleMessages();
         }

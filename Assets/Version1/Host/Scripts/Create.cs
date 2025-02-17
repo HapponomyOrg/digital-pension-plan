@@ -9,6 +9,7 @@ namespace Version1.Host.Scripts
 {
     public class Create : MonoBehaviour
     {
+        
         [SerializeField] private GameObject natsError;
         [SerializeField] private TMP_Text natsErrorTMP;
 
@@ -48,14 +49,15 @@ namespace Version1.Host.Scripts
 
             hostInputField.text = SessionData.Instance.HostName;
             seedInputField.text = SessionData.Instance.Seed.ToString();
-            gameModeDropDown.value = SessionData.Instance.InterestMode;
-
+            
             gameCodeInputField.text =
                 $"{SessionData.Instance.LobbyCode.ToString().Substring(0, 3)} {SessionData.Instance.LobbyCode.ToString().Substring(3, 3)} {SessionData.Instance.LobbyCode.ToString().Substring(6, 3)}";
         }
 
         private void AddListeners()
         {
+            gameModeDropDown.onValueChanged.AddListener(OnValueChanged);
+            
             editButton.onClick.AddListener(EditButtonOnClick);
             regenerateButton.onClick.AddListener(RegenerateButtonOnClick);
             createSession.onClick.AddListener(CreateSessionOnClick);
@@ -75,7 +77,6 @@ namespace Version1.Host.Scripts
                 }
             });
 
-            gameModeDropDown.onValueChanged.AddListener((val) => { SessionData.Instance.InterestMode = val; });
 
             gameCodeInputField.onValueChanged.AddListener((val) =>
             {
@@ -98,6 +99,24 @@ namespace Version1.Host.Scripts
             });
         }
 
+        private void OnValueChanged(int val)
+        {
+            switch (val)
+            {
+                case 0:
+                    SessionData.Instance.CurrentMoneySystem = MoneySystems.Sustainable;
+                    break;
+                case 1 :
+                    SessionData.Instance.CurrentMoneySystem = MoneySystems.DebtBased;
+                    break;
+                case 2:
+                    SessionData.Instance.CurrentMoneySystem = MoneySystems.InterestAtIntervals;
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
         private void CreateSessionOnClick()
         {
             Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(), new CreateSessionMessage(
@@ -108,8 +127,7 @@ namespace Version1.Host.Scripts
 
 
             HostScene.SetActive(true);
-
-            // disable this screen
+            
             gameObject.SetActive(false);
         }
 

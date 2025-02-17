@@ -48,13 +48,13 @@ namespace Version1.Host.Scripts
                 if (SessionData.Instance.InbalanceMode)
                 {
                     msg = new StartGameMessage(DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, -1, i,
-                        CalculateBalancePerPlayer(i), handCards, SessionData.Instance.InterestMode);
+                        CalculateBalancePerPlayer(i), handCards, (int)SessionData.Instance.CurrentMoneySystem);
                 }
                 else
                 {
                     msg = new StartGameMessage(DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, -1, i, 6000,
                         handCards,
-                        SessionData.Instance.InterestMode);
+                        (int)SessionData.Instance.CurrentMoneySystem);
                 }
 
                 Nats.NatsHost.C.Publish($"{SessionData.Instance.LobbyCode}.{i}", msg);

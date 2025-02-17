@@ -21,7 +21,7 @@ namespace Version1.Host.Scripts
 
         public string HostName { get; set; }
         public int LobbyCode { get; set; }
-        public int InterestMode { get; set; }
+        public MoneySystems CurrentMoneySystem { get; set; }
         public bool InbalanceMode { get; set; }
         public int Seed { get; set; }
         public int RoundDuration { get; set; }
@@ -30,7 +30,7 @@ namespace Version1.Host.Scripts
         {
             HostName = "";
             LobbyCode = Random.Range(100000000, 999999999);
-            InterestMode = 0;
+            CurrentMoneySystem = MoneySystems.Sustainable;
             InbalanceMode = true;
             Seed = 0;
             RoundDuration = 4;
@@ -52,7 +52,7 @@ namespace Version1.Host.Scripts
         {
             HostName = "";
             LobbyCode = Random.Range(100000000, 999999999);
-            InterestMode = 0;
+            CurrentMoneySystem = MoneySystems.Sustainable;
             InbalanceMode = true;
             Seed = 0;
             RoundDuration = 4;
