@@ -158,6 +158,8 @@ namespace Version1.PlayerData
         public void AddCard(int card)
         {
                 cards.Add(card);
+                cards.Sort();
+
                 OnCardsChange?.Invoke(this, new List<int>(cards));
         }
         
@@ -167,6 +169,8 @@ namespace Version1.PlayerData
             {
                 cards.Add(card);
             }
+            cards.Sort();
+            
             OnCardsChange?.Invoke(this, new List<int>(cards));
         }
 
@@ -174,6 +178,7 @@ namespace Version1.PlayerData
         {
             if (cards.Remove(card))
             {
+                cards.Sort();
                 OnCardsChange?.Invoke(this, new List<int>(cards));
             }
             else
@@ -189,6 +194,7 @@ namespace Version1.PlayerData
             {
                 cards.Remove(card);
             }
+            cards.Sort();
             
             OnCardsChange?.Invoke(this, new List<int>(cards));
         }

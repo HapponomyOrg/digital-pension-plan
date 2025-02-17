@@ -638,8 +638,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 151.25, y: -12.5}
-  m_SizeDelta: {x: 292.5, y: 65}
+  m_AnchoredPosition: {x: 113.75, y: -12.5}
+  m_SizeDelta: {x: 217.5, y: 65}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7812406689336324692
 MonoBehaviour:
@@ -1206,6 +1206,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   price: {fileID: 4115620162186576855}
+  bids: {fileID: 0}
   cardList: {fileID: 9019215804966928246}
   cardDisplay: {fileID: -8222426205000192782, guid: 7dfe49bc7665d2c4180e9331ff23187b, type: 3}
   cancel: {fileID: 6763809916522896857}

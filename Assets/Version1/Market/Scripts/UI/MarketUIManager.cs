@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Version1.Market.Scripts.UI.Displays;
 using Version1.Market.Scripts.UI.Overlays;
@@ -9,15 +10,11 @@ namespace Version1.Market.Scripts.UI
 {
     public class MarketUIManager : MonoBehaviour
     {
-        
-        
-        [SerializeField] private MarketOverlay BuyOverlay;
-        [SerializeField] private MarketOverlay BidOverlay;
-        [SerializeField] private MarketOverlay CancelBidOverlay;
-        
-        [SerializeField] private AddListingOverlay AddListingOverlay;
+
 
         [SerializeField] private Button AddListingButton;
+
+        [SerializeField] private Transform closedMarketPanel;
         
         private Listing[] testListings = 
         {
@@ -58,23 +55,33 @@ namespace Version1.Market.Scripts.UI
             new (2, 2,4000),*/
         };
 
-
+        [Header("Display lists")]
         [SerializeField] private Transform personalListings;
-        [SerializeField] private PersonalListingDisplay personalListingDisplay;
-
         [SerializeField] private Transform marketListings;
-        [SerializeField] private MarketListingDisplay marketListingDisplay;
-
-        [SerializeField] private MarketListingDetailsDisplay marketListingDetailsDisplay;
-        
         [SerializeField] private Transform marketBidListings;
+
+        
+        [Header("Display prefabs")]
+        [SerializeField] private PersonalListingDisplay personalListingDisplay;
+        [SerializeField] private PersonalListingDetailsDisplay personalListingDetailsDisplay;
+        [SerializeField] private MarketListingDisplay marketListingDisplay;
+        [SerializeField] private MarketListingDetailsDisplay marketListingDetailsDisplay;
         [SerializeField] private MarketBidListingDisplay marketBidListingDisplay;
 
         //private readonly Dictionary<Guid, IListingDisplay> listingDisplays = new Dictionary<Guid, IListingDisplay>();
 
-        private void Start()
+        
+        [Header("Overlays")]
+        [SerializeField] private MarketOverlay buyOverlay;
+        [SerializeField] private MarketOverlay bidOverlay;
+        [SerializeField] private MarketOverlay cancelBidOverlay;
+        
+        [SerializeField] private AddListingOverlay addListingOverlay;
+        [SerializeField] private CancelListingOverlay cancelListingOverlay;
+        
+        public void Init()
         {
-            AddListingButton.onClick.AddListener(() => AddListingOverlay.Open());
+            AddListingButton.onClick.AddListener(() => addListingOverlay.Open());
             
             Utilities.GameManager.Instance.MarketManager.MarketDataChanged += (sender, args) => { GenerateDisplays(); };
 
@@ -93,10 +100,15 @@ namespace Version1.Market.Scripts.UI
             
             GenerateDisplays();
         }
-
-        public void Init()
+        
+        public void CloseMarket()
         {
-            
+            closedMarketPanel.gameObject.SetActive(true);
+        }
+
+        public void OpenMarket()
+        {
+            closedMarketPanel.gameObject.SetActive(false);
         }
 
         // TODO Only change display that changed instead of regenerating everything
@@ -130,14 +142,14 @@ namespace Version1.Market.Scripts.UI
             obj.Init(listing,
                 new Dictionary<ListingDisplayAction, Action>
                 {
-                    { ListingDisplayAction.Buy, () => { Debug.Log("Buy"); BuyOverlay.Open(listing); } },
-                    { ListingDisplayAction.Bid, () => { Debug.Log("Bid"); BidOverlay.Open(listing); } },
+                    { ListingDisplayAction.Buy, () => { Debug.Log("Buy"); buyOverlay.Open(listing); } },
+                    { ListingDisplayAction.Bid, () => { Debug.Log("Bid"); bidOverlay.Open(listing); } },
                     { ListingDisplayAction.Select, () => 
                         marketListingDetailsDisplay.Init(listing, 
                             new Dictionary<ListingDisplayAction, Action>
                             {
-                                { ListingDisplayAction.Buy, () => { Debug.Log("Buy"); BuyOverlay.Open(listing); } },
-                                { ListingDisplayAction.Bid, () => { Debug.Log("Bid"); BidOverlay.Open(listing); } }
+                                { ListingDisplayAction.Buy, () => { Debug.Log("Buy"); buyOverlay.Open(listing); } },
+                                { ListingDisplayAction.Bid, () => { Debug.Log("Bid"); bidOverlay.Open(listing); } }
                             })
                     }
                 });
@@ -163,7 +175,7 @@ namespace Version1.Market.Scripts.UI
                         ListingDisplayAction.Cancel, () =>
                         {
                             Debug.Log($"Cancel bid {listing.ListingId}");
-                            CancelBidOverlay.Open(listing);
+                            cancelBidOverlay.Open(listing);
                         }
                     },
                     { ListingDisplayAction.Select, () => { Debug.Log($"Selected bid: {listing.ListingId}"); } }
@@ -187,9 +199,16 @@ namespace Version1.Market.Scripts.UI
             obj.Init(listing,
                 new Dictionary<ListingDisplayAction, Action>
                 {
-                    { ListingDisplayAction.Cancel, () => { Debug.Log("Cancel personal listing"); } },
-                    { ListingDisplayAction.Select, () => { Debug.Log("Select personal listing"); } }
+                    { ListingDisplayAction.Cancel, () => { Debug.Log("Cancel personal listing"); cancelListingOverlay.Open(listing); } },
+                    { ListingDisplayAction.Select, () => { personalListingDetailsDisplay.Init(listing,
+                            new Dictionary<ListingDisplayAction, Action>
+                            {
+                                { ListingDisplayAction.Cancel, () => { cancelListingOverlay.Open(listing); } }
+                            });
+                    } }
                 });
         }
+
+        
     }
 }

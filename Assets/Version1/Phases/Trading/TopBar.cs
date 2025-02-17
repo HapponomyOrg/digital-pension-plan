@@ -12,7 +12,7 @@ namespace Version1.Phases.Trading
 
         [SerializeField] private GameObject donateOverlay;
         
-        private void Start()
+        public void Init()
         {
             var customCulture = new CultureInfo("en-US")
             {

@@ -10,7 +10,8 @@ namespace Version1.Phases.Trading
         [SerializeField] private Transform cardList;
         [SerializeField] private DetailsCardDisplay cardDisplay;
         
-        private void Start()
+        
+        public void Init()
         {
             GenerateCardDisplays();
 

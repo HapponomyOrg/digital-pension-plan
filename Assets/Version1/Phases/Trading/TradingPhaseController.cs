@@ -9,25 +9,43 @@ namespace Version1.Phases.Trading
         [SerializeField] private Timer timer;
         [SerializeField] private MarketUIManager market;
         [SerializeField] private CardBar cardBar;
+        [SerializeField] private TopBar topBar;
+
+        private bool started;
         
-        
-        
-        private void Awake()
+        private void Start()
         {
             timer.Init(300);
             market.Init();
-            
+            cardBar.Init();
+            topBar.Init();
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyUp(KeyCode.P) && !started)
+            {
+                started = true;
+                StartPhase();
+            }
+
+            if (Input.GetKeyUp(KeyCode.S) && started)
+            {
+                started = false;
+                StopPhase();
+            }
         }
 
         private void StartPhase()
         {
             timer.StartTimer();
-            
+            market.OpenMarket();
         }
 
         private void StopPhase()
         {
             timer.StopTimer();
+            market.CloseMarket();
         }
     }
 }

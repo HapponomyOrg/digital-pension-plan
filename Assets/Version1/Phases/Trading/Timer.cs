@@ -15,6 +15,7 @@ namespace Version1.Phases.Trading
         public void Init(int seconds)
         {
             timeLeftInSeconds = seconds;
+            DisplayTimer();
         }
 
         public void StartTimer()

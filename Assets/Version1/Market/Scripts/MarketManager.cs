@@ -42,6 +42,18 @@ namespace Version1.Market.Scripts
             // TODO() networking
         }
 
+        public void CancelListing(Listing listing)
+        {
+            if (!listings.ContainsKey(listing.ListingId))
+                return;
+            
+            listings.Remove(listing.ListingId);
+            PlayerData.PlayerData.Instance.AddCards(listing.Cards);
+            MarketDataChanged?.Invoke(this, EventArgs.Empty);
+
+            // TODO() networking
+        }
+        
         private void RemoveListing(Guid listingId)
         {
             if (!listings.ContainsKey(listingId))
@@ -107,7 +119,18 @@ namespace Version1.Market.Scripts
             MarketDataChanged?.Invoke(this, EventArgs.Empty);
             // TODO() Add networking
         }
-        
+
+        // TODO() Invoke when receiving buy message
+        public void SellListing(Guid listingId)
+        {
+            var listing = listings[listingId];
+            
+            PlayerData.PlayerData.Instance.Balance += listing.Price;
+
+            RemoveListing(listingId);
+
+            MarketDataChanged?.Invoke(this, EventArgs.Empty);
+        }
         
         public Listing[] PersonalListings(int playerId)
         {
@@ -166,5 +189,6 @@ namespace Version1.Market.Scripts
         
             return ls.ToArray();
         }*/
+        
     }
 }

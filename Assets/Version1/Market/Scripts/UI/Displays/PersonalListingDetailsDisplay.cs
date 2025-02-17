@@ -1,28 +1,32 @@
+using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Version1.Market.Scripts.UI.Displays;
 
-namespace Version1.Market.Scripts.UI.Overlays
+namespace Version1.Market.Scripts.UI.Displays
 {
-    public class CancelListingOverlay : MarketOverlay
+    public class PersonalListingDetailsDisplay : MonoBehaviour, IListingDisplay
     {
+        [SerializeField] private TMP_Text price;
+        [SerializeField] private TMP_Text bids;
         
-        [SerializeField] private Button confirm;
+        [SerializeField] private Button cancel;
 
         [SerializeField] private Transform cardList;
         [SerializeField] private DetailsCardDisplay cardDisplay;
         
-        public override void Open(Listing listing)
+        public void Init(Listing l, Dictionary<ListingDisplayAction, Action> displayActions)
         {
-            gameObject.SetActive(true);
-
-            confirm.onClick.RemoveAllListeners();
-            confirm.onClick.AddListener(() => CancelListing(listing));
+            price.text = l.Price.ToString();
+            bids.text = l.BidHistories.Count.ToString();
             
-            GenerateCardDisplays(listing);
-        }
+            GenerateCardDisplays(l);
 
+            cancel.onClick.RemoveAllListeners();
+            cancel.onClick.AddListener(displayActions[ListingDisplayAction.Cancel].Invoke);
+        }
+        
         private void GenerateCardDisplays(Listing listing)
         {
             foreach (Transform child in cardList)
@@ -44,15 +48,11 @@ namespace Version1.Market.Scripts.UI.Overlays
             }
         }
 
-        private void CancelListing(Listing listing)
-        {
-            Utilities.GameManager.Instance.MarketManager.CancelListing(listing);
-            Close();
-        }
+        public GameObject GameObject() => gameObject;
         
-        public override void Close()
+        public void UpdateDisplay()
         {
-            gameObject.SetActive(false);
+            
         }
     }
 }

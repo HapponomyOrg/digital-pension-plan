@@ -86,6 +86,9 @@ namespace Version1.Market.Scripts.UI.Overlays
 
         private void GenerateDisplays()
         {
+            remainingCards.Sort();
+            selectedCards.Sort();
+        
             GenerateCardDisplays(remainingCardList, true);
             GenerateCardDisplays(selectedCardList, false);
         }
