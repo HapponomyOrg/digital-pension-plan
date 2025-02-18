@@ -1,9 +1,13 @@
+using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using Version1.Nats.Messages.Host;
 using Version1.Phases;
 using Version1.Phases.BalanceModification;
 using Version1.Phases.Interest;
 using Version1.Phases.Trading;
 using MarketManager = Version1.Market.Scripts.MarketManager;
+using NatsHost = Version1.Nats.NatsHost;
 
 
 namespace Version1.Utilities
@@ -16,11 +20,8 @@ namespace Version1.Utilities
 
         public Cards.Scripts.CardLibrary CardLibrary { get; }
         
-        
         public MarketManager MarketManager { get; }
-
-
-        private bool isClient = true;
+        
         
         private readonly Phase[] debtBasedPhases =
         {
@@ -50,15 +51,17 @@ namespace Version1.Utilities
             // Pension Calculation
         };
 
-        private readonly Phase[] testPhases =
+        private readonly string[] testPhases =
         {
-            new TradingPhase(),
-            new InterestPhase(),
-            new BalanceModificationPhase(),
-            new TradingPhase()
+            "MarketScene",
+            "Loading",
+            "MarketScene",
+            "Loading",
+            "MarketScene",
+            "Loading",
         };
 
-        private Phase[] phases;
+        private string[] phases;
 
         private int currentPhase;
 
@@ -68,48 +71,59 @@ namespace Version1.Utilities
             CardLibrary.FillCardList();
             phases = testPhases;
 
-            if (isClient)
-            {
-                new Nats.NatsClient();
-            }
+            new Nats.NatsClient();
+            
 
             MarketManager = new MarketManager();
+
+            Nats.NatsClient.C.OnStartGame += (sender, message) => { StartGame(); };
+            Nats.NatsClient.C.OnStartRound += (sender, message) => { LoadPhase(message.RoundNumber); };
         }
         
         public void StartGame()
         {
-            
+            LoadPhase(0);
         }
 
-        public void InitPhase(int p)
+        private void LoadPhase(int index)
         {
-            if (p >= phases.Length)
-                return;
-            
-            var phase = phases[p];
-            currentPhase = p;
-            
-            
-            phase.InitFinished += (sender, e) =>
-            {
-                Debug.Log("Init finished");
-                StartPhase();
-            };
-            phase.Init();
-            
+            SceneManager.LoadScene(phases[index]);
         }
-
-        public void StartPhase()
+        
+        private void LoadNextPhase()
         {
-            if (currentPhase >= phases.Length)
-                return;
-            
-            if (phases[currentPhase].InitComplete)
-                phases[currentPhase].Start();
-            else
-                phases[currentPhase].InitFinished += (sender, e) => phases[currentPhase].Start();
-
-
+            SceneManager.LoadScene(phases[++currentPhase]);
         }
+
+        // public void InitPhase(int p)
+        // {
+        //     if (p >= phases.Length)
+        //         return;
+        //     
+        //     var phase = phases[p];
+        //     currentPhase = p;
+        //     
+        //     
+        //     phase.InitFinished += (sender, e) =>
+        //     {
+        //         Debug.Log("Init finished");
+        //         StartPhase();
+        //     };
+        //     phase.Init();
+        //     
+        // }
+        //
+        // public void StartPhase()
+        // {
+        //     if (currentPhase >= phases.Length)
+        //         return;
+        //     
+        //     if (phases[currentPhase].InitComplete)
+        //         phases[currentPhase].Start();
+        //     else
+        //         phases[currentPhase].InitFinished += (sender, e) => phases[currentPhase].Start();
+        //
+        //
+        // }
     }
 }

@@ -59,8 +59,6 @@ namespace Version1.Market.Scripts
             PlayerData.PlayerData.Instance.RemoveCards(listing.Cards);
             listings.Add(listingId, listing);
             MarketDataChanged?.Invoke(this, EventArgs.Empty);
-            
-            // TODO() networking
         }
         
         public void AddListing(int listerId, DateTime timestamp, int price, int[] cards)
@@ -79,6 +77,10 @@ namespace Version1.Market.Scripts
             MarketDataChanged?.Invoke(this, EventArgs.Empty);
             
             // TODO() networking
+            var data = PlayerData.PlayerData.Instance;
+            
+            var message = new ListCardsmessage(DateTime.Now.ToString("o"), data.LobbyID, listerId, data.PlayerName, listingId.ToString(), cards, price);
+            Nats.NatsClient.C.Publish(data.LobbyID.ToString(), message);
         }
         
         // Test method
@@ -89,8 +91,6 @@ namespace Version1.Market.Scripts
             
             listings.Add(listing.ListingId, listing);
             MarketDataChanged?.Invoke(this, EventArgs.Empty);
-            
-            // TODO() networking
         }
 
         public void CancelListing(Listing listing)
@@ -103,6 +103,15 @@ namespace Version1.Market.Scripts
             MarketDataChanged?.Invoke(this, EventArgs.Empty);
 
             // TODO() networking
+            var data = PlayerData.PlayerData.Instance;
+            
+            var message = new CancelListingMessage(
+                DateTime.Now.ToString("o"), 
+                data.LobbyID,
+                data.PlayerId,
+                listing.ListingId.ToString()
+                );
+            Nats.NatsClient.C.Publish(data.LobbyID.ToString(), message);        
         }
         
         private void RemoveListing(Guid listingId)
@@ -112,7 +121,6 @@ namespace Version1.Market.Scripts
 
             listings.Remove(listingId);
             MarketDataChanged?.Invoke(this, EventArgs.Empty);
-            // TODO() networking
         }
 
         public void AddBidToListing(Listing listing, int buyer, int offeredPrice, bool listerBid = false)
@@ -168,10 +176,19 @@ namespace Version1.Market.Scripts
             RemoveListing(listingId);
 
             MarketDataChanged?.Invoke(this, EventArgs.Empty);
-            // TODO() Add networking
+            
+            // TODO() networking
+            var data = PlayerData.PlayerData.Instance;
+            
+            var message = new BuyCardsRequestMessage(
+                DateTime.Now.ToString("o"), 
+                data.LobbyID,
+                data.PlayerId,
+                listingId.ToString()
+            );
+            Nats.NatsClient.C.Publish(data.LobbyID.ToString(), message);       
         }
 
-        // TODO() Invoke when receiving buy message
         public void SellListing(Guid listingId)
         {
             var listing = listings[listingId];

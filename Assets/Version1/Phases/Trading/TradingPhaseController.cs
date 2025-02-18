@@ -18,13 +18,12 @@ namespace Version1.Phases.Trading
             var gm = Utilities.GameManager.Instance;
 
             
-            Nats.NatsClient.C.OnStartRound += (sender, message) => { StartPhase(); };
-            Nats.NatsClient.C.OnStopRound += (sender, message) => { StopPhase(); };
-            
             timer.Init(300);
             market.Init();
             cardBar.Init();
             topBar.Init();
+            
+            StartPhase();
         }
 
         private void StartPhase()

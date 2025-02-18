@@ -33,7 +33,7 @@ namespace Version1
 
         public void LoadNextPhase()
         {
-            Utilities.GameManager.Instance.InitPhase(phaseCount++);
+            // Utilities.GameManager.Instance.InitPhase(phaseCount++);
         }
     }
 }
