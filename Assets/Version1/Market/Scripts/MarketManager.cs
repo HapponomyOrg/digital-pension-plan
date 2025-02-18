@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Version1.Nats.Messages.Client;
 
 namespace Version1.Market.Scripts
 {
@@ -11,6 +12,56 @@ namespace Version1.Market.Scripts
         private readonly Dictionary<Guid, Listing> listings = new();
 
         public event EventHandler MarketDataChanged;
+
+        public MarketManager()
+        {
+            Nats.NatsClient.C.OnBuyCards += (sender, message) => { HandleBuyCardsMessage(message); };
+            Nats.NatsClient.C.OnCancelListing += (sender, message) => { HandleCancelListingMessage(message); };
+            Nats.NatsClient.C.OnListCards += (sender, message) => { HandleAddListingMessage(message); };
+
+        }
+
+        private void HandleBuyCardsMessage(BuyCardsRequestMessage message)
+        {
+            var guid = Guid.Parse(message.AuctionID);
+            var listing = listings[guid];
+            
+            if (listing.Lister == PlayerData.PlayerData.Instance.PlayerId)
+                SellListing(guid);
+            
+            RemoveListing(guid);
+        }
+
+        private void HandleCancelListingMessage(CancelListingMessage message)
+        {
+            var guid = Guid.Parse(message.AuctionID);
+            
+            RemoveListing(guid);
+        }
+
+        private void HandleAddListingMessage(ListCardsmessage message)
+        {
+            var guid = Guid.Parse(message.AuctionID);
+            
+            AddListing(guid, message.PlayerID, DateTime.Parse(message.DateTimeStamp),  message.Amount, message.Cards);
+        }
+        
+        private void AddListing(Guid listingId, int listerId, DateTime timestamp, int price, int[] cards)
+        {
+            var listing = new Listing(listingId, listerId, timestamp, price, cards);
+
+            if (listings.ContainsKey(listingId))
+            {
+                Debug.Log("guid already in market");
+                return;
+            }
+
+            PlayerData.PlayerData.Instance.RemoveCards(listing.Cards);
+            listings.Add(listingId, listing);
+            MarketDataChanged?.Invoke(this, EventArgs.Empty);
+            
+            // TODO() networking
+        }
         
         public void AddListing(int listerId, DateTime timestamp, int price, int[] cards)
         {

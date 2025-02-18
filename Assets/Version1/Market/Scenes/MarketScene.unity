@@ -5158,7 +5158,7 @@ MonoBehaviour:
   playerId: 0
   dept: 0
   interestRemainder: 0
-  cards: 010000000200000001000000060000000c000000
+  cards: 010000000200000001000000060000000c0000000c0000000c0000000c0000000c000000
   allPoints: 
   currentMoneySystem: 0
   balance: 47000

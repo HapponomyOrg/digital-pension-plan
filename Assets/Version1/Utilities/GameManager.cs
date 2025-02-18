@@ -16,8 +16,11 @@ namespace Version1.Utilities
 
         public Cards.Scripts.CardLibrary CardLibrary { get; }
         
-        public MarketManager MarketManager { get; } = new();
+        
+        public MarketManager MarketManager { get; }
 
+
+        private bool isClient = true;
         
         private readonly Phase[] debtBasedPhases =
         {
@@ -64,6 +67,13 @@ namespace Version1.Utilities
             CardLibrary = Resources.Load<Cards.Scripts.CardLibrary>("CardList");
             CardLibrary.FillCardList();
             phases = testPhases;
+
+            if (isClient)
+            {
+                new Nats.NatsClient();
+            }
+
+            MarketManager = new MarketManager();
         }
         
         public void StartGame()

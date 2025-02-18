@@ -15,25 +15,16 @@ namespace Version1.Phases.Trading
         
         private void Start()
         {
+            var gm = Utilities.GameManager.Instance;
+
+            
+            Nats.NatsClient.C.OnStartRound += (sender, message) => { StartPhase(); };
+            Nats.NatsClient.C.OnStopRound += (sender, message) => { StopPhase(); };
+            
             timer.Init(300);
             market.Init();
             cardBar.Init();
             topBar.Init();
-        }
-
-        private void Update()
-        {
-            if (Input.GetKeyUp(KeyCode.P) && !started)
-            {
-                started = true;
-                StartPhase();
-            }
-
-            if (Input.GetKeyUp(KeyCode.S) && started)
-            {
-                started = false;
-                StopPhase();
-            }
         }
 
         private void StartPhase()
