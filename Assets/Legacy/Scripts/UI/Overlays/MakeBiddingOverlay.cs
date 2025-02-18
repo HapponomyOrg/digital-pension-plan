@@ -1,9 +1,10 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI.Overlays
-{
+{[Obsolete]
     public class MakeBiddingOverlay : MonoBehaviour
     {
         [SerializeField] private TMP_Text responseMessageDisplay;

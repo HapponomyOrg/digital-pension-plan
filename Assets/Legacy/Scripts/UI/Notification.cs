@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace UI
-{
+{[Obsolete]
     public class Notification
     {
         public string Title { get; }

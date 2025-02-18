@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 
 namespace NATS
 {
+    [Obsolete]
     // TODO() implement this message in the donate screen
     public class DonateInfoMessage : BaseMessage
     {

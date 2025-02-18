@@ -7,6 +7,7 @@ using Version1.Nats.Messages.Host;
 
 namespace Version1.PlayerData
 {
+    // TODO when start looking at the money system set the debt to the balance.
     public class PlayerData : MonoBehaviour
     {
         // Singleton instance
@@ -30,7 +31,7 @@ namespace Version1.PlayerData
         [SerializeField] private int age = 0;
         [SerializeField] private string gender = "Unknown";
         [SerializeField] private int playerId = 456;
-        [SerializeField] private int dept = 0;
+        [FormerlySerializedAs("dept")] [SerializeField] private int debt = 0;
         [SerializeField] private int interestRemainder = 0;
         [SerializeField] private List<int> cards = new List<int>();
         [SerializeField] private List<int> allPoints = new List<int>();
@@ -85,10 +86,10 @@ namespace Version1.PlayerData
             set => playerId = value;
         }
 
-        public int Dept
+        public int Debt
         {
-            get => dept;
-            set => dept = value;
+            get => debt;
+            set => debt = value;
         }
         
         public int InterestRemainder

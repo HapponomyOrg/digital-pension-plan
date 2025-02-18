@@ -5,7 +5,7 @@ using NATS;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
+[Obsolete]
 public class JoinSession : MonoBehaviour
 {
     [SerializeField] Button Button;

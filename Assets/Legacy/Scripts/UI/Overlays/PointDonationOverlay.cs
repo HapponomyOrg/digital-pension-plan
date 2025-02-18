@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
-
+[Obsolete]
 public class PointDonationoverlay : MonoBehaviour
 {
     [SerializeField] private TMP_Text points;

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI.Overlays
-{
+{[Obsolete]
     public class CounterOfferOverlay : MonoBehaviour
     {
         [SerializeField] private Image cardDisplayPrefab;

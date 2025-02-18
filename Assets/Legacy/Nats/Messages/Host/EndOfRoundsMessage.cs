@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 
 namespace NATS
 {
+    [Obsolete]
     public class EndOfRoundsMessage : BaseMessage
     {
         public EndOfRoundsMessage(string dateTime, int lobbyID, int playerID) : base(dateTime,

@@ -2,7 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
+[Obsolete]
 public class IntrestsFunctions : MonoBehaviour
 {
     public GameObject simple, complex;

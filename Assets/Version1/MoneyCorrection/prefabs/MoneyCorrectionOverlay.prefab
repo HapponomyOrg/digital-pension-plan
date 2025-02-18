@@ -109,8 +109,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -277}
-  m_SizeDelta: {x: 2200, y: 259.6073}
+  m_AnchoredPosition: {x: 0, y: -525.8273}
+  m_SizeDelta: {x: 2200, y: 1517.6759}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8148818637053916492
 CanvasRenderer:
@@ -140,7 +140,17 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum '
+  m_text: 'You have a debt of {debt} with an interest rate of 10%
+
+    There was
+    also a remaining interest of last round which is {amount}
+
+
+    {amount + amount
+    } = {amount}
+
+
+    {Amount} will be taken from your balance'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 345914b607ea30541a1fd769b254f581, type: 2}
   m_sharedMaterial: {fileID: -185881325436670113, guid: 345914b607ea30541a1fd769b254f581, type: 2}
@@ -488,15 +498,14 @@ GameObject:
   - component: {fileID: 5702108641458191508}
   - component: {fileID: 7344586701878121652}
   - component: {fileID: 7767971999924488401}
-  - component: {fileID: 3205149834637127300}
   - component: {fileID: 3627938575213605658}
   m_Layer: 5
-  m_Name: PayInterestOverlay
+  m_Name: MoneyCorrectionOverlay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5702108641458191508
 RectTransform:
   m_ObjectHideFlags: 0
@@ -558,21 +567,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &3205149834637127300
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7932245887794574821}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e75d4f2453a444294865f4262b044c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  confirmButton: {fileID: 262557425077486629}
-  donationAmountDisplay: {fileID: 0}
-  priceStep: 1000
 --- !u!114 &3627938575213605658
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -585,7 +579,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f847045b11f1cd74ca52e57af025f5a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Text: {fileID: 0}
+  Text: {fileID: 5544127782958252358}
 --- !u!1 &8545265687884070485
 GameObject:
   m_ObjectHideFlags: 0

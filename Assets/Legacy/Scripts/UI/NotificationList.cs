@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace UI
-{
+{[Obsolete]
     public class NotificationList : MonoBehaviour
     {
         [SerializeField] private NotificationDisplay NotificationDisplayPrefab;

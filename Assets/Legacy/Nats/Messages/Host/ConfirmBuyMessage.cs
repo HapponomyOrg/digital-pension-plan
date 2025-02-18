@@ -1,5 +1,8 @@
+using System;
+
 namespace NATS
 {
+    [Obsolete]
     public class ConfirmBuyMessage : BaseMessage
     {
         public string AuctionID;

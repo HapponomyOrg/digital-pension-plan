@@ -1,10 +1,11 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace UI
-{
+{[Obsolete]
     public class RespondToBiddingOverlay : MonoBehaviour
     {
         [SerializeField] private TMP_Text responseMessageDisplay;

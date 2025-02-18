@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace UI
-{
+{[Obsolete]
     public class UICard : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler,
         IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler, IPointerDownHandler
     {

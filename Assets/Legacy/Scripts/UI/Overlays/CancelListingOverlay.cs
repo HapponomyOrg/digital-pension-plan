@@ -1,9 +1,10 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI
-{
+{[Obsolete]
     public class CancelListingOverlay : MonoBehaviour
     {
         [SerializeField] private Button confirmButton;

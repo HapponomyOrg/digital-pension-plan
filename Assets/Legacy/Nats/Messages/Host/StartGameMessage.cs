@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 
 namespace NATS
 {
+    [Obsolete]
     public class StartGameMessage : BaseMessage
     {
         public int OtherPlayerID;

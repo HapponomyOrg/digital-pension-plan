@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Version1.Nats.Messages.Client;
 using Version1.Nats.Messages.Host;
@@ -51,8 +50,7 @@ namespace Version1.Host.Scripts
         [SerializeField] private TMP_Text timeLeftTMP;
         [SerializeField] private TMP_Text phaseTypeTMP;
         [SerializeField] private TMP_Text nextPhaseTMP;
-
-
+        
         private void Start()
         {
             abortSession.onClick.AddListener(AbortSessionOnClick);
@@ -78,7 +76,7 @@ namespace Version1.Host.Scripts
             playerScrolView = GameObject.Find("PlayerScrollView");
 
             hostNameTMP.text = SessionData.Instance.HostName;
-            gameModeTMP.text = SessionData.Instance.InterestMode.ToString(); //TODO enum type oid
+            gameModeTMP.text = SessionData.Instance.CurrentMoneySystem.ToString();
             seedTMP.text = SessionData.Instance.Seed.ToString();
             gameCodeTMP.text =
                 $"{SessionData.Instance.LobbyCode.ToString().Substring(0, 3)} {SessionData.Instance.LobbyCode.ToString().Substring(3, 3)} {SessionData.Instance.LobbyCode.ToString().Substring(6, 3)}";

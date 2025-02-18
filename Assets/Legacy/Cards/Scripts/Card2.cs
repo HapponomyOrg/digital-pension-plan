@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 
+[Obsolete]
 [CreateAssetMenu(fileName = "Card", menuName = "Cards/Card")]
 public class Card2 : ScriptableObject
 {

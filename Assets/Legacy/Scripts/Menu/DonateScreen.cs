@@ -7,7 +7,7 @@ using TMPro;
 using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 using UnityEngine.UI;
-
+[Obsolete]
 public class DonateScreen : MonoBehaviour
 {
     [SerializeField] private TMP_Text clientPointsDisplay;

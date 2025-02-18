@@ -8,7 +8,7 @@ using UI.Overlays;
 using UnityEngine;
 
 namespace UI
-{
+{[Obsolete]
     public class MarketManager : MonoBehaviour
     {
         public static MarketManager Instance { get; private set; }

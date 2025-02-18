@@ -8,7 +8,7 @@ using NATS;
 using TMPro;
 
 namespace Client
-{
+{[Obsolete]
     public class CreatePlayer : MonoBehaviour
     {
         public string playerName = "", ageString = "", codeString = "";

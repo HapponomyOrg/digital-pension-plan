@@ -5,6 +5,7 @@ using System;
 
 namespace NATS
 {
+    [Obsolete]
     public abstract class BaseMessage
     {
         public string DateTimeStamp;

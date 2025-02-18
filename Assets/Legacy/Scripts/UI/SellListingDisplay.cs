@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace UI
-{
+{[Obsolete]
     public class SellListingDisplay : MonoBehaviour
     {
         [SerializeField] private Button cancelButton;

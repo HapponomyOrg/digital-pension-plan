@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 
 namespace NATS
 {
+    [Obsolete]
     public class EndGameMessage : BaseMessage
     {
         public EndGameMessage(string dateTime, int lobbyID, int playerID) : base(dateTime, MessageSubject.EndGame, lobbyID, playerID)

@@ -189,6 +189,7 @@ using System.Collections.Generic;
 
 namespace NATS
 {
+    [Obsolete]
     public abstract class Connection
     {
         private const string DefaultNATSURL = "nats://ec2-13-60-182-44.eu-north-1.compute.amazonaws.com:4222";

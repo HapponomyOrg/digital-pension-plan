@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI
-{
+{[Obsolete]
     public class NotificationDisplay : MonoBehaviour
     {
         [SerializeField] private Image background;
