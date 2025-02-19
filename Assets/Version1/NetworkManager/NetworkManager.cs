@@ -236,10 +236,5 @@ namespace Version1.NetworkManager
         {
             throw new NotImplementedException();
         }*/
-
-        private void Update()
-        {
-            _natsClient.HandleMessages();
-        }
     }
 }
