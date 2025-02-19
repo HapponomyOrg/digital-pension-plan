@@ -85,15 +85,15 @@ namespace Version1.Market.Scripts.UI
             
             Utilities.GameManager.Instance.MarketManager.MarketDataChanged += (sender, args) => { GenerateDisplays(); };
 
-            foreach (var listing in testListings)
+            /*foreach (var listing in testListings)
             {
                 Utilities.GameManager.Instance.MarketManager.AddListing(listing);
                 
                 /*foreach (var bid in testBids)
                 {
                     Utilities.GameManager.Instance.MarketManager.AddBidToListing(listing, bid.Item2, bid.Item3, bid.Item1 == 0);
-                }*/
-            }
+                }#1#
+            }*/
             //
             // Utilities.GameManager.Instance.MarketManager.AddBidToListing(testListings[2], 0, 1234);
             // Utilities.GameManager.Instance.MarketManager.AddBidToListing(testListings[3], 0, 1234);
@@ -115,14 +115,26 @@ namespace Version1.Market.Scripts.UI
         private void GenerateDisplays()
         {
             foreach (Transform child in marketListings)
+            {
+                if (child == null)
+                    continue;
                 Destroy(child.gameObject);
-            
+            }
+
             foreach (Transform child in marketBidListings)
+            {
+                if (child == null)
+                    continue;
                 Destroy(child.gameObject);
-            
+            }
+
             foreach (Transform child in personalListings)
+            {
+                if (child == null)
+                    continue;
                 Destroy(child.gameObject);
-            
+            }
+
             GenerateMarketListings();
             GenerateMarketBidListings();
             GeneratePersonalListings();

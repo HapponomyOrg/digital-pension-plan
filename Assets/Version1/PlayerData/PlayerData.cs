@@ -58,6 +58,7 @@ namespace Version1.PlayerData
                 Destroy(this);
                 return;
             }
+            DontDestroyOnLoad(gameObject);
             _instance = this;
         }
 
@@ -132,6 +133,7 @@ namespace Version1.PlayerData
         public void StartGame(StartGameMessage msg)
         {
             //reset
+            Debug.Log("Cards received");
             
             playerId = msg.OtherPlayerID;
             

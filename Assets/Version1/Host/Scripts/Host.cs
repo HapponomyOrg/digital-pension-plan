@@ -32,8 +32,7 @@ namespace Version1.Host.Scripts
             "EndScene"
         };
         
-        [SerializeField] private Cards.Scripts.CardLibrary cardLibrary;
-        private CardManager _cardManager;
+        [SerializeField] private CardManager _cardManager;
         
         [SerializeField] private GameObject natsError;
         [SerializeField] private TMP_Text natsErrorTMP;
@@ -84,9 +83,11 @@ namespace Version1.Host.Scripts
             Nats.NatsHost.C.OnHeartBeat += OnOnHeartBeat;
             Nats.NatsHost.C.OnJoinrequest += OnOnJoinrequest;
             Nats.NatsHost.C.MessageLog += OnMessageLog;
+            
+            Init();
         }
 
-        private void OnEnable()
+        private void Init()
         {
             activities = new List<GameObject>();
 
@@ -126,7 +127,8 @@ namespace Version1.Host.Scripts
         {
             foreach (var record in players)
             {
-                if (record.Value.Name == msg.PlayerName)
+                // TODO() Fix player records
+                /*if (record.Value.Name == msg.PlayerName)
                 {
                     RejectedMessage rejectedMessage = new RejectedMessage(DateTime.Now.ToString("o"), msg.LobbyID,
                         -1, msg.PlayerName, "PlayerNameAlreadyTaken",
@@ -134,7 +136,7 @@ namespace Version1.Host.Scripts
                     
                     Nats.NatsHost.C.Publish(msg.LobbyID.ToString(),rejectedMessage);
                     return;
-                }
+                }*/
             }
             
             Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(), new ConfirmJoinMessage(
@@ -145,7 +147,7 @@ namespace Version1.Host.Scripts
                 msg.Age,
                 msg.Gender));
 
-            players.Add(playerId, new playerlistprefab(msg.PlayerName, playerId, 0, DateTime.Now));
+            players.Add(playerId, null);
         }
 
         private void OnOnHeartBeat(object sender, HeartBeatMessage e)
@@ -167,10 +169,10 @@ namespace Version1.Host.Scripts
             }
             else
             {
-                players[e.PlayerID].LastPing = parsedDate;
-                players[e.PlayerID].Name = e.PlayerName;
-                players[e.PlayerID].Balance = e.Balance;
-                players[e.PlayerID].Points = e.Points;
+                // players[e.PlayerID].LastPing = parsedDate;
+                // players[e.PlayerID].Name = e.PlayerName;
+                // players[e.PlayerID].Balance = e.Balance;
+                // players[e.PlayerID].Points = e.Points;
             }
         }
 
@@ -189,8 +191,6 @@ namespace Version1.Host.Scripts
 
         private void StartSessionOnClick()
         {
-            _cardManager = new CardManager(cardLibrary);
-            
             _cardManager.StartGame(players.Count);
         }
 
@@ -242,14 +242,14 @@ namespace Version1.Host.Scripts
 
                 var keysToRemove = new List<int>();
 
-                foreach (var player in players)
-                {
-                    if (DateTime.Now - TimeSpan.FromSeconds(5) > player.Value.LastPing)
-                    {
-                        Destroy(player.Value.gameObject);
-                        keysToRemove.Add(player.Key);
-                    }
-                }
+                // foreach (var player in players)
+                // {
+                //     if (DateTime.Now - TimeSpan.FromSeconds(5) > player.Value.LastPing)
+                //     {
+                //         Destroy(player.Value.gameObject);
+                //         keysToRemove.Add(player.Key);
+                //     }
+                // }
                 
                 foreach (var key in keysToRemove)
                 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using Version1.Market.Scripts.UI;
+using Version1.Nats.Messages.Host;
 
 namespace Version1.Phases.Trading
 {
@@ -17,6 +18,7 @@ namespace Version1.Phases.Trading
         {
             var gm = Utilities.GameManager.Instance;
 
+            Nats.NatsClient.C.OnStopRound += StopPhase;
             
             timer.Init(300);
             market.Init();
@@ -32,7 +34,7 @@ namespace Version1.Phases.Trading
             market.OpenMarket();
         }
 
-        private void StopPhase()
+        private void StopPhase(object sender, StopRoundMessage message)
         {
             timer.StopTimer();
             market.CloseMarket();

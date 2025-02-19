@@ -13,7 +13,7 @@ namespace Version1.Host.Scripts
     /// </summary>
     public class CardManager : MonoBehaviour
     {
-        private Cards.Scripts.CardLibrary _cardLibrary;
+        [SerializeField] private Cards.Scripts.CardLibrary _cardLibrary;
         
         // This is the deck the host has for the game
         private List<CardData> _cardDeck;
@@ -27,7 +27,6 @@ namespace Version1.Host.Scripts
         {
             _cardDeck = new List<CardData>();
 
-            _cardLibrary = new Cards.Scripts.CardLibrary();
             FillDeck();
             ShuffleDeck();
 

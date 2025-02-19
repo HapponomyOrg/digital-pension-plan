@@ -326,9 +326,11 @@ namespace Version1.Nats
                     break;
                 case MessageSubject.StartRound:
                     OnStartRound?.Invoke(this, (StartRoundMessage)message);
+                    OnStopRound = null;
                     break;
                 case MessageSubject.StopRound:
                     OnStopRound?.Invoke(this, (StopRoundMessage)message);
+                    OnStopRound = null;
                     break;
                 case MessageSubject.EndOfRounds:
                     OnEndOfRounds?.Invoke(this, (EndOfRoundsMessage)message);
