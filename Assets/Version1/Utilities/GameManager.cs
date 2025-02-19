@@ -54,11 +54,17 @@ namespace Version1.Utilities
         private readonly string[] testPhases =
         {
             "MarketScene",
+            "MoneyCorrectionScene",
             "Loading",
             "MarketScene",
+            "MoneyCorrectionScene",
             "Loading",
             "MarketScene",
+            "MoneyCorrectionScene",
             "Loading",
+            "MoneyToPointScene",
+            "DonatePointsScene",
+            "EndScene"
         };
 
         private string[] phases;
@@ -71,13 +77,8 @@ namespace Version1.Utilities
             CardLibrary.FillCardList();
             phases = testPhases;
 
-            new Nats.NatsClient();
-            
-
             MarketManager = new MarketManager();
-
-            Nats.NatsClient.C.OnStartGame += (sender, message) => { StartGame(); };
-            Nats.NatsClient.C.OnStartRound += (sender, message) => { LoadPhase(message.RoundNumber); };
+            
         }
         
         public void StartGame()
@@ -85,9 +86,9 @@ namespace Version1.Utilities
             LoadPhase(0);
         }
 
-        private void LoadPhase(int index)
+        public void LoadPhase(int phase)
         {
-            SceneManager.LoadScene(phases[index]);
+            SceneManager.LoadScene(phases[phase]);
         }
         
         private void LoadNextPhase()

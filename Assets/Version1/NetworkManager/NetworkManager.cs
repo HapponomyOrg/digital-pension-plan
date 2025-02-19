@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Version1.Nats.Messages;
 using Version1.Nats.Messages.Client;
 using Version1.Nats.Messages.Host;
@@ -15,10 +16,9 @@ namespace Version1.NetworkManager
             if (Instance != null) return;
             Instance = this;
         }
-
-
+        
         private Nats.NatsClient _natsClient;
-
+        
         public void SubscribeToSubject(string subject)
         {
             _natsClient.SubscribeToSubject(subject);
@@ -31,6 +31,8 @@ namespace Version1.NetworkManager
 
         private void Awake()
         {
+            DontDestroyOnLoad(gameObject);
+            
             _natsClient = new Nats.NatsClient();
             
             //_natsClient.OnJoinrequest += NatsClientOnOnJoinrequest;
@@ -118,13 +120,14 @@ namespace Version1.NetworkManager
 
         private void NatsClientOnOnStartRound(object sender, StartRoundMessage e)
         {
-            // TODO game phase system
-            throw new NotImplementedException();
+            Utilities.GameManager.Instance.LoadPhase(e.RoundNumber);
         }
 
         private void NatsClientOnOnStartGame(object sender, StartGameMessage e)
         {
+            Utilities.GameManager.Instance.StartGame();
             PlayerData.PlayerData.Instance.StartGame(e);
+            
         }
 
         private void NatsClientOnOnRespondBidding(object sender, RespondBiddingMessage e)
@@ -188,6 +191,8 @@ namespace Version1.NetworkManager
         private void NatsClientOnOnConfirmJoin(object sender, ConfirmJoinMessage e)
         {
             _natsClient.StartHeartbeat();
+            SceneManager.LoadScene("Loading");
+            PlayerData.PlayerData.Instance.PlayerId = e.LobbyPlayerID;
         }
 
         private void NatsClientOnOnConfirmBuy(object sender, ConfirmBuyMessage e)
@@ -230,5 +235,10 @@ namespace Version1.NetworkManager
         {
             throw new NotImplementedException();
         }*/
+
+        private void Update()
+        {
+            _natsClient.HandleMessages();
+        }
     }
 }

@@ -5,34 +5,28 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/BUILDSCENE.unity
-    guid: 791e543e8a2e2a14c9bda1504e264342
   - enabled: 1
-    path: Assets/Legacy/Scenes/HostScene.unity
-    guid: 2840e8d8351494b40bd7058735895f61
-  - enabled: 0
-    path: Assets/Scenes/LoginAndLobby.unity
-    guid: f128783559bcef647a2ac68a8bf59d10
-  - enabled: 0
-    path: Assets/Scenes/DragCards.unity
-    guid: 4c952e9530f46644a8252f6569ca5f3f
-  - enabled: 0
-    path: Assets/Scenes/DragCards 1.unity
-    guid: 45ff99a6b8b6c22468983a46a65f774f
-  - enabled: 0
-    path: Assets/Legacy/Scenes/FINALSCENEBAS.unity
-    guid: fd1419173f485034aba6ff7277529d04
+    path: Assets/Version1/Phases/login/scenes/LoginScene.unity
+    guid: 46842ca02971e9848a8b68fc34cbef5b
   - enabled: 1
-    path: Assets/Version1/Phases/Interest/InterestScene.unity
-    guid: 236f93351a1e3cb41b9be8f21e72f9e8
+    path: Assets/Version1/Phases/DonatePoints/scenes/DonatePointsScene.unity
+    guid: b8cbeb8ce8195a049abefa5c1188d006
   - enabled: 1
-    path: Assets/Version1/Phases/BalanceModification/BalanceModificationScene.unity
-    guid: 682c3ed33c6455d49a1fb0e8d27ccad6
+    path: Assets/Version1/Phases/Loading/Loading.unity
+    guid: 06c67f39b67c03a44ac6681f887215d2
   - enabled: 1
-    path: Assets/Version1/Phases/Trading/TradingScene.unity
-    guid: 81f2f81c8c7845f4797e183e825fcbdb
+    path: Assets/Version1/Phases/MoneyCorrection/scenes/MoneyCorrectionScene.unity
+    guid: b38bc4202d1645e45bfa04c57c5cbfb5
   - enabled: 1
-    path: Assets/Version1/Phases/test.unity
-    guid: e2c9dc27ad339c0459c03621edc1b0ab
+    path: Assets/Version1/Phases/MoneyToPoint/scenes/MoneyToPointScene.unity
+    guid: e998af63ab528b9499620de3364d403f
+  - enabled: 1
+    path: Assets/Version1/Phases/PayDept/scenes/PayDeptScene.unity
+    guid: 727f489ef402f9348ab8332a1b53f3bb
+  - enabled: 1
+    path: Assets/Version1/Phases/TakeALoan/scenes/TakeALoanScene.unity
+    guid: c1c7b7ae07618ce4ebc461d17a304272
+  - enabled: 1
+    path: Assets/Version1/Phases/End/scenes/EndScene.unity
+    guid: 7ad33738c5ea304479b8ea75d747156b
   m_configObjects: {}

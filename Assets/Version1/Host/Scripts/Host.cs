@@ -9,8 +9,29 @@ using Version1.Nats.Messages.Host;
 
 namespace Version1.Host.Scripts
 {
+    
+    
     public class Host : MonoBehaviour
     {
+
+        private int current_round = 0;
+        
+        private readonly string[] testPhases =
+        {
+            "MarketScene",
+            "MoneyCorrectionScene",
+            "Loading",
+            "MarketScene",
+            "MoneyCorrectionScene",
+            "Loading",
+            "MarketScene",
+            "MoneyCorrectionScene",
+            "Loading",
+            "MoneyToPointScene",
+            "DonatePointsScene",
+            "EndScene"
+        };
+        
         [SerializeField] private Cards.Scripts.CardLibrary cardLibrary;
         private CardManager _cardManager;
         
@@ -179,12 +200,14 @@ namespace Version1.Host.Scripts
                 DateTime.Now.ToString("o"),
                 SessionData.Instance.LobbyCode,
                 -1,
-                1 //TODO CHANGE TO ROUND NUMBER OR CHANGE TO STRING WITH PHASE NAME
+                current_round
             ));
+            current_round++;
         }
 
         private void ContinueOnClick()
         {
+            throw new NotImplementedException();
             Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(), new SkipRoundMessage(
                 DateTime.Now.ToString("o"),
                 SessionData.Instance.LobbyCode,
@@ -197,9 +220,10 @@ namespace Version1.Host.Scripts
                 DateTime.Now.ToString("o"),
                 SessionData.Instance.LobbyCode,
                 -1,
-                1, //TODO CHANGE TO ROUND NUMBER OR PHASE NAME
+                current_round,
                 100 // TODO CHANGE TO DURATION OF PHASE, GET FROM PHASE SYSTEM OF LUUK
             ));
+
         }
 
         private void Update()

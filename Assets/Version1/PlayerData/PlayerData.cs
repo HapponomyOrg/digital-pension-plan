@@ -31,7 +31,7 @@ namespace Version1.PlayerData
         [SerializeField] private int age = 0;
         [SerializeField] private string gender = "Unknown";
         [SerializeField] private int playerId = 456;
-        [FormerlySerializedAs("dept")] [SerializeField] private int debt = 0;
+        [SerializeField] private int debt = 0;
         [SerializeField] private int interestRemainder = 0;
         [SerializeField] private List<int> cards = new List<int>();
         [SerializeField] private List<int> allPoints = new List<int>();
