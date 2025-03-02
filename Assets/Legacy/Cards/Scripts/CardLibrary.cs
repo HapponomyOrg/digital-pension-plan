@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Obsolete]
 [CreateAssetMenu(fileName = "CardList", menuName ="Cards/CardList")]
 public class CardLibrary : ScriptableObject
 {

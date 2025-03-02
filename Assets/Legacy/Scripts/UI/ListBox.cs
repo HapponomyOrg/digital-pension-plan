@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI
-{
+{[Obsolete]
     public class ListBox : CardBox
     {
         [SerializeField] private SellOverlay sellOverlay;

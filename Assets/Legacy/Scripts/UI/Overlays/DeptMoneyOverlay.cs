@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-
+[Obsolete]
 public class DeptMoneyOverlay : MonoBehaviour
 {
     [SerializeField] private TMP_Text deptAmount;

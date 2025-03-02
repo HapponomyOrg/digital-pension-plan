@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI
-{
+{[Obsolete]
     public class NavigationButton : MonoBehaviour
     {
         [field:SerializeField] public Button Button { get; private set; }

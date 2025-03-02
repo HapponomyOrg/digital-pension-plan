@@ -1,4 +1,5 @@
 ﻿using System;
+using Version1.Market.Scripts;
 
 namespace Version1.Market
 {
@@ -19,14 +20,9 @@ namespace Version1.Market
             TimeStamp = timeStamp;
         }
 
-        public void AcceptBidding()
+        public void CancelBid()
         {
-            BidStatus = BidStatus.Accepted;
-        }
-        
-        public void RejectBidding()
-        {
-            BidStatus = BidStatus.Rejected;
+            BidStatus = BidStatus.Canceled;
         }
 
         public override string ToString()

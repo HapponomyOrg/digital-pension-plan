@@ -7,7 +7,7 @@ using TMPro;
 using UI;
 using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
-
+[Obsolete]
 public class PlayerManager : MonoBehaviour
 {
     private static PlayerManager instance;

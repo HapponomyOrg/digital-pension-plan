@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
+    [Obsolete]
     public class BuyListingDisplay : MonoBehaviour
     {
         [SerializeField] private TMP_Text priceDisplay;

@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace NATS
 {
+    [Obsolete]
     public class MessageSubject
     {
         public const string

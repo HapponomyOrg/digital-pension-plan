@@ -3,17 +3,36 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Version1.Nats.Messages.Client;
 using Version1.Nats.Messages.Host;
 
 namespace Version1.Host.Scripts
 {
+    
+    
     public class Host : MonoBehaviour
     {
-        [SerializeField] private Cards.Scripts.CardLibrary cardLibrary;
-        private CardManager _cardManager;
+
+        private int current_round = 0;
+        
+        private readonly string[] testPhases =
+        {
+            "MarketScene",
+            "MoneyCorrectionScene",
+            "Loading",
+            "MarketScene",
+            "MoneyCorrectionScene",
+            "Loading",
+            "MarketScene",
+            "MoneyCorrectionScene",
+            "Loading",
+            "MoneyToPointScene",
+            "DonatePointsScene",
+            "EndScene"
+        };
+        
+        [SerializeField] private CardManager _cardManager;
         
         [SerializeField] private GameObject natsError;
         [SerializeField] private TMP_Text natsErrorTMP;
@@ -51,8 +70,7 @@ namespace Version1.Host.Scripts
         [SerializeField] private TMP_Text timeLeftTMP;
         [SerializeField] private TMP_Text phaseTypeTMP;
         [SerializeField] private TMP_Text nextPhaseTMP;
-
-
+        
         private void Start()
         {
             abortSession.onClick.AddListener(AbortSessionOnClick);
@@ -65,9 +83,11 @@ namespace Version1.Host.Scripts
             Nats.NatsHost.C.OnHeartBeat += OnOnHeartBeat;
             Nats.NatsHost.C.OnJoinrequest += OnOnJoinrequest;
             Nats.NatsHost.C.MessageLog += OnMessageLog;
+            
+            Init();
         }
 
-        private void OnEnable()
+        private void Init()
         {
             activities = new List<GameObject>();
 
@@ -78,7 +98,7 @@ namespace Version1.Host.Scripts
             playerScrolView = GameObject.Find("PlayerScrollView");
 
             hostNameTMP.text = SessionData.Instance.HostName;
-            gameModeTMP.text = SessionData.Instance.InterestMode.ToString(); //TODO enum type oid
+            gameModeTMP.text = SessionData.Instance.CurrentMoneySystem.ToString();
             seedTMP.text = SessionData.Instance.Seed.ToString();
             gameCodeTMP.text =
                 $"{SessionData.Instance.LobbyCode.ToString().Substring(0, 3)} {SessionData.Instance.LobbyCode.ToString().Substring(3, 3)} {SessionData.Instance.LobbyCode.ToString().Substring(6, 3)}";
@@ -107,7 +127,8 @@ namespace Version1.Host.Scripts
         {
             foreach (var record in players)
             {
-                if (record.Value.Name == msg.PlayerName)
+                // TODO() Fix player records
+                /*if (record.Value.Name == msg.PlayerName)
                 {
                     RejectedMessage rejectedMessage = new RejectedMessage(DateTime.Now.ToString("o"), msg.LobbyID,
                         -1, msg.PlayerName, "PlayerNameAlreadyTaken",
@@ -115,7 +136,7 @@ namespace Version1.Host.Scripts
                     
                     Nats.NatsHost.C.Publish(msg.LobbyID.ToString(),rejectedMessage);
                     return;
-                }
+                }*/
             }
             
             Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(), new ConfirmJoinMessage(
@@ -126,7 +147,7 @@ namespace Version1.Host.Scripts
                 msg.Age,
                 msg.Gender));
 
-            players.Add(playerId, new playerlistprefab(msg.PlayerName, playerId, 0, DateTime.Now));
+            players.Add(playerId, null);
         }
 
         private void OnOnHeartBeat(object sender, HeartBeatMessage e)
@@ -148,10 +169,10 @@ namespace Version1.Host.Scripts
             }
             else
             {
-                players[e.PlayerID].LastPing = parsedDate;
-                players[e.PlayerID].Name = e.PlayerName;
-                players[e.PlayerID].Balance = e.Balance;
-                players[e.PlayerID].Points = e.Points;
+                // players[e.PlayerID].LastPing = parsedDate;
+                // players[e.PlayerID].Name = e.PlayerName;
+                // players[e.PlayerID].Balance = e.Balance;
+                // players[e.PlayerID].Points = e.Points;
             }
         }
 
@@ -170,8 +191,6 @@ namespace Version1.Host.Scripts
 
         private void StartSessionOnClick()
         {
-            _cardManager = new CardManager(cardLibrary);
-            
             _cardManager.StartGame(players.Count);
         }
 
@@ -181,12 +200,14 @@ namespace Version1.Host.Scripts
                 DateTime.Now.ToString("o"),
                 SessionData.Instance.LobbyCode,
                 -1,
-                1 //TODO CHANGE TO ROUND NUMBER OR CHANGE TO STRING WITH PHASE NAME
+                current_round
             ));
+            current_round++;
         }
 
         private void ContinueOnClick()
         {
+            throw new NotImplementedException();
             Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(), new SkipRoundMessage(
                 DateTime.Now.ToString("o"),
                 SessionData.Instance.LobbyCode,
@@ -199,9 +220,10 @@ namespace Version1.Host.Scripts
                 DateTime.Now.ToString("o"),
                 SessionData.Instance.LobbyCode,
                 -1,
-                1, //TODO CHANGE TO ROUND NUMBER OR PHASE NAME
+                current_round,
                 100 // TODO CHANGE TO DURATION OF PHASE, GET FROM PHASE SYSTEM OF LUUK
             ));
+
         }
 
         private void Update()
@@ -220,14 +242,14 @@ namespace Version1.Host.Scripts
 
                 var keysToRemove = new List<int>();
 
-                foreach (var player in players)
-                {
-                    if (DateTime.Now - TimeSpan.FromSeconds(5) > player.Value.LastPing)
-                    {
-                        Destroy(player.Value.gameObject);
-                        keysToRemove.Add(player.Key);
-                    }
-                }
+                // foreach (var player in players)
+                // {
+                //     if (DateTime.Now - TimeSpan.FromSeconds(5) > player.Value.LastPing)
+                //     {
+                //         Destroy(player.Value.gameObject);
+                //         keysToRemove.Add(player.Key);
+                //     }
+                // }
                 
                 foreach (var key in keysToRemove)
                 {

@@ -5,7 +5,7 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace UI
-{
+{[Obsolete]
     public class SellOverlay : MonoBehaviour
     {
         [SerializeField] private ListBox listBox;

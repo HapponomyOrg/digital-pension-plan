@@ -1,7 +1,8 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
+[Obsolete]
 public class TimerTestScript : MonoBehaviour
 {
    [SerializeField] private Timer timer;

@@ -1,7 +1,8 @@
+using System;
 using System.Collections.Generic;
 using UI;
 using UnityEngine;
-
+[Obsolete]
 public class Listing
 {
     public string Seller { get; }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
+[Obsolete]
 public class Timer : MonoBehaviour
 {
     [SerializeField] public int TotalRoundTime = 240;

@@ -4,7 +4,7 @@ using System.Linq;
 using NATS;
 using UnityEngine;
 using UnityEngine.UI;
-
+[Obsolete]
 public class EndScreen : MonoBehaviour
 {
     [SerializeField] public Dictionary<int, PlayerDataEnd> players;

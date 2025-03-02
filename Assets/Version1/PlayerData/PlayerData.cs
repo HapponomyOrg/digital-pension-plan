@@ -7,6 +7,7 @@ using Version1.Nats.Messages.Host;
 
 namespace Version1.PlayerData
 {
+    // TODO when start looking at the money system set the debt to the balance.
     public class PlayerData : MonoBehaviour
     {
         // Singleton instance
@@ -22,7 +23,6 @@ namespace Version1.PlayerData
                 return _instance;
             }
         }
-        
         // TODO dont destroy on load
         
 
@@ -31,7 +31,7 @@ namespace Version1.PlayerData
         [SerializeField] private int age = 0;
         [SerializeField] private string gender = "Unknown";
         [SerializeField] private int playerId = 456;
-        [SerializeField] private int dept = 0;
+        [SerializeField] private int debt = 0;
         [SerializeField] private int interestRemainder = 0;
         [SerializeField] private List<int> cards = new List<int>();
         [SerializeField] private List<int> allPoints = new List<int>();
@@ -58,6 +58,7 @@ namespace Version1.PlayerData
                 Destroy(this);
                 return;
             }
+            DontDestroyOnLoad(gameObject);
             _instance = this;
         }
 
@@ -86,10 +87,10 @@ namespace Version1.PlayerData
             set => playerId = value;
         }
 
-        public int Dept
+        public int Debt
         {
-            get => dept;
-            set => dept = value;
+            get => debt;
+            set => debt = value;
         }
         
         public int InterestRemainder
@@ -132,6 +133,7 @@ namespace Version1.PlayerData
         public void StartGame(StartGameMessage msg)
         {
             //reset
+            Debug.Log("Cards received");
             
             playerId = msg.OtherPlayerID;
             
@@ -159,13 +161,27 @@ namespace Version1.PlayerData
         public void AddCard(int card)
         {
                 cards.Add(card);
+                cards.Sort();
+
                 OnCardsChange?.Invoke(this, new List<int>(cards));
+        }
+        
+        public void AddCards(int[] c)
+        {
+            foreach (var card in c)
+            {
+                cards.Add(card);
+            }
+            cards.Sort();
+            
+            OnCardsChange?.Invoke(this, new List<int>(cards));
         }
 
         public void RemoveCard(int card)
         {
             if (cards.Remove(card))
             {
+                cards.Sort();
                 OnCardsChange?.Invoke(this, new List<int>(cards));
             }
             else
@@ -175,6 +191,17 @@ namespace Version1.PlayerData
             }
         }
 
+        public void RemoveCards(int[] c)
+        {
+            foreach (var card in c)
+            {
+                cards.Remove(card);
+            }
+            cards.Sort();
+            
+            OnCardsChange?.Invoke(this, new List<int>(cards));
+        }
+        
         public void AddPoints(int points)
         {
             this.points += points;
@@ -219,7 +246,8 @@ namespace Version1.PlayerData
             AddPoints(msg.Amount);
         }
 
-        public void Reset()
+        // TODO() Rename to non-event function
+        public void ResetData()
         {
             // TODO RESET EVERYTHING
             throw new NotImplementedException();

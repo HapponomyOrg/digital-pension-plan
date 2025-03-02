@@ -1,5 +1,8 @@
+using System;
+
 namespace NATS
 {
+    [Obsolete]
     public class RespondBiddingMessage : BaseMessage
     {
         public string AuctionID;

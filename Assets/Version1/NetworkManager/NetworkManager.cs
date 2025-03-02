@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Version1.Nats.Messages;
 using Version1.Nats.Messages.Client;
 using Version1.Nats.Messages.Host;
@@ -15,10 +16,9 @@ namespace Version1.NetworkManager
             if (Instance != null) return;
             Instance = this;
         }
-
-
+        
         private Nats.NatsClient _natsClient;
-
+        
         public void SubscribeToSubject(string subject)
         {
             _natsClient.SubscribeToSubject(subject);
@@ -31,7 +31,10 @@ namespace Version1.NetworkManager
 
         private void Awake()
         {
+            DontDestroyOnLoad(gameObject);
+            
             _natsClient = new Nats.NatsClient();
+            _natsClient.Connect();
             
             //_natsClient.OnJoinrequest += NatsClientOnOnJoinrequest;
             _natsClient.OnRejected += NatsClientOnOnRejected;
@@ -84,7 +87,7 @@ namespace Version1.NetworkManager
         private void NatsClientOnOnEndOfRounds(object sender, EndOfRoundsMessage e)
         {
             // TODO game phase system
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         private void NatsClientOnOnConfirmHandIn(object sender, ConfirmHandInMessage e)
@@ -95,7 +98,7 @@ namespace Version1.NetworkManager
         private void NatsClientOnOnConfirmCancelListing(object sender, ConfirmCancelListingMessage e)
         {
             // TODO MARKET FUNCTION
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         // Host function
@@ -107,48 +110,49 @@ namespace Version1.NetworkManager
         private void NatsClientOnOnAcceptCounterBidding(object sender, AcceptCounterBiddingMessage e)
         {
             // TODO MARKET FUNCTION
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         private void NatsClientOnOnStopRound(object sender, StopRoundMessage e)
         {
             // TODO game phase system
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         private void NatsClientOnOnStartRound(object sender, StartRoundMessage e)
         {
-            // TODO game phase system
-            throw new NotImplementedException();
+            Utilities.GameManager.Instance.LoadPhase(e.RoundNumber);
         }
 
         private void NatsClientOnOnStartGame(object sender, StartGameMessage e)
         {
+            Utilities.GameManager.Instance.StartGame();
             PlayerData.PlayerData.Instance.StartGame(e);
+            
         }
 
         private void NatsClientOnOnRespondBidding(object sender, RespondBiddingMessage e)
         {
             // TODO MARKET FUNCTION
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         private void NatsClientOnOnRejectBidding(object sender, RejectBiddingMessage e)
         {
             // TODO MARKET FUNCTION
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         private void NatsClientOnOnMakeBidding(object sender, MakeBiddingMessage e)
         {
             // TODO MARKET FUNCTION 
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         private void NatsClientOnOnListCards(object sender, ListCardsmessage e)
         {
             // TODO MARKET FUNCTION
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         // Host Function
@@ -159,7 +163,7 @@ namespace Version1.NetworkManager
 
         private void NatsClientOnOnEndGame(object sender, EndGameMessage e)
         {
-            PlayerData.PlayerData.Instance.Reset();
+            PlayerData.PlayerData.Instance.ResetData();
         }
 
         private void NatsClientOnOnDonatePoints(object sender, DonatePointsMessage e)
@@ -188,42 +192,44 @@ namespace Version1.NetworkManager
         private void NatsClientOnOnConfirmJoin(object sender, ConfirmJoinMessage e)
         {
             _natsClient.StartHeartbeat();
+            SceneManager.LoadScene("Loading");
+            PlayerData.PlayerData.Instance.PlayerId = e.LobbyPlayerID;
         }
 
         private void NatsClientOnOnConfirmBuy(object sender, ConfirmBuyMessage e)
         {
             // TODO MARKET FUNCTION
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         private void NatsClientOnOnCancelListing(object sender, CancelListingMessage e)
         {
             // TODO MARKET FUNCTION
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         private void NatsClientOnOnCancelBidding(object sender, CancelBiddingMessage e)
         {
             // TODO MARKET FUNCTION
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         private void NatsClientOnOnBuyCards(object sender, BuyCardsRequestMessage e)
         {
             // TODO MARKET FUNCTION
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         private void NatsClientOnOnAcceptBidding(object sender, AcceptBiddingMessage e)
         {
             // TODO MARKET FUNCTION
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         private void NatsClientOnOnRejected(object sender, RejectedMessage e)
         {
             // TODO MARKET FUNCTION
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         /*private void NatsClientOnOnJoinrequest(object sender, JoinRequestMessage e)

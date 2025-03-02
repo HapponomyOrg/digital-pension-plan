@@ -1,7 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
-
+[Obsolete]
 public class PlayerRecord : MonoBehaviour
 {
     public DateTime LastContact;

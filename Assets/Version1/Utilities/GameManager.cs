@@ -1,10 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using Version1.Nats.Messages.Host;
 using Version1.Phases;
 using Version1.Phases.BalanceModification;
 using Version1.Phases.Interest;
 using Version1.Phases.Trading;
+using MarketManager = Version1.Market.Scripts.MarketManager;
+using NatsHost = Version1.Nats.NatsHost;
 
 
 namespace Version1.Utilities
@@ -15,6 +18,11 @@ namespace Version1.Utilities
         
         public static GameManager Instance => instance ??= new GameManager();
 
+        public Cards.Scripts.CardLibrary CardLibrary { get; }
+        
+        public MarketManager MarketManager { get; }
+        
+        
         private readonly Phase[] debtBasedPhases =
         {
             // Trading
@@ -43,57 +51,80 @@ namespace Version1.Utilities
             // Pension Calculation
         };
 
-        private readonly Phase[] testPhases =
+        private readonly string[] testPhases =
         {
-            new TradingPhase(),
-            new InterestPhase(),
-            new BalanceModificationPhase(),
-            new TradingPhase()
+            "MarketScene",
+            "MoneyCorrectionScene",
+            "Loading",
+            "MarketScene",
+            "MoneyCorrectionScene",
+            "Loading",
+            "MarketScene",
+            "MoneyCorrectionScene",
+            "Loading",
+            "MoneyToPointScene",
+            "DonatePointsScene",
+            "EndScene"
         };
 
-        private Phase[] phases;
+        private string[] phases;
 
         private int currentPhase;
 
         private GameManager()
         {
+            CardLibrary = Resources.Load<Cards.Scripts.CardLibrary>("CardList");
+            CardLibrary.FillCardList();
             phases = testPhases;
+
+            MarketManager = new MarketManager();
+            
         }
         
         public void StartGame()
         {
-            
+            LoadPhase(0);
         }
 
-        public void InitPhase(int p)
+        public void LoadPhase(int phase)
         {
-            if (p >= phases.Length)
-                return;
-            
-            var phase = phases[p];
-            currentPhase = p;
-            
-            
-            phase.InitFinished += (sender, e) =>
-            {
-                Debug.Log("Init finished");
-                StartPhase();
-            };
-            phase.Init();
-            
+            SceneManager.LoadScene(phases[phase]);
         }
-
-        public void StartPhase()
+        
+        private void LoadNextPhase()
         {
-            if (currentPhase >= phases.Length)
-                return;
-            
-            if (phases[currentPhase].InitComplete)
-                phases[currentPhase].Start();
-            else
-                phases[currentPhase].InitFinished += (sender, e) => phases[currentPhase].Start();
-
-
+            SceneManager.LoadScene(phases[++currentPhase]);
         }
+
+        // public void InitPhase(int p)
+        // {
+        //     if (p >= phases.Length)
+        //         return;
+        //     
+        //     var phase = phases[p];
+        //     currentPhase = p;
+        //     
+        //     
+        //     phase.InitFinished += (sender, e) =>
+        //     {
+        //         Debug.Log("Init finished");
+        //         StartPhase();
+        //     };
+        //     phase.Init();
+        //     
+        // }
+        //
+        // public void StartPhase()
+        // {
+        //     if (currentPhase >= phases.Length)
+        //         return;
+        //     
+        //     if (phases[currentPhase].InitComplete)
+        //         phases[currentPhase].Start();
+        //     else
+        //         phases[currentPhase].InitFinished += (sender, e) => phases[currentPhase].Start();
+        //
+        //
+        // }
     }
 }

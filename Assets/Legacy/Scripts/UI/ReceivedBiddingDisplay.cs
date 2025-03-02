@@ -1,10 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UI;
 using UnityEngine;
 using UnityEngine.UI;
-
+[Obsolete]
 public class ReceivedBiddingDisplay : MonoBehaviour
 {
     [SerializeField] private TMP_Text nameDisplay;

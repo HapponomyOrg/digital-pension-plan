@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using NATS;
 using UnityEngine;
-
+[Obsolete]
 public class Player2 : MonoBehaviour
 {
     [SerializeField] private bool player1;

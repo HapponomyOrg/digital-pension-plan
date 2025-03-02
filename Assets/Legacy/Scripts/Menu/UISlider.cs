@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
-
+[Obsolete]
 public class UISlider : MonoBehaviour
 {
     [SerializeField] private Slider slider;

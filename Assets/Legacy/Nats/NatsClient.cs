@@ -194,7 +194,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Connection = NATS.Connection;
-
+[Obsolete]
 public class NatsClient : Connection
 {
     private CancellationTokenSource _cancellationTokenSource;
