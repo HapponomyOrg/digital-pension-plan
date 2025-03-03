@@ -33,7 +33,7 @@ namespace Version1.MoneyToPoint.scripts
             }
         }
         
-        private void OnEnable()
+        private void Start()
         {
             Balance = PlayerData.PlayerData.Instance.Balance;
             Points = PlayerData.PlayerData.Instance.Points;

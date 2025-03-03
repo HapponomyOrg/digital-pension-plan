@@ -2,33 +2,45 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-namespace Version1.MoneyCorrection.scripts
+namespace Version1.Phases.MoneyCorrection.scripts
 {
     public class MoneyCorrection : MonoBehaviour
     {
-        [SerializeField] private TMP_Text Text;
+        [SerializeField] private TMP_Text text;
 
-        private void OnEnable()
+        private void Start()
         {
             switch (PlayerData.PlayerData.Instance.CurrentMoneySystem)
             {
                 case MoneySystems.Sustainable:
                     switch (PlayerData.PlayerData.Instance.Balance)
                     {
+                        case > 6000:
+                        {
+                            var amountToPay = RoundToThousand((PlayerData.PlayerData.Instance.Balance - 6000) / 2);
+                            PlayerData.PlayerData.Instance.Balance -= amountToPay;
+
+                            Debug.LogWarning($"Over or equal 6000     {amountToPay}       {PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}");
+                            
+                            StartCoroutine(DisplayTextLetterByLetter(
+                                $"Because your balance is over 6.000\nyou will get a penalty of {amountToPay.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}\n\nYour new balance is {PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}"));
+                            break;
+                        }
                         case < 4000:
+                        {
                             PlayerData.PlayerData.Instance.Balance += 2000;
+                            Debug.LogWarning(
+                                $"under or equal 4000  {PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}");
                             StartCoroutine(DisplayTextLetterByLetter(
                                 $"Because your balance is less then 4.000\n2.000 will be added to your balance\n\nYour balance is now {PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}"));
                             break;
-                        case > 6000:
+                        }
+                        default:
                         {
-                            var amountToPay = roundToThousand((PlayerData.PlayerData.Instance.Balance - 6000) / 2);
-                            PlayerData.PlayerData.Instance.Balance -= amountToPay;
-
-                            StartCoroutine(DisplayTextLetterByLetter(
-                                $"Because your balance is over 6.000\nyou will get a penalty of {amountToPay.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}\n\nYour new balance is {PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}"));
-
+                             StartCoroutine(DisplayTextLetterByLetter(
+                                $"Your balance is between 4.000 and 6.000\n Nothing will be done with your balance\n You keep {PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}"));
                             break;
                         }
                     }
@@ -37,7 +49,6 @@ namespace Version1.MoneyCorrection.scripts
                 case MoneySystems.DebtBased:
                     // TODO this is at the end of the game.
                     throw new NotImplementedException();
-                    break;
                 case MoneySystems.InterestAtIntervals:
                     int newInterest =
                         (int)(PlayerData.PlayerData.Instance.Debt * 0.10); // Calculate 10% interest of current debt
@@ -56,7 +67,7 @@ namespace Version1.MoneyCorrection.scripts
                         payment = PlayerData.PlayerData.Instance.Debt; // Pay the full debt + interest
                         PlayerData.PlayerData.Instance.Balance -= payment; // Deduct from the player's balance
 
-                        Text.text =
+                        text.text =
                             $"You have a debt of {PlayerData.PlayerData.Instance.Debt} with an interest rate of 10%\n" +
                             $"All remaining debt and interest ({interestDue}) have been added to the debt.\n" +
                             $"Your total debt now is {PlayerData.PlayerData.Instance.Debt}. " +
@@ -122,7 +133,7 @@ namespace Version1.MoneyCorrection.scripts
             }
         }
 
-        private int roundToThousand(float value)
+        private int RoundToThousand(float value)
         {
             return (int)Math.Round(value / 1000, MidpointRounding.AwayFromZero) * 1000;
         }
@@ -130,18 +141,24 @@ namespace Version1.MoneyCorrection.scripts
         private IEnumerator DisplayTextLetterByLetter(string message)
         {
             // Start by resetting the text
-            Text.text = "";
+            text.text = "";
 
             // The text you want to display
 
             // Loop through each character in the message and reveal it one by one
             foreach (char letter in message)
             {
-                Text.text += letter; // Add one letter at a time
+                text.text += letter; // Add one letter at a time
                 yield return new WaitForSeconds(0.03f); // Wait for a specified time before displaying the next letter
             }
         }
+            
+        public void Continue()
+        {
+            SceneManager.LoadScene(Utilities.GameManager.LOADING);
+        }
     }
+
 }
 
 

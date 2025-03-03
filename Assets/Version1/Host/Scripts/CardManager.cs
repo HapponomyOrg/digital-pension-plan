@@ -32,7 +32,7 @@ namespace Version1.Host.Scripts
 
             var cardsPerPlayer = CalculateCardsPerPlayer(numOfPlayers);
 
-            for (int i = 1; i < numOfPlayers + 1; i++)
+            for (int i = 0; i < numOfPlayers + 1; i++)
             {
                 List<CardData> playerCards = TakeCards(cardsPerPlayer);
 
@@ -46,11 +46,13 @@ namespace Version1.Host.Scripts
                 StartGameMessage msg;
                 if (SessionData.Instance.InbalanceMode)
                 {
+                    Debug.Log($"Players get something");
                     msg = new StartGameMessage(DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, -1, i,
                         CalculateBalancePerPlayer(i), handCards, (int)SessionData.Instance.CurrentMoneySystem);
                 }
                 else
                 {
+                    Debug.Log($"6000");
                     msg = new StartGameMessage(DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, -1, i, 6000,
                         handCards,
                         (int)SessionData.Instance.CurrentMoneySystem);

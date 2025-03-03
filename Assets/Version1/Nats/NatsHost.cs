@@ -38,8 +38,12 @@ namespace Version1.Nats
         {
             if (EventsReceived.Count < 1) return;
             var message = EventsReceived.Dequeue();
-            
-            MessageLog?.Invoke(null,message.ToString());
+
+
+            if (message.Subject != MessageSubject.HeartBeat)
+            {
+                MessageLog?.Invoke(null,message.ToString());    
+            }
             
             switch (message.Subject)
             {

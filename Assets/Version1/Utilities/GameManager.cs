@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Version1.Nats.Messages.Host;
@@ -14,6 +15,8 @@ namespace Version1.Utilities
 {
     public class GameManager
     {
+        public const string LOADING = "Loading";
+        
         private static GameManager instance;
         
         public static GameManager Instance => instance ??= new GameManager();
@@ -21,8 +24,8 @@ namespace Version1.Utilities
         public Cards.Scripts.CardLibrary CardLibrary { get; }
         
         public MarketManager MarketManager { get; }
-        
-        
+
+
         private readonly Phase[] debtBasedPhases =
         {
             // Trading
@@ -83,11 +86,19 @@ namespace Version1.Utilities
         
         public void StartGame()
         {
-            LoadPhase(0);
+            LoadPhase(0, phases[0]);
         }
 
-        public void LoadPhase(int phase)
+        public void LoadPhase(int phase, string  name)
         {
+            if (phases[phase] != name)
+            {
+                //TODO this is maybe not how we want it but this is a way to keep players in sync
+                Debug.LogWarning($"Phase: {phases[phase]} is not the same as received {name}");
+                SceneManager.LoadScene(name);
+                return;
+            }
+
             SceneManager.LoadScene(phases[phase]);
         }
         

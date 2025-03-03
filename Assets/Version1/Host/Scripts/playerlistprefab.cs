@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 
 namespace Version1.Host.Scripts
 {
-    public class playerlistprefab : MonoBehaviour
+    public class PlayerListPrefab : MonoBehaviour
     {
         public DateTime LastPing;
 
@@ -48,7 +48,7 @@ namespace Version1.Host.Scripts
         [SerializeField] private TMP_Text PointsTextField;
         [SerializeField] private TMP_Text BalanceTextField;
 
-        public playerlistprefab(string PlayerName, int playerId, int points, DateTime now)
+        public PlayerListPrefab(string PlayerName, int playerId, int points, DateTime now)
         {
             Name = PlayerName;
             ID = playerId;

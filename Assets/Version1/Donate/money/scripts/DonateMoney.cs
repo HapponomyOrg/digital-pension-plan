@@ -17,11 +17,7 @@ namespace Version1.Donate.money.scripts
             private int maxDonation;
         
             [SerializeField] private int priceStep = 1000;
-
-            private void Start()
-            {
-                PlayerData.PlayerData.Instance.Balance = 10000;
-            }
+            
 
             private void Update()
             {
@@ -72,8 +68,6 @@ namespace Version1.Donate.money.scripts
         
             private void SendDonateMessage()
             {
-                PlayerData.PlayerData.Instance.Balance -= currentDonation;
-                
                 var sessionId = PlayerData.PlayerData.Instance.LobbyID;
                 var msg = new DonateMoneyMessage(DateTime.Now.ToString("o"), sessionId, PlayerData.PlayerData.Instance.PlayerId,
                     currentDonation);

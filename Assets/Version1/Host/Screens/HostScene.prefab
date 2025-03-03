@@ -36,9 +36,9 @@ RectTransform:
   m_Father: {fileID: 7623907911012001620}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -17, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &4549982415294296112
 CanvasRenderer:
@@ -126,7 +126,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: -384.54}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &6356924657110419172
 MonoBehaviour:
@@ -153,7 +153,7 @@ MonoBehaviour:
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
-  m_ReverseArrangement: 0
+  m_ReverseArrangement: 1
 --- !u!114 &1946320332390077930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2350,7 +2350,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3456299276812665766
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2383,7 +2383,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1c224f27679f024f9748c41c980c885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardLibrary: {fileID: 0}
+  _cardManager: {fileID: 0}
   natsError: {fileID: 0}
   natsErrorTMP: {fileID: 0}
   CreateScene: {fileID: 0}
@@ -2986,7 +2986,7 @@ RectTransform:
   m_Father: {fileID: 8783104493862227117}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3331,7 +3331,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -0.000076293945}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: -250.7398}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &3753413278510255364
 MonoBehaviour:
@@ -4008,6 +4008,10 @@ PrefabInstance:
     - target: {fileID: 412065175182992522, guid: 37ee9aa1d641c9c40857592ac00b7945, type: 3}
       propertyPath: m_fontSizeBase
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4848648308580026719, guid: 37ee9aa1d641c9c40857592ac00b7945, type: 3}
+      propertyPath: m_Interactable
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5038168454141414062, guid: 37ee9aa1d641c9c40857592ac00b7945, type: 3}
       propertyPath: m_Name
@@ -5442,7 +5446,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4848648308580026719, guid: 37ee9aa1d641c9c40857592ac00b7945, type: 3}
       propertyPath: m_Interactable
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4848648308580026719, guid: 37ee9aa1d641c9c40857592ac00b7945, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size

@@ -30,7 +30,7 @@ namespace Version1.Host.Scripts
         private void Start()
         {
             new Nats.NatsHost();
-
+            
             Nats.NatsHost.C.onError += (sender, s) =>
             {
                 natsError.SetActive(true);
@@ -146,9 +146,10 @@ namespace Version1.Host.Scripts
 
             seedInputField.interactable = !seedInputField.interactable;
         }
-
+        
         public void ToggleMoneyInbalance(bool inbalance)
         {
+            Debug.Log($"inbalance mode  = {inbalance}");
             SessionData.Instance.InbalanceMode = inbalance;
         }
 

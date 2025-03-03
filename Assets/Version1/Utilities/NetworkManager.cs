@@ -1,24 +1,29 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Version1.Nats.Messages;
 using Version1.Nats.Messages.Client;
 using Version1.Nats.Messages.Host;
 
-namespace Version1.NetworkManager
+namespace Version1.Utilities
 {
     public class NetworkManager : MonoBehaviour
     {
         public static NetworkManager Instance { get; private set; }
 
+        public int heartbeatInterval = 2;
+
+        public event EventHandler<RejectedMessage> OnRejected;
+        
         public NetworkManager()
         {
             if (Instance != null) return;
             Instance = this;
         }
-        
+
         private Nats.NatsClient _natsClient;
-        
+
         public void SubscribeToSubject(string subject)
         {
             _natsClient.SubscribeToSubject(subject);
@@ -32,10 +37,10 @@ namespace Version1.NetworkManager
         private void Awake()
         {
             DontDestroyOnLoad(gameObject);
-            
+
             _natsClient = new Nats.NatsClient();
             _natsClient.Connect();
-            
+
             //_natsClient.OnJoinrequest += NatsClientOnOnJoinrequest;
             _natsClient.OnRejected += NatsClientOnOnRejected;
             _natsClient.OnAcceptBidding += NatsClientOnOnAcceptBidding;
@@ -63,8 +68,29 @@ namespace Version1.NetworkManager
             _natsClient.OnConfirmHandIn += NatsClientOnOnConfirmHandIn;
             _natsClient.OnEndOfRounds += NatsClientOnOnEndOfRounds;
             //_natsClient.OnConnect += NatsClientOnOnConnect;
-            
+
             _natsClient.SubscribeToSubject("*");
+        }
+
+        private IEnumerator HeartbeatRoutine()
+        {
+            while (true)
+            {
+                var msg = new HeartBeatMessage(
+                    DateTime.UtcNow.ToString("o"),
+                    PlayerData.PlayerData.Instance.LobbyID,
+                    PlayerData.PlayerData.Instance.PlayerId,
+                    PlayerData.PlayerData.Instance.PlayerName,
+                    PlayerData.PlayerData.Instance.Balance,
+                    PlayerData.PlayerData.Instance.Cards.ToArray(),
+                    PlayerData.PlayerData.Instance.Points,
+                    PlayerData.PlayerData.Instance.AllPoints.ToArray()
+                );
+
+                Publish(PlayerData.PlayerData.Instance.LobbyID.ToString(), msg);
+
+                yield return new WaitForSeconds(heartbeatInterval);
+            }
         }
 
 
@@ -73,11 +99,6 @@ namespace Version1.NetworkManager
             _natsClient.HandleMessages();
         }
 
-        public void OnDestroy()
-        {
-            NatsClient.Instance.StopHeartbeat();
-        }
-        
         // No idea where we use this
         /*private void NatsClientOnOnConnect(object sender, EventArgs e)
         {
@@ -121,14 +142,15 @@ namespace Version1.NetworkManager
 
         private void NatsClientOnOnStartRound(object sender, StartRoundMessage e)
         {
-            Utilities.GameManager.Instance.LoadPhase(e.RoundNumber);
+            Utilities.GameManager.Instance.LoadPhase(e.RoundNumber, e.RoundName);
         }
 
         private void NatsClientOnOnStartGame(object sender, StartGameMessage e)
         {
+            if (e.OtherPlayerID != PlayerData.PlayerData.Instance.PlayerId) return;
+
             Utilities.GameManager.Instance.StartGame();
             PlayerData.PlayerData.Instance.StartGame(e);
-            
         }
 
         private void NatsClientOnOnRespondBidding(object sender, RespondBiddingMessage e)
@@ -168,6 +190,7 @@ namespace Version1.NetworkManager
 
         private void NatsClientOnOnDonatePoints(object sender, DonatePointsMessage e)
         {
+            
             PlayerData.PlayerData.Instance.PointsDonated(e);
         }
 
@@ -176,7 +199,7 @@ namespace Version1.NetworkManager
         {
             throw new NotImplementedException();
         }*/
-        
+
         // No clue where we use this for
         /*private void NatsClientOnOnDeptUpdate(object sender, DeptUpdateMessage e)
         {
@@ -191,9 +214,12 @@ namespace Version1.NetworkManager
 
         private void NatsClientOnOnConfirmJoin(object sender, ConfirmJoinMessage e)
         {
-            _natsClient.StartHeartbeat();
-            SceneManager.LoadScene("Loading");
+            // TODO MAYBE SEND A  JOIN ID OR SOMEHTING INSTEAD OF CHECKING BY NAME
+            if (e.RequestID != PlayerData.PlayerData.Instance.RequestID) return;
+
             PlayerData.PlayerData.Instance.PlayerId = e.LobbyPlayerID;
+            StartCoroutine(HeartbeatRoutine());
+            SceneManager.LoadScene("Loading");
         }
 
         private void NatsClientOnOnConfirmBuy(object sender, ConfirmBuyMessage e)
@@ -228,8 +254,8 @@ namespace Version1.NetworkManager
 
         private void NatsClientOnOnRejected(object sender, RejectedMessage e)
         {
-            // TODO MARKET FUNCTION
-            //throw new NotImplementedException();
+            // TODO this is disgusting
+            OnRejected?.Invoke(sender, e);
         }
 
         /*private void NatsClientOnOnJoinrequest(object sender, JoinRequestMessage e)

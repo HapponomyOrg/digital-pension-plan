@@ -191,7 +191,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Threading;
-using System.Threading.Tasks;
 using Version1.Nats.Messages;
 using Version1.Nats.Messages.Client;
 using Version1.Nats.Messages.Host;
@@ -200,9 +199,6 @@ namespace Version1.Nats
 {
     public class NatsClient : Connection
     {
-        private CancellationTokenSource _cancellationTokenSource;
-        public int HeartbeatInterval = 5000;
-
         public static NatsClient C { get; private set; }
         
         public NatsClient()
@@ -212,6 +208,7 @@ namespace Version1.Nats
             C = this;
             EventsReceived = new Queue<BaseMessage>();
         }
+        
         public event EventHandler<ListCardsmessage> OnListCards;
         public event EventHandler<BuyCardsRequestMessage> OnBuyCards;
         public event EventHandler<CancelListingMessage> OnCancelListing;
@@ -240,38 +237,7 @@ namespace Version1.Nats
         public event EventHandler<AcceptCounterBiddingMessage> OnAcceptCounterBidding;
         public event EventHandler<AbortSessionMessage> OnAbortSession;
         public event EventHandler<SkipRoundMessage> OnSkipRound;
-
-        public void StartHeartbeat()
-        {
-            _cancellationTokenSource = new CancellationTokenSource();
-
-            Task.Run(async () =>
-            {
-                while (!_cancellationTokenSource.Token.IsCancellationRequested)
-                {
-                    var msg = new HeartBeatMessage(
-                        DateTime.UtcNow.ToString("o"),
-                        PlayerManager.Instance.LobbyID,
-                        PlayerManager.Instance.PlayerId,
-                        PlayerManager.Instance.PlayerName,
-                        PlayerManager.Instance.Balance,
-                        PlayerManager.Instance.Cards.ToArray(),
-                        PlayerManager.Instance.Points,
-                        PlayerManager.Instance.allPoints.ToArray()
-                    );
-
-                    Publish(PlayerManager.Instance.LobbyID.ToString(), msg);
-                    await Task.Delay(HeartbeatInterval);
-                }
-            }, _cancellationTokenSource.Token);
-        }
-
-        public void StopHeartbeat()
-        {
-            _cancellationTokenSource?.Cancel();
-            _cancellationTokenSource?.Dispose();
-            _cancellationTokenSource = null;
-        }
+        
 
         protected override void Subscribe()
         {
@@ -282,7 +248,7 @@ namespace Version1.Nats
             if (EventsReceived.Count < 1) return;
             
             var message = EventsReceived.Dequeue();
-            if (message == null || message.PlayerID == PlayerManager.Instance.PlayerId) return;
+            if (message == null || message.PlayerID == PlayerData.PlayerData.Instance.PlayerId) return;
             
             DispatchMessage(message);
         }

@@ -33,10 +33,5 @@ namespace Version1.Phases.Trading
         {
             donateOverlay.SetActive(true);
         }
-
-        public void CloseDonateOverlay()
-        {
-            donateOverlay.SetActive(false);
-        }
     }
 }

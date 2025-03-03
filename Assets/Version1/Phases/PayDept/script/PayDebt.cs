@@ -13,7 +13,7 @@ namespace Version1.PayDept.script
 
         private int _maxAmount = 0;
 
-        private void OnEnable()
+        private void Start()
         {
             // TODO skip to next phase
             if (PlayerData.PlayerData.Instance.Debt <= 0) gameObject.SetActive(false);
