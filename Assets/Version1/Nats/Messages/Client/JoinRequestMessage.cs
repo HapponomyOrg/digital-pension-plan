@@ -4,9 +4,9 @@ namespace Version1.Nats.Messages.Client
     {
         public string PlayerName;
         public int Age;
-        public string Gender;
+        public int Gender;
 
-        public JoinRequestMessage(string dateTime, int lobbyID, int playerID, string playerName, int age, string gender)
+        public JoinRequestMessage(string dateTime, int lobbyID, int playerID, string playerName, int age, int gender)
             : base(dateTime, MessageSubject.JoinRequest, lobbyID, playerID)
         {
             PlayerName = playerName;

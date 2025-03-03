@@ -1,5 +1,4 @@
-﻿using Version1.Donate.points.scripts;
-using Version1.Nats.Messages;
+﻿using Version1.Nats.Messages;
 using Version1.Nats.Messages.Client;
 using Version1.Nats.Messages.Host;
 
@@ -196,8 +195,8 @@ namespace Version1.Nats
 
     public abstract class Connection
     {
-        private const string DefaultNATSURL = "ec2-16-171-62-212.eu-north-1.compute.amazonaws.com:4222";
-        //private const string DefaultNATSURL = "nats://127.0.0.1:4222";
+        //private const string DefaultNATSURL = "ec2-16-171-62-212.eu-north-1.compute.amazonaws.com:4222";
+        private const string DefaultNATSURL = "nats://127.0.0.1:4222";
         private const int ConnectionTimeout = 10000;
 
         public string NATSURL = DefaultNATSURL;

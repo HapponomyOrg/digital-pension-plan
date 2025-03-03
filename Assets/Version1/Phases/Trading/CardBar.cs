@@ -21,6 +21,8 @@ namespace Version1.Phases.Trading
         
         private void GenerateCardDisplays()
         {
+            
+            //TODO here it goes wrong for the hand in.
             foreach (Transform child in cardList)
                 Destroy(child.gameObject);
             

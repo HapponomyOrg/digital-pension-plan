@@ -10,7 +10,7 @@ namespace Version1.login.scripts
    {
       [SerializeField] private TMP_InputField PlayerName;
       [SerializeField] private TMP_InputField Age;
-      [SerializeField] private TMP_InputField Gender;
+      [SerializeField] private TMP_Dropdown Gender;
       [SerializeField] private TMP_InputField GameCode;
       [SerializeField] private Button CreateButton;
       [SerializeField] private GameObject NatsError;
@@ -18,7 +18,7 @@ namespace Version1.login.scripts
 
       private string playername;
       private int age;
-      private string gender;
+      private int gender;
       private int gamecode;
    
       private void Start()
@@ -60,7 +60,7 @@ namespace Version1.login.scripts
          }
       }
 
-      private void GenderChanged(string arg)
+      private void GenderChanged(int arg)
       {
          gender = arg;
          CheckButton();
@@ -80,7 +80,7 @@ namespace Version1.login.scripts
 
       private void CheckButton()
       {
-         if (playername != "" && age != -1 && gender != "" && gamecode != -1)
+         if (playername != "" && age != -1 && gender != -1 && gamecode != -1)
          {
             CreateButton.interactable = true;
          }

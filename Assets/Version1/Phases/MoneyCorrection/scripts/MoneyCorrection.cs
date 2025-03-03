@@ -2,14 +2,15 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-namespace Version1.MoneyCorrection.scripts
+namespace Version1.Phases.MoneyCorrection.scripts
 {
     public class MoneyCorrection : MonoBehaviour
     {
-        [SerializeField] private TMP_Text Text;
+        [SerializeField] private TMP_Text text;
 
-        private void OnEnable()
+        private void Start()
         {
             switch (PlayerData.PlayerData.Instance.CurrentMoneySystem)
             {
@@ -56,7 +57,7 @@ namespace Version1.MoneyCorrection.scripts
                         payment = PlayerData.PlayerData.Instance.Debt; // Pay the full debt + interest
                         PlayerData.PlayerData.Instance.Balance -= payment; // Deduct from the player's balance
 
-                        Text.text =
+                        text.text =
                             $"You have a debt of {PlayerData.PlayerData.Instance.Debt} with an interest rate of 10%\n" +
                             $"All remaining debt and interest ({interestDue}) have been added to the debt.\n" +
                             $"Your total debt now is {PlayerData.PlayerData.Instance.Debt}. " +
@@ -130,14 +131,14 @@ namespace Version1.MoneyCorrection.scripts
         private IEnumerator DisplayTextLetterByLetter(string message)
         {
             // Start by resetting the text
-            Text.text = "";
+            text.text = "";
 
             // The text you want to display
 
             // Loop through each character in the message and reveal it one by one
             foreach (char letter in message)
             {
-                Text.text += letter; // Add one letter at a time
+                text.text += letter; // Add one letter at a time
                 yield return new WaitForSeconds(0.03f); // Wait for a specified time before displaying the next letter
             }
         }

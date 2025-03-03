@@ -146,14 +146,16 @@ namespace Version1.Host.Scripts
 
             seedInputField.interactable = !seedInputField.interactable;
         }
-
+        
         public void ToggleMoneyInbalance(bool inbalance)
         {
+            Debug.Log($"inbalance mode  = {inbalance}");
             SessionData.Instance.InbalanceMode = inbalance;
         }
 
         private void Update()
         {
+            
             createSession.interactable = !(SessionData.Instance.HostName == "" || SessionData.Instance.LobbyCode == 0 ||
                                            gameCodeError.activeSelf || seedInputError.activeSelf);
         }

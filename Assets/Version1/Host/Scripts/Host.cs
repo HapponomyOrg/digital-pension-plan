@@ -9,13 +9,10 @@ using Version1.Nats.Messages.Host;
 
 namespace Version1.Host.Scripts
 {
-    
-    
     public class Host : MonoBehaviour
     {
-
         private int current_round = 0;
-        
+
         private readonly string[] testPhases =
         {
             "MarketScene",
@@ -31,9 +28,9 @@ namespace Version1.Host.Scripts
             "DonatePointsScene",
             "EndScene"
         };
-        
+
         [SerializeField] private CardManager _cardManager;
-        
+
         [SerializeField] private GameObject natsError;
         [SerializeField] private TMP_Text natsErrorTMP;
 
@@ -70,7 +67,7 @@ namespace Version1.Host.Scripts
         [SerializeField] private TMP_Text timeLeftTMP;
         [SerializeField] private TMP_Text phaseTypeTMP;
         [SerializeField] private TMP_Text nextPhaseTMP;
-        
+
         private void Start()
         {
             abortSession.onClick.AddListener(AbortSessionOnClick);
@@ -83,7 +80,7 @@ namespace Version1.Host.Scripts
             Nats.NatsHost.C.OnHeartBeat += OnOnHeartBeat;
             Nats.NatsHost.C.OnJoinrequest += OnOnJoinrequest;
             Nats.NatsHost.C.MessageLog += OnMessageLog;
-            
+
             Init();
         }
 
@@ -113,7 +110,7 @@ namespace Version1.Host.Scripts
             var activity = Instantiate(activityPrefab, activityScrollView.transform);
             activity.GetComponentInChildren<TMP_Text>().text = e;
             activity.SetActive(true);
-            
+
             activities.Add(activity);
 
             if (activities.Count > 20)
@@ -133,12 +130,12 @@ namespace Version1.Host.Scripts
                     RejectedMessage rejectedMessage = new RejectedMessage(DateTime.Now.ToString("o"), msg.LobbyID,
                         -1, msg.PlayerName, "PlayerNameAlreadyTaken",
                         $"{msg.PlayerName} is already taken in the session you are trying to join. \n Please fill in another name and try again.");
-                    
+
                     Nats.NatsHost.C.Publish(msg.LobbyID.ToString(),rejectedMessage);
                     return;
                 }*/
             }
-            
+
             Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(), new ConfirmJoinMessage(
                 DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode,
                 -1,
@@ -148,6 +145,8 @@ namespace Version1.Host.Scripts
                 msg.Gender));
 
             players.Add(playerId, null);
+
+            playerId++;
         }
 
         private void OnOnHeartBeat(object sender, HeartBeatMessage e)
@@ -169,10 +168,10 @@ namespace Version1.Host.Scripts
             }
             else
             {
-                // players[e.PlayerID].LastPing = parsedDate;
-                // players[e.PlayerID].Name = e.PlayerName;
-                // players[e.PlayerID].Balance = e.Balance;
-                // players[e.PlayerID].Points = e.Points;
+                players[e.PlayerID].LastPing = parsedDate;
+                players[e.PlayerID].Name = e.PlayerName;
+                players[e.PlayerID].Balance = e.Balance;
+                players[e.PlayerID].Points = e.Points;
             }
         }
 
@@ -192,6 +191,9 @@ namespace Version1.Host.Scripts
         private void StartSessionOnClick()
         {
             _cardManager.StartGame(players.Count);
+
+            startRound.interactable = true;
+            skipRound.interactable = true;
         }
 
         private void StopRoundOnClick()
@@ -207,11 +209,10 @@ namespace Version1.Host.Scripts
 
         private void ContinueOnClick()
         {
-            throw new NotImplementedException();
-            Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(), new SkipRoundMessage(
+            /*Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(), new SkipRoundMessage(
                 DateTime.Now.ToString("o"),
                 SessionData.Instance.LobbyCode,
-                -1));
+                -1));*/
         }
 
         private void StartRoundOnClick()
@@ -223,7 +224,6 @@ namespace Version1.Host.Scripts
                 current_round,
                 100 // TODO CHANGE TO DURATION OF PHASE, GET FROM PHASE SYSTEM OF LUUK
             ));
-
         }
 
         private void Update()
@@ -250,7 +250,7 @@ namespace Version1.Host.Scripts
                 //         keysToRemove.Add(player.Key);
                 //     }
                 // }
-                
+
                 foreach (var key in keysToRemove)
                 {
                     players.Remove(key);

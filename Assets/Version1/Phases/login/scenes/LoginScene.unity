@@ -347,6 +347,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbddd18936ae42a992b6a5941af97ec7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HeartbeatInterval: 2
 --- !u!4 &377223520
 Transform:
   m_ObjectHideFlags: 0
@@ -606,7 +607,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerName: Player
   age: 0
-  gender: Unknown
+  gender: 0
   playerId: 456
   debt: 0
   interestRemainder: 0

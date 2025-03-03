@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using Version1.Host.Scripts;
 using Version1.Nats.Messages.Client;
 
-namespace Version1.Donate.points.scripts
+namespace Version1.Phases.DonatePoints.scripts
 {
     public class DonatePoints : MonoBehaviour
     {
@@ -67,8 +67,23 @@ namespace Version1.Donate.points.scripts
 
         private void Start()
         {
-            // TODO place this heres
-            //Nats.NatsClient.C.OnHeartBeat += OnOnHeartBeat;
+            Nats.NatsClient.C.Connect();
+            Nats.NatsClient.C.SubscribeToSubject(PlayerData.PlayerData.Instance.LobbyID.ToString());
+            Nats.NatsClient.C.OnDonatePoints += OnOnDonatePoints;
+            
+            
+            
+            Nats.NatsClient.C.OnHeartBeat += OnOnHeartBeat;
+            otherNameTMP.text = "";
+            otherPointsTMP.text = "0";
+
+            players = new Dictionary<int, playerlistprefab>();
+
+            OwnPoints = PlayerData.PlayerData.Instance.Points;
+
+            descriptionText.text = OwnPoints ! >= 1
+                ? "Please click on another player if you want to donate your point?"
+                : "Please click on another player if you want to donate one of your points?";
 
             increaseButton.onClick.RemoveAllListeners();
             decreaseButton.onClick.RemoveAllListeners();
@@ -79,28 +94,42 @@ namespace Version1.Donate.points.scripts
             donateButton.onClick.AddListener(OnDonate);
         }
 
+        private void OnOnDonatePoints(object sender, DonatePointsMessage e)
+        {
+            OwnPoints = PlayerData.PlayerData.Instance.Points;
+        }
+
         private void OnDonate()
         {
-            if (_pointsToDonate == 0) return;
+            if (_pointsToDonate <= 0) return;
 
             PlayerData.PlayerData.Instance.Points = OwnPoints;
 
-            Nats.NatsClient.C.Publish(PlayerData.PlayerData.Instance.LobbyID.ToString(),
+            NetworkManager.NetworkManager.Instance.Publish(PlayerData.PlayerData.Instance.LobbyID.ToString(),
                 new DonatePointsMessage(DateTime.Now.ToString("o"), PlayerData.PlayerData.Instance.LobbyID,
                     PlayerData.PlayerData.Instance.PlayerId, _otherPlayer.PlayerId, _pointsToDonate));
+
+            descriptionText.text = OwnPoints ! >= 1
+                ? "Please click on another player if you want to donate your point?"
+                : "Please click on another player if you want to donate one of your points?";
+            
+            otherNameTMP.text = "";
+            OwnPoints = 0;
+            OtherPoints = 0;
+            _pointsToDonate = 0;
         }
 
         private void OnDecrease()
         {
-            if (_pointsToDonate - 1 == 0) return;
-            OwnPoints -= 1;
-            OtherPoints += 1;
+            if (_pointsToDonate - 1 < 0) return;
+            OwnPoints += 1;
+            OtherPoints -= 1;
             _pointsToDonate -= 1;
         }
 
         private void OnIncreases()
         {
-            if (OwnPoints - 1 == 0) return;
+            if (OwnPoints - 1 < 0) return;
             OwnPoints -= 1;
             OtherPoints += 1;
             _pointsToDonate += 1;
@@ -147,7 +176,7 @@ namespace Version1.Donate.points.scripts
                 : $"Do you want to donate some of your points to {OtherName}?";
         }
 
-        private void OnEnable()
+        /*private void OnEnable()
         {
             new Nats.NatsClient();
             Nats.NatsClient.C.Connect();
@@ -164,7 +193,7 @@ namespace Version1.Donate.points.scripts
             descriptionText.text = OwnPoints ! >= 1
                 ? "Do you want to donate your point?"
                 : "Do you want to donate your points?";
-        }
+        }*/
 
         private void Update()
         {
@@ -185,9 +214,6 @@ namespace Version1.Donate.points.scripts
             {
                 players.Remove(key);
             }
-
-            //TODO remove this
-            Nats.NatsClient.C.HandleMessages();
         }
     }
 }
