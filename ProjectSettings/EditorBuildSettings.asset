@@ -5,34 +5,34 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/Version1/Phases/login/scenes/LoginScene.unity
     guid: 46842ca02971e9848a8b68fc34cbef5b
-  - enabled: 0
+  - enabled: 1
     path: Assets/Version1/Phases/DonatePoints/scenes/DonatePointsScene.unity
     guid: b8cbeb8ce8195a049abefa5c1188d006
-  - enabled: 0
+  - enabled: 1
     path: Assets/Version1/Phases/Loading/Loading.unity
     guid: 06c67f39b67c03a44ac6681f887215d2
-  - enabled: 0
+  - enabled: 1
     path: Assets/Version1/Market/Scenes/MarketScene.unity
     guid: 0bab51dc448a7944085657a9f80699a7
-  - enabled: 0
+  - enabled: 1
     path: Assets/Version1/Phases/MoneyCorrection/scenes/MoneyCorrectionScene.unity
     guid: b38bc4202d1645e45bfa04c57c5cbfb5
-  - enabled: 0
+  - enabled: 1
     path: Assets/Version1/Phases/MoneyToPoint/scenes/MoneyToPointScene.unity
     guid: e998af63ab528b9499620de3364d403f
-  - enabled: 0
+  - enabled: 1
     path: Assets/Version1/Phases/PayDept/scenes/PayDeptScene.unity
     guid: 727f489ef402f9348ab8332a1b53f3bb
-  - enabled: 0
+  - enabled: 1
     path: Assets/Version1/Phases/TakeALoan/scenes/TakeALoanScene.unity
     guid: c1c7b7ae07618ce4ebc461d17a304272
-  - enabled: 0
+  - enabled: 1
     path: Assets/Version1/Phases/End/scenes/EndScene.unity
     guid: 7ad33738c5ea304479b8ea75d747156b
-  - enabled: 1
+  - enabled: 0
     path: Assets/Version1/Host/scene/HostScene.unity
     guid: b3b1a602a0ce9ae4f972901921db59a9
   m_configObjects: {}

@@ -31,7 +31,7 @@ namespace Version1.Host.Scripts
             HostName = "";
             LobbyCode = Random.Range(100000000, 999999999);
             CurrentMoneySystem = MoneySystems.Sustainable;
-            InbalanceMode = true;
+            InbalanceMode = false;
             Seed = 0;
             RoundDuration = 4;
         }
@@ -53,7 +53,7 @@ namespace Version1.Host.Scripts
             HostName = "";
             LobbyCode = Random.Range(100000000, 999999999);
             CurrentMoneySystem = MoneySystems.Sustainable;
-            InbalanceMode = true;
+            InbalanceMode = false;
             Seed = 0;
             RoundDuration = 4;
         }

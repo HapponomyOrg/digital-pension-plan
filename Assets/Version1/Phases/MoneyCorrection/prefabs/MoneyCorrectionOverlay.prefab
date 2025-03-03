@@ -625,7 +625,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f847045b11f1cd74ca52e57af025f5a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Text: {fileID: 5544127782958252358}
+  text: {fileID: 5544127782958252358}
 --- !u!1 &8545265687884070485
 GameObject:
   m_ObjectHideFlags: 0
@@ -748,13 +748,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7932245887794574821}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 3627938575213605658}
+        m_TargetAssemblyTypeName: Version1.Phases.MoneyCorrection.scripts.MoneyCorrection,
+          Assembly-CSharp
+        m_MethodName: Continue
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

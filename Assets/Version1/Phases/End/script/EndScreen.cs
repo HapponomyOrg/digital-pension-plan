@@ -10,7 +10,7 @@ namespace Version1.End.script
         [SerializeField] private TMP_Text text;
         [SerializeField] private TMP_Text description;
 
-        private void OnEnable()
+        private void Start()
         {
             StartCoroutine(Print());
         }

@@ -12,7 +12,7 @@ namespace Version1.TakeALoan.scripts
         private int _currentAmount = 0;
         private const int PriceStep = 1000;
 
-        private void OnEnable()
+        private void Start()
         {
             switch (PlayerData.PlayerData.Instance.CurrentMoneySystem)
             {

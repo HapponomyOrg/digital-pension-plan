@@ -55,12 +55,12 @@ public class PlayerManager : MonoBehaviour
     public int LobbyID = 0;
     public int Dept = 11000;
     public int IntrestRemainder = 0;
-    public List<int> allPoints = new List<int>();
+    public List<int> allPoints;
 
     public bool RoundIsActive = false;
 
 
-    [field: SerializeField] public List<int> Cards = new List<int>();
+    [field: SerializeField] public List<int> Cards;
     [field: SerializeField] public List<UICard> UiCards { get; private set; }
     [SerializeField] private Transform playerHand;
     [SerializeField] private Transform defaultUICardParent;

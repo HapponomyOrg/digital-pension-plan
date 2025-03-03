@@ -29,7 +29,7 @@ namespace Version1.PlayerData
         // Serialized fields for Inspector visibility
         [SerializeField] private string playerName = "Player";
         [SerializeField] private int age = 0;
-        [SerializeField] private string gender = "Unknown";
+        [SerializeField] private int gender = 0; // 0 Male, 1 Female, 2  other //TODO maybe use enums
         [SerializeField] private int playerId = 456;
         [SerializeField] private int debt = 0;
         [SerializeField] private int interestRemainder = 0;
@@ -63,6 +63,8 @@ namespace Version1.PlayerData
         }
 
         #region Public Properties
+        
+        public string RequestID = "";
         public string PlayerName
         {
             get => playerName;
@@ -75,7 +77,7 @@ namespace Version1.PlayerData
             set => age = value;
         }
 
-        public string Gender
+        public int Gender
         {
             get => gender;
             set => gender = value;
@@ -134,7 +136,9 @@ namespace Version1.PlayerData
         {
             //reset
             Debug.Log("Cards received");
+
             
+            // TODO check i think this is not needed
             playerId = msg.OtherPlayerID;
             
             AddToBalance(msg.Balance);
