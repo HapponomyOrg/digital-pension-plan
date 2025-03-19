@@ -63,6 +63,8 @@ namespace Version1.PlayerData
         }
 
         #region Public Properties
+        
+        public string RequestID = "";
         public string PlayerName
         {
             get => playerName;

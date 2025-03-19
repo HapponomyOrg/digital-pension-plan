@@ -6,17 +6,20 @@ namespace Version1.Nats.Messages.Host
         public string PlayerName;
         public int Age;
         public int Gender;
-        public ConfirmJoinMessage(string dateTime, int lobbyID, int playerID, int lobbyPlayerID, string playerName, int age, int gender) : base(dateTime, MessageSubject.ConfirmJoin, lobbyID, playerID)
+        public string RequestID;
+        
+        public ConfirmJoinMessage(string dateTime, int lobbyID, int playerID, int lobbyPlayerID, string playerName, int age, int gender, string requestID) : base(dateTime, MessageSubject.ConfirmJoin, lobbyID, playerID)
         {
             LobbyPlayerID = lobbyPlayerID;
             PlayerName = playerName;
             Age = age;
             Gender = gender;
+            RequestID = requestID;
         }
 
         public override string ToString()
         {
-            return $"{DateTimeStamp} , Lobby: {LobbyID} , Subject: {Subject} , Player: {PlayerID} , LobbyPlayerID: {LobbyPlayerID}, PlayerName : {PlayerName} , Age: {Age} , Gender: {Gender}";
+            return $"{DateTimeStamp} , Lobby: {LobbyID} , Subject: {Subject} , Player: {PlayerID} , LobbyPlayerID: {LobbyPlayerID}, PlayerName : {PlayerName} , Age: {Age} , Gender: {Gender} , RequestID: {RequestID}";
         }
     }
 }

@@ -648,13 +648,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ownPointsTMP: {fileID: 620274628452221386}
   otherPointsTMP: {fileID: 4866470223542327195}
+  descriptionText: {fileID: 7546914535289790715}
   otherNameTMP: {fileID: 7546914535289790715}
-  otherName2TMP: {fileID: 6935923804957746767}
   increaseButton: {fileID: 2657679456317568249}
   decreaseButton: {fileID: 362015671600484963}
   donateButton: {fileID: 5765502214217512844}
   playerListPrefab: {fileID: 8846001963057236029}
-  playerScrolView: {fileID: 486473963913114578}
+  playerScrollView: {fileID: 486473963913114578}
 --- !u!1 &1082767354583837339
 GameObject:
   m_ObjectHideFlags: 0
@@ -1014,7 +1014,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 6033333590444661386}
   m_OnClick:
     m_PersistentCalls:
@@ -1276,7 +1276,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1942611606089628124}
   m_OnClick:
     m_PersistentCalls:
@@ -2783,7 +2783,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5756790758432781510}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8639645823494548240}
+        m_TargetAssemblyTypeName: Version1.Phases.DonatePoints.scripts.DonatePoints,
+          Assembly-CSharp
+        m_MethodName: SkipDonation
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &7387126689344673159
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3527,7 +3540,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1652223296874417607}
   m_OnClick:
     m_PersistentCalls:

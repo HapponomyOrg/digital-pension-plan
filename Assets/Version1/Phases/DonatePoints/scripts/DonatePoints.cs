@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Version1.Host.Scripts;
 using Version1.Nats.Messages.Client;
+using Version1.Utilities;
 
 namespace Version1.Phases.DonatePoints.scripts
 {
@@ -24,9 +27,9 @@ namespace Version1.Phases.DonatePoints.scripts
 
         private PlayerData.PlayerData _otherPlayer;
 
-        private Dictionary<int, playerlistprefab> players;
-        [SerializeField] private Transform playerListPrefab;
-        [SerializeField] private GameObject playerScrolView;
+        private Dictionary<int, PlayerListPrefab> players;
+        [SerializeField] private Transform playerListPrefab; 
+        [SerializeField] private GameObject playerScrollView;
 
         private int _ownPoints;
 
@@ -77,7 +80,7 @@ namespace Version1.Phases.DonatePoints.scripts
             otherNameTMP.text = "";
             otherPointsTMP.text = "0";
 
-            players = new Dictionary<int, playerlistprefab>();
+            players = new Dictionary<int, PlayerListPrefab>();
 
             OwnPoints = PlayerData.PlayerData.Instance.Points;
 
@@ -105,7 +108,7 @@ namespace Version1.Phases.DonatePoints.scripts
 
             PlayerData.PlayerData.Instance.Points = OwnPoints;
 
-            NetworkManager.NetworkManager.Instance.Publish(PlayerData.PlayerData.Instance.LobbyID.ToString(),
+            NetworkManager.Instance.Publish(PlayerData.PlayerData.Instance.LobbyID.ToString(),
                 new DonatePointsMessage(DateTime.Now.ToString("o"), PlayerData.PlayerData.Instance.LobbyID,
                     PlayerData.PlayerData.Instance.PlayerId, _otherPlayer.PlayerId, _pointsToDonate));
 
@@ -125,6 +128,8 @@ namespace Version1.Phases.DonatePoints.scripts
             OwnPoints += 1;
             OtherPoints -= 1;
             _pointsToDonate -= 1;
+
+            if (_pointsToDonate == 0) donateButton.interactable = false;
         }
 
         private void OnIncreases()
@@ -133,6 +138,9 @@ namespace Version1.Phases.DonatePoints.scripts
             OwnPoints -= 1;
             OtherPoints += 1;
             _pointsToDonate += 1;
+
+            donateButton.interactable = true;
+
         }
 
         private void OnOnHeartBeat(object sender, HeartBeatMessage e)
@@ -141,9 +149,9 @@ namespace Version1.Phases.DonatePoints.scripts
 
             if (!players.ContainsKey(e.PlayerID))
             {
-                var player = Instantiate(playerListPrefab, playerScrolView.transform);
+                var player = Instantiate(playerListPrefab, playerScrollView.transform);
                 player.gameObject.SetActive(true);
-                var plistprefab = player.GetComponent<playerlistprefab>();
+                var plistprefab = player.GetComponent<PlayerListPrefab>();
                 plistprefab.LastPing = parsedDate;
                 plistprefab.ID = e.PlayerID;
                 plistprefab.Name = e.PlayerName;
@@ -163,17 +171,25 @@ namespace Version1.Phases.DonatePoints.scripts
                 players[e.PlayerID].Points = e.Points;
 
                 if (OtherName != e.PlayerName || OtherPoints == e.Points) return;
-                OtherPoints = e.Points;
+                OtherPoints = e.Points + _pointsToDonate;
             }
         }
 
-        private void OnPlayerClick(playerlistprefab player)
+        private void OnPlayerClick(PlayerListPrefab player)
         {
-            OtherPoints = player.Points;
+            OtherPoints = player.Points + _pointsToDonate;
             OtherName = player.Name;
             descriptionText.text = OwnPoints ! >= 1
                 ? $"Do you want to donate your point to {OtherName}?"
                 : $"Do you want to donate some of your points to {OtherName}?";
+            
+            increaseButton.interactable = true;
+            decreaseButton.interactable = true;
+        }
+
+        public void SkipDonation()
+        {
+            SceneManager.LoadScene(Utilities.GameManager.LOADING);
         }
 
         /*private void OnEnable()

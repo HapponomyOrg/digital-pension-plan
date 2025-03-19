@@ -30,7 +30,7 @@ namespace Version1.Host.Scripts
         private void Start()
         {
             new Nats.NatsHost();
-
+            
             Nats.NatsHost.C.onError += (sender, s) =>
             {
                 natsError.SetActive(true);

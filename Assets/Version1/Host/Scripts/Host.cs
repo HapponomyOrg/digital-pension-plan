@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Version1.Nats.Messages.Client;
 using Version1.Nats.Messages.Host;
+using Debug = UnityEngine.Debug;
 
 namespace Version1.Host.Scripts
 {
@@ -49,7 +51,7 @@ namespace Version1.Host.Scripts
 
         // things from the hostscene
         private int playerId = 0;
-        private Dictionary<int, playerlistprefab> players;
+        private Dictionary<int, PlayerListPrefab> players;
         [SerializeField] private Transform playerListPrefab;
         [SerializeField] private GameObject playerScrolView;
 
@@ -75,7 +77,7 @@ namespace Version1.Host.Scripts
             stopRound.onClick.AddListener(StopRoundOnClick);
             skipRound.onClick.AddListener(ContinueOnClick);
             startRound.onClick.AddListener(StartRoundOnClick);
-
+            
             // hostscene
             Nats.NatsHost.C.OnHeartBeat += OnOnHeartBeat;
             Nats.NatsHost.C.OnJoinrequest += OnOnJoinrequest;
@@ -90,7 +92,7 @@ namespace Version1.Host.Scripts
 
             _sessionDuration = new Stopwatch();
 
-            players = new Dictionary<int, playerlistprefab>();
+            players = new Dictionary<int, PlayerListPrefab>();
 
             playerScrolView = GameObject.Find("PlayerScrollView");
 
@@ -122,19 +124,16 @@ namespace Version1.Host.Scripts
 
         private void OnOnJoinrequest(object sender, JoinRequestMessage msg)
         {
-            foreach (var record in players)
+            if (players.Any(record => record.Value.Name == msg.PlayerName))
             {
-                // TODO() Fix player records
-                /*if (record.Value.Name == msg.PlayerName)
-                {
-                    RejectedMessage rejectedMessage = new RejectedMessage(DateTime.Now.ToString("o"), msg.LobbyID,
-                        -1, msg.PlayerName, "PlayerNameAlreadyTaken",
-                        $"{msg.PlayerName} is already taken in the session you are trying to join. \n Please fill in another name and try again.");
+                RejectedMessage rejectedMessage = new RejectedMessage(DateTime.Now.ToString("o"), msg.LobbyID,
+                    -1, msg.PlayerName, "PlayerNameAlreadyTaken",
+                    $"{msg.PlayerName} is already taken in the session you are trying to join. \n Please fill in another name and try again.");
 
-                    Nats.NatsHost.C.Publish(msg.LobbyID.ToString(),rejectedMessage);
-                    return;
-                }*/
+                Nats.NatsHost.C.Publish(msg.LobbyID.ToString(),rejectedMessage);
+                return;
             }
+            
 
             Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(), new ConfirmJoinMessage(
                 DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode,
@@ -142,22 +141,34 @@ namespace Version1.Host.Scripts
                 playerId,
                 msg.PlayerName,
                 msg.Age,
-                msg.Gender));
+                msg.Gender, 
+                msg.RequestID));
 
-            // players.Add(playerId, null);
+            var player = Instantiate(playerListPrefab, playerScrolView.transform);
+            player.gameObject.SetActive(true);
+            var plistprefab = player.GetComponent<PlayerListPrefab>();
+            plistprefab.LastPing = DateTime.Parse(msg.DateTimeStamp);
+            plistprefab.ID = msg.PlayerID;
+            plistprefab.Name = msg.PlayerName;
+            plistprefab.Balance = 0;
+            plistprefab.Points = 0;
+
+            players.Add(playerId, plistprefab);
 
             playerId++;
         }
 
         private void OnOnHeartBeat(object sender, HeartBeatMessage e)
         {
+            Debug.Log("HEARTBEAT");
+            
             DateTime parsedDate = DateTime.Parse(e.DateTimeStamp);
 
             if (!players.ContainsKey(e.PlayerID))
             {
                 var player = Instantiate(playerListPrefab, playerScrolView.transform);
                 player.gameObject.SetActive(true);
-                var plistprefab = player.GetComponent<playerlistprefab>();
+                var plistprefab = player.GetComponent<PlayerListPrefab>();
                 plistprefab.LastPing = parsedDate;
                 plistprefab.ID = e.PlayerID;
                 plistprefab.Name = e.PlayerName;
@@ -168,11 +179,10 @@ namespace Version1.Host.Scripts
             }
             else
             {
-                // TODO fix null error
-                players[e.PlayerID].LastPing = parsedDate;
-                players[e.PlayerID].Name = e.PlayerName;
-                players[e.PlayerID].Balance = e.Balance;
-                players[e.PlayerID].Points = e.Points;
+                    players[e.PlayerID].LastPing = parsedDate;
+                    players[e.PlayerID].Name = e.PlayerName;
+                    players[e.PlayerID].Balance = e.Balance;
+                    players[e.PlayerID].Points = e.Points;   
             }
         }
 
@@ -215,7 +225,7 @@ namespace Version1.Host.Scripts
                 SessionData.Instance.LobbyCode,
                 -1));*/
         }
-
+        
         private void StartRoundOnClick()
         {
             Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(), new StartRoundMessage(
@@ -223,6 +233,7 @@ namespace Version1.Host.Scripts
                 SessionData.Instance.LobbyCode,
                 -1,
                 current_round,
+                testPhases[current_round],
                 100 // TODO CHANGE TO DURATION OF PHASE, GET FROM PHASE SYSTEM OF LUUK
             ));
         }

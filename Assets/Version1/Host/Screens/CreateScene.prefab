@@ -1806,7 +1806,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4848648308580026719, guid: 37ee9aa1d641c9c40857592ac00b7945, type: 3}
       propertyPath: m_Interactable
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5038168454141414062, guid: 37ee9aa1d641c9c40857592ac00b7945, type: 3}
       propertyPath: m_Name
@@ -2948,6 +2948,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -0.000024796
       objectReference: {fileID: 0}
+    - target: {fileID: 4145294113076975667, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
+      propertyPath: m_text
+      value: Sustainable
+      objectReference: {fileID: 0}
     - target: {fileID: 5062449074504788644, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
       propertyPath: m_Name
       value: Dropdown
@@ -3051,6 +3055,18 @@ PrefabInstance:
     - target: {fileID: 7046917170965905598, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
       propertyPath: m_Colors.m_HighlightedColor.r
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7046917170965905598, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
+      propertyPath: m_Options.m_Options.Array.data[0].m_Text
+      value: Sustainable
+      objectReference: {fileID: 0}
+    - target: {fileID: 7046917170965905598, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
+      propertyPath: m_Options.m_Options.Array.data[1].m_Text
+      value: Debt Based
+      objectReference: {fileID: 0}
+    - target: {fileID: 7046917170965905598, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
+      propertyPath: m_Options.m_Options.Array.data[2].m_Text
+      value: At Intervals
       objectReference: {fileID: 0}
     - target: {fileID: 8559564146588199429, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
       propertyPath: m_AnchoredPosition.x

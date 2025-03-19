@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Version1.Nats.Messages;
 using Version1.Nats.Messages.Client;
 using Version1.Nats.Messages.Host;
-using System.Threading;
 
-namespace Version1.NetworkManager
+namespace Version1.Utilities
 {
     public class NetworkManager : MonoBehaviour
     {
         public static NetworkManager Instance { get; private set; }
 
-        public int HeartbeatInterval = 2;
+        public int heartbeatInterval = 2;
 
+        public event EventHandler<RejectedMessage> OnRejected;
+        
         public NetworkManager()
         {
             if (Instance != null) return;
@@ -89,7 +89,7 @@ namespace Version1.NetworkManager
 
                 Publish(PlayerData.PlayerData.Instance.LobbyID.ToString(), msg);
 
-                yield return new WaitForSeconds(HeartbeatInterval);
+                yield return new WaitForSeconds(heartbeatInterval);
             }
         }
 
@@ -142,7 +142,7 @@ namespace Version1.NetworkManager
 
         private void NatsClientOnOnStartRound(object sender, StartRoundMessage e)
         {
-            Utilities.GameManager.Instance.LoadPhase(e.RoundNumber);
+            Utilities.GameManager.Instance.LoadPhase(e.RoundNumber, e.RoundName);
         }
 
         private void NatsClientOnOnStartGame(object sender, StartGameMessage e)
@@ -173,13 +173,8 @@ namespace Version1.NetworkManager
 
         private void NatsClientOnOnListCards(object sender, ListCardsmessage e)
         {
-            // Debug.Log("listing received");
-            // Debug.Log(e.ToString());
-            
-            if (e.PlayerID == PlayerData.PlayerData.Instance.PlayerId)
-                return;
-            
-            Utilities.GameManager.Instance.MarketManager.HandleAddListingMessage(e);
+            // TODO MARKET FUNCTION
+            //throw new NotImplementedException();
         }
 
         // Host Function
@@ -219,7 +214,7 @@ namespace Version1.NetworkManager
         private void NatsClientOnOnConfirmJoin(object sender, ConfirmJoinMessage e)
         {
             // TODO MAYBE SEND A  JOIN ID OR SOMEHTING INSTEAD OF CHECKING BY NAME
-            if (e.PlayerName != PlayerData.PlayerData.Instance.PlayerName) return;
+            if (e.RequestID != PlayerData.PlayerData.Instance.RequestID) return;
 
             PlayerData.PlayerData.Instance.PlayerId = e.LobbyPlayerID;
             StartCoroutine(HeartbeatRoutine());
@@ -234,14 +229,8 @@ namespace Version1.NetworkManager
 
         private void NatsClientOnOnCancelListing(object sender, CancelListingMessage e)
         {
-            Debug.Log($"sender: {e.PlayerID}, receiver: {PlayerData.PlayerData.Instance.PlayerId}");
-
-            if (e.PlayerID == PlayerData.PlayerData.Instance.PlayerId)
-                return;
-            
-            Debug.Log("processed cancel listing");
-            
-            Utilities.GameManager.Instance.MarketManager.HandleCancelListingMessage(e);
+            // TODO MARKET FUNCTION
+            //throw new NotImplementedException();
         }
 
         private void NatsClientOnOnCancelBidding(object sender, CancelBiddingMessage e)
@@ -264,8 +253,8 @@ namespace Version1.NetworkManager
 
         private void NatsClientOnOnRejected(object sender, RejectedMessage e)
         {
-            // TODO MARKET FUNCTION
-            //throw new NotImplementedException();
+            // TODO this is disgusting
+            OnRejected?.Invoke(sender, e);
         }
 
         /*private void NatsClientOnOnJoinrequest(object sender, JoinRequestMessage e)
