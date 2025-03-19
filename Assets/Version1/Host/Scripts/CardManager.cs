@@ -32,7 +32,7 @@ namespace Version1.Host.Scripts
 
             var cardsPerPlayer = CalculateCardsPerPlayer(numOfPlayers);
 
-            for (int i = 0; i < numOfPlayers + 1; i++)
+            for (int i = 0; i < numOfPlayers; i++)
             {
                 List<CardData> playerCards = TakeCards(cardsPerPlayer);
 
