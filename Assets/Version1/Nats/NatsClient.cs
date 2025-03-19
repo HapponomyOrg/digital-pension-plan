@@ -241,6 +241,7 @@ namespace Version1.Nats
 
         protected override void Subscribe()
         {
+            
         }
         
         public void HandleMessages()
@@ -248,6 +249,7 @@ namespace Version1.Nats
             if (EventsReceived.Count < 1) return;
             
             var message = EventsReceived.Dequeue();
+            
             if (message == null || message.PlayerID == PlayerData.PlayerData.Instance.PlayerId) return;
             
             DispatchMessage(message);

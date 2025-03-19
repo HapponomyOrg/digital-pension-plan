@@ -58,6 +58,8 @@ namespace Version1.Host.Scripts
                         (int)SessionData.Instance.CurrentMoneySystem);
                 }
 
+                Debug.Log($"sent cards, msg: {msg}");
+                
                 Nats.NatsHost.C.Publish($"{SessionData.Instance.LobbyCode}.{i}", msg);
             }
         }

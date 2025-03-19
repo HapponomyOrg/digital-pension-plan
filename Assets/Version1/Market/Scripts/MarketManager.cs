@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Version1.Host.Scripts;
 using Version1.Nats.Messages.Client;
 
 namespace Version1.Market.Scripts
@@ -12,13 +13,13 @@ namespace Version1.Market.Scripts
         private readonly Dictionary<Guid, Listing> listings = new();
 
         public event EventHandler MarketDataChanged;
+        public event EventHandler<string> ListingRemoved;
+        public event EventHandler<string> ListingAdded;
 
         public MarketManager()
         {
-            Nats.NatsClient.C.OnBuyCards += (sender, message) => { HandleBuyCardsMessage(message); };
-            Nats.NatsClient.C.OnCancelListing += (sender, message) => { HandleCancelListingMessage(message); };
-            Nats.NatsClient.C.OnListCards += (sender, message) => { HandleAddListingMessage(message); };
-
+            // Nats.NatsClient.C.OnBuyCards += (sender, message) => { HandleBuyCardsMessage(message); };
+            // Nats.NatsClient.C.OnCancelListing += (sender, message) => { HandleCancelListingMessage(message); };
         }
 
         private void HandleBuyCardsMessage(BuyCardsRequestMessage message)
@@ -32,14 +33,7 @@ namespace Version1.Market.Scripts
             RemoveListing(guid);
         }
 
-        private void HandleCancelListingMessage(CancelListingMessage message)
-        {
-            var guid = Guid.Parse(message.AuctionID);
-            
-            RemoveListing(guid);
-        }
-
-        private void HandleAddListingMessage(ListCardsmessage message)
+        public void HandleAddListingMessage(ListCardsmessage message)
         {
             var guid = Guid.Parse(message.AuctionID);
             
@@ -58,7 +52,8 @@ namespace Version1.Market.Scripts
 
             PlayerData.PlayerData.Instance.RemoveCards(listing.Cards);
             listings.Add(listingId, listing);
-            MarketDataChanged?.Invoke(this, EventArgs.Empty);
+            ListingAdded?.Invoke(this, listingId.ToString());
+            //MarketDataChanged?.Invoke(this, EventArgs.Empty);
         }
         
         public void AddListing(int listerId, DateTime timestamp, int price, int[] cards)
@@ -74,7 +69,9 @@ namespace Version1.Market.Scripts
 
             PlayerData.PlayerData.Instance.RemoveCards(listing.Cards);
             listings.Add(listingId, listing);
-            MarketDataChanged?.Invoke(this, EventArgs.Empty);
+            ListingAdded?.Invoke(this, listingId.ToString());
+
+            //MarketDataChanged?.Invoke(this, EventArgs.Empty);
             
             // TODO() networking
             var data = PlayerData.PlayerData.Instance;
@@ -93,25 +90,29 @@ namespace Version1.Market.Scripts
             MarketDataChanged?.Invoke(this, EventArgs.Empty);
         }
 
+        public void HandleCancelListingMessage(CancelListingMessage message)
+        {
+            var guid = Guid.Parse(message.AuctionID);
+            
+            RemoveListing(guid);
+        }
+        
         public void CancelListing(Listing listing)
         {
             if (!listings.ContainsKey(listing.ListingId))
                 return;
             
-            listings.Remove(listing.ListingId);
             PlayerData.PlayerData.Instance.AddCards(listing.Cards);
-            MarketDataChanged?.Invoke(this, EventArgs.Empty);
-
-            // TODO() networking
-            var data = PlayerData.PlayerData.Instance;
+            RemoveListing(listing.ListingId);
             
             var message = new CancelListingMessage(
                 DateTime.Now.ToString("o"), 
-                data.LobbyID,
-                data.PlayerId,
+                PlayerData.PlayerData.Instance.LobbyID,
+                PlayerData.PlayerData.Instance.PlayerId,
                 listing.ListingId.ToString()
                 );
-            Nats.NatsClient.C.Publish(data.LobbyID.ToString(), message);        
+            
+            Nats.NatsClient.C.Publish(PlayerData.PlayerData.Instance.LobbyID.ToString(), message);        
         }
         
         private void RemoveListing(Guid listingId)
@@ -119,8 +120,11 @@ namespace Version1.Market.Scripts
             if (!listings.ContainsKey(listingId))
                 return;
 
+            Debug.LogWarning("removed listing");
+            
             listings.Remove(listingId);
-            MarketDataChanged?.Invoke(this, EventArgs.Empty);
+            ListingRemoved?.Invoke(this, listingId.ToString());
+            //MarketDataChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public void AddBidToListing(Listing listing, int buyer, int offeredPrice, bool listerBid = false)

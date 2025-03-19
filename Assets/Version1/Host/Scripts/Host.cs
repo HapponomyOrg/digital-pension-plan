@@ -144,7 +144,7 @@ namespace Version1.Host.Scripts
                 msg.Age,
                 msg.Gender));
 
-            players.Add(playerId, null);
+            // players.Add(playerId, null);
 
             playerId++;
         }
@@ -168,6 +168,7 @@ namespace Version1.Host.Scripts
             }
             else
             {
+                // TODO fix null error
                 players[e.PlayerID].LastPing = parsedDate;
                 players[e.PlayerID].Name = e.PlayerName;
                 players[e.PlayerID].Balance = e.Balance;

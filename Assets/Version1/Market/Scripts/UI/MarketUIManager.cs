@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -10,8 +11,6 @@ namespace Version1.Market.Scripts.UI
 {
     public class MarketUIManager : MonoBehaviour
     {
-
-
         [SerializeField] private Button AddListingButton;
 
         [SerializeField] private Transform closedMarketPanel;
@@ -78,12 +77,44 @@ namespace Version1.Market.Scripts.UI
         
         [SerializeField] private AddListingOverlay addListingOverlay;
         [SerializeField] private CancelListingOverlay cancelListingOverlay;
-        
+
+
+        private Dictionary<string, MarketListingDisplay> marketListingDisplays = new();
+        private Dictionary<string, PersonalListingDisplay> personalListingDisplays = new();
+        private Dictionary<string, MarketBidListingDisplay> marketBidListingDisplays = new();
+
         public void Init()
         {
-            AddListingButton.onClick.AddListener(() => addListingOverlay.Open());
+            marketListingDisplays = new Dictionary<string, MarketListingDisplay>();
+            personalListingDisplays = new Dictionary<string, PersonalListingDisplay>();
+            marketBidListingDisplays = new Dictionary<string, MarketBidListingDisplay>();
             
-            Utilities.GameManager.Instance.MarketManager.MarketDataChanged += (sender, args) => { GenerateDisplays(); };
+            AddListingButton.onClick.AddListener(() => addListingOverlay.Open());
+
+            Utilities.GameManager.Instance.MarketManager.ListingAdded += (sender, args) => { GenerateDisplays(); }; 
+            Utilities.GameManager.Instance.MarketManager.ListingRemoved += (sender, args) =>
+            {
+                if (marketListingDisplays.ContainsKey(args))
+                {
+                    Destroy(marketListingDisplays[args]);
+                    marketListingDisplays.Remove(args);
+                    Debug.Log($"removed market listing {args}");
+                }
+
+                if (personalListingDisplays.ContainsKey(args))
+                {
+                    Destroy(personalListingDisplays[args]);
+                    personalListingDisplays.Remove(args);
+                    Debug.Log($"removed personal listing {args}");
+                }
+
+                if (marketBidListingDisplays.ContainsKey(args))
+                {
+                    Destroy(marketBidListingDisplays[args]);
+                    marketBidListingDisplays.Remove(args);
+                    Debug.Log($"removed bid listing {args}");
+                }
+            }; 
 
             /*foreach (var listing in testListings)
             {
@@ -114,27 +145,6 @@ namespace Version1.Market.Scripts.UI
         // TODO Only change display that changed instead of regenerating everything
         private void GenerateDisplays()
         {
-            foreach (Transform child in marketListings)
-            {
-                if (child == null)
-                    continue;
-                Destroy(child.gameObject);
-            }
-
-            foreach (Transform child in marketBidListings)
-            {
-                if (child == null)
-                    continue;
-                Destroy(child.gameObject);
-            }
-
-            foreach (Transform child in personalListings)
-            {
-                if (child == null)
-                    continue;
-                Destroy(child.gameObject);
-            }
-
             GenerateMarketListings();
             GenerateMarketBidListings();
             GeneratePersonalListings();
@@ -147,9 +157,13 @@ namespace Version1.Market.Scripts.UI
             foreach (var l in listings)
                 GenerateMarketListing(l);
         }
-        
+
+
         private void GenerateMarketListing(Listing listing)
         {
+            if (marketListingDisplays.ContainsKey(listing.ListingId.ToString()))
+                return;
+            
             var obj = Instantiate(marketListingDisplay, marketListings);
             obj.Init(listing,
                 new Dictionary<ListingDisplayAction, Action>
@@ -165,7 +179,8 @@ namespace Version1.Market.Scripts.UI
                             })
                     }
                 });
-            //listingDisplays[listing.ListingId] = obj;
+            
+            marketListingDisplays.Add(listing.ListingId.ToString(), obj);
         }
         
         
@@ -200,18 +215,21 @@ namespace Version1.Market.Scripts.UI
         private void GeneratePersonalListings()
         {
             var listings = Utilities.GameManager.Instance.MarketManager.PersonalListings(PlayerData.PlayerData.Instance.PlayerId);
-            
+         
             foreach (var l in listings)
                 GeneratePersonalListing(l);
         }
 
         private void GeneratePersonalListing(Listing listing)
         {
+            if (personalListingDisplays.ContainsKey(listing.ListingId.ToString()))
+                return;
+            
             var obj = Instantiate(personalListingDisplay, personalListings);
             obj.Init(listing,
                 new Dictionary<ListingDisplayAction, Action>
                 {
-                    { ListingDisplayAction.Cancel, () => { Debug.Log("Cancel personal listing"); cancelListingOverlay.Open(listing); } },
+                    { ListingDisplayAction.Cancel, () => { cancelListingOverlay.Open(listing); } },
                     { ListingDisplayAction.Select, () => { personalListingDetailsDisplay.Init(listing,
                             new Dictionary<ListingDisplayAction, Action>
                             {
@@ -219,6 +237,8 @@ namespace Version1.Market.Scripts.UI
                             });
                     } }
                 });
+            
+            personalListingDisplays.Add(listing.ListingId.ToString(), obj);
         }
 
         

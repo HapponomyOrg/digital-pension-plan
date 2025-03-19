@@ -21,10 +21,15 @@ namespace Version1.Phases.Trading
         
         private void GenerateCardDisplays()
         {
-            
             //TODO here it goes wrong for the hand in.
-            foreach (Transform child in cardList)
-                Destroy(child.gameObject);
+            // foreach (Transform child in cardList)
+            //     Destroy(child.gameObject);
+            
+            // for (var i = cardList.childCount - 1; i >= 0; i--)
+            // {
+            //     DestroyImmediate(cardList.GetChild(i).gameObject);
+            // }
+            
             
             
             var cardAmounts = new Dictionary<int, int>();
