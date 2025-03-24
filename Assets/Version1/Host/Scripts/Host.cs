@@ -148,24 +148,19 @@ namespace Version1.Host.Scripts
             player.gameObject.SetActive(true);
             var plistprefab = player.GetComponent<PlayerListPrefab>();
             plistprefab.LastPing = DateTime.Parse(msg.DateTimeStamp);
-            plistprefab.ID = playerId; //msg.PlayerID;
+            plistprefab.ID = msg.PlayerID;
             plistprefab.Name = msg.PlayerName;
             plistprefab.Balance = 0;
             plistprefab.Points = 0;
 
             players.Add(playerId, plistprefab);
 
-            foreach (var p in players)
-            {
-                Debug.Log($"Player {p.Key}: {p.Value.Name}, {p.Value.ID}, {p.Value.Balance}");
-            }
-
             playerId++;
         }
 
         private void OnOnHeartBeat(object sender, HeartBeatMessage e)
         {
-            Debug.Log($"HEARTBEAT: {e.PlayerID}");
+            Debug.Log("HEARTBEAT");
             
             DateTime parsedDate = DateTime.Parse(e.DateTimeStamp);
 
@@ -206,8 +201,6 @@ namespace Version1.Host.Scripts
 
         private void StartSessionOnClick()
         {
-            Debug.Log(players.Count);
-            
             _cardManager.StartGame(players.Count);
 
             startRound.interactable = true;

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Version1.Host.Scripts;
 using Version1.Nats.Messages.Client;
@@ -27,8 +26,8 @@ namespace Version1.Phases.DonatePoints.scripts
 
         private PlayerData.PlayerData _otherPlayer;
 
-        private Dictionary<int, PlayerListPrefab> players;
-        [SerializeField] private Transform playerListPrefab; 
+        private Dictionary<int, PlayerListPrefab> _players;
+        [SerializeField] private Transform playerListPrefab;
         [SerializeField] private GameObject playerScrollView;
 
         private int _ownPoints;
@@ -70,17 +69,15 @@ namespace Version1.Phases.DonatePoints.scripts
 
         private void Start()
         {
-            Nats.NatsClient.C.Connect();
-            Nats.NatsClient.C.SubscribeToSubject(PlayerData.PlayerData.Instance.LobbyID.ToString());
+            NetworkManager.Instance.SubscribeToSubject(PlayerData.PlayerData.Instance.LobbyID.ToString());
+
             Nats.NatsClient.C.OnDonatePoints += OnOnDonatePoints;
-            
-            
-            
+
             Nats.NatsClient.C.OnHeartBeat += OnOnHeartBeat;
             otherNameTMP.text = "";
             otherPointsTMP.text = "0";
 
-            players = new Dictionary<int, PlayerListPrefab>();
+            _players = new Dictionary<int, PlayerListPrefab>();
 
             OwnPoints = PlayerData.PlayerData.Instance.Points;
 
@@ -115,7 +112,7 @@ namespace Version1.Phases.DonatePoints.scripts
             descriptionText.text = OwnPoints ! >= 1
                 ? "Please click on another player if you want to donate your point?"
                 : "Please click on another player if you want to donate one of your points?";
-            
+
             otherNameTMP.text = "";
             OwnPoints = 0;
             OtherPoints = 0;
@@ -140,14 +137,13 @@ namespace Version1.Phases.DonatePoints.scripts
             _pointsToDonate += 1;
 
             donateButton.interactable = true;
-
         }
 
         private void OnOnHeartBeat(object sender, HeartBeatMessage e)
         {
             DateTime parsedDate = DateTime.Parse(e.DateTimeStamp);
 
-            if (!players.ContainsKey(e.PlayerID))
+            if (!_players.ContainsKey(e.PlayerID))
             {
                 var player = Instantiate(playerListPrefab, playerScrollView.transform);
                 player.gameObject.SetActive(true);
@@ -161,14 +157,14 @@ namespace Version1.Phases.DonatePoints.scripts
                 button.onClick.RemoveAllListeners();
                 button.onClick.AddListener(() => OnPlayerClick(plistprefab));
 
-                players.Add(e.PlayerID, plistprefab);
+                _players.Add(e.PlayerID, plistprefab);
             }
             else
             {
-                players[e.PlayerID].LastPing = parsedDate;
-                players[e.PlayerID].ID = e.PlayerID;
-                players[e.PlayerID].Name = e.PlayerName;
-                players[e.PlayerID].Points = e.Points;
+                _players[e.PlayerID].LastPing = parsedDate;
+                _players[e.PlayerID].ID = e.PlayerID;
+                _players[e.PlayerID].Name = e.PlayerName;
+                _players[e.PlayerID].Points = e.Points;
 
                 if (OtherName != e.PlayerName || OtherPoints == e.Points) return;
                 OtherPoints = e.Points + _pointsToDonate;
@@ -182,7 +178,7 @@ namespace Version1.Phases.DonatePoints.scripts
             descriptionText.text = OwnPoints ! >= 1
                 ? $"Do you want to donate your point to {OtherName}?"
                 : $"Do you want to donate some of your points to {OtherName}?";
-            
+
             increaseButton.interactable = true;
             decreaseButton.interactable = true;
         }
@@ -217,7 +213,7 @@ namespace Version1.Phases.DonatePoints.scripts
 
             var keysToRemove = new List<int>();
 
-            foreach (var player in players)
+            foreach (var player in _players)
             {
                 if (DateTime.Now - TimeSpan.FromSeconds(5) > player.Value.LastPing)
                 {
@@ -228,7 +224,7 @@ namespace Version1.Phases.DonatePoints.scripts
 
             foreach (var key in keysToRemove)
             {
-                players.Remove(key);
+                _players.Remove(key);
             }
         }
     }

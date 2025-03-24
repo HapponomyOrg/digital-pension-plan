@@ -190,6 +190,7 @@ namespace Version1.Utilities
 
         private void NatsClientOnOnDonatePoints(object sender, DonatePointsMessage e)
         {
+            
             PlayerData.PlayerData.Instance.PointsDonated(e);
         }
 
