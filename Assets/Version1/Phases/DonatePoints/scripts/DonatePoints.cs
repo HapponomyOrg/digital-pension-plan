@@ -28,7 +28,7 @@ namespace Version1.Phases.DonatePoints.scripts
 
         private Dictionary<int, PlayerListPrefab> _players;
         [SerializeField] private Transform playerListPrefab;
-        [SerializeField] private GameObject playerScrollView;
+        [SerializeField] private Transform playerScrollView;
 
         private int _ownPoints;
 

@@ -38,6 +38,8 @@ namespace Version1.Phases.login.scripts
       private void InstanceOnOnRejected(object sender, RejectedMessage e)
       {
          // TODO this is wrong select right text.
+         if (e.TargetPlayer != PlayerData.PlayerData.Instance.PlayerName && e.RequestID != PlayerData.PlayerData.Instance.RequestID) return;
+         
          NameError.SetActive(true);
          NameError.GetComponentAtIndex<TMP_Text>(2).text = e.Message;
          NameError.GetComponentAtIndex<TMP_Text>(3).text = e.ReferenceID;

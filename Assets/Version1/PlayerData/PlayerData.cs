@@ -23,8 +23,6 @@ namespace Version1.PlayerData
                 return _instance;
             }
         }
-        // TODO dont destroy on load
-        
 
         // Serialized fields for Inspector visibility
         [SerializeField] private string playerName = "Player";
@@ -44,6 +42,7 @@ namespace Version1.PlayerData
         [SerializeField] private int points = 0;
         [SerializeField] private int lobbyID = 0;
 
+        
         // Events
         public event EventHandler<int> OnBalanceChange;
         public event EventHandler<int> OnPointsChange;
