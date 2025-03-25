@@ -249,6 +249,11 @@ namespace Version1.Nats
             
             var message = EventsReceived.Dequeue();
             if (message == null || message.PlayerID == PlayerData.PlayerData.Instance.PlayerId) return;
+
+            if (message.Subject != MessageSubject.HeartBeat)
+            {
+                Debug.Log($"Handled message: {message}");
+            }
             
             DispatchMessage(message);
         }

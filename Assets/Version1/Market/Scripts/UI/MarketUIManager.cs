@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -82,7 +83,7 @@ namespace Version1.Market.Scripts.UI
         private Dictionary<string, MarketListingDisplay> marketListingDisplays = new();
         private Dictionary<string, PersonalListingDisplay> personalListingDisplays = new();
         private Dictionary<string, MarketBidListingDisplay> marketBidListingDisplays = new();
-
+        
         public void Init()
         {
             marketListingDisplays = new Dictionary<string, MarketListingDisplay>();
@@ -92,29 +93,29 @@ namespace Version1.Market.Scripts.UI
             AddListingButton.onClick.AddListener(() => addListingOverlay.Open());
 
             Utilities.GameManager.Instance.MarketManager.ListingAdded += (sender, args) => { GenerateDisplays(); }; 
-            Utilities.GameManager.Instance.MarketManager.ListingRemoved += (sender, args) =>
-            {
-                if (marketListingDisplays.ContainsKey(args))
-                {
-                    Destroy(marketListingDisplays[args]);
-                    marketListingDisplays.Remove(args);
-                    Debug.Log($"removed market listing {args}");
-                }
-
-                if (personalListingDisplays.ContainsKey(args))
-                {
-                    Destroy(personalListingDisplays[args]);
-                    personalListingDisplays.Remove(args);
-                    Debug.Log($"removed personal listing {args}");
-                }
-
-                if (marketBidListingDisplays.ContainsKey(args))
-                {
-                    Destroy(marketBidListingDisplays[args]);
-                    marketBidListingDisplays.Remove(args);
-                    Debug.Log($"removed bid listing {args}");
-                }
-            }; 
+            // Utilities.GameManager.Instance.MarketManager.ListingRemoved += (sender, args) =>
+            // {
+            //     if (marketListingDisplays.ContainsKey(args))
+            //     {
+            //         Destroy(marketListingDisplays[args]);
+            //         marketListingDisplays.Remove(args);
+            //         Debug.Log($"removed market listing {args}");
+            //     }
+            //
+            //     if (personalListingDisplays.ContainsKey(args))
+            //     {
+            //         Destroy(personalListingDisplays[args]);
+            //         personalListingDisplays.Remove(args);
+            //         Debug.Log($"removed personal listing {args}");
+            //     }
+            //
+            //     if (marketBidListingDisplays.ContainsKey(args))
+            //     {
+            //         Destroy(marketBidListingDisplays[args]);
+            //         marketBidListingDisplays.Remove(args);
+            //         Debug.Log($"removed bid listing {args}");
+            //     }
+            // }; 
 
             /*foreach (var listing in testListings)
             {
@@ -128,7 +129,7 @@ namespace Version1.Market.Scripts.UI
             //
             // Utilities.GameManager.Instance.MarketManager.AddBidToListing(testListings[2], 0, 1234);
             // Utilities.GameManager.Instance.MarketManager.AddBidToListing(testListings[3], 0, 1234);
-            
+
             GenerateDisplays();
         }
         
@@ -145,6 +146,21 @@ namespace Version1.Market.Scripts.UI
         // TODO Only change display that changed instead of regenerating everything
         private void GenerateDisplays()
         {
+            // foreach (GameObject child in marketListings)
+            // {
+            //     Destroy(child);
+            // }
+            //
+            // foreach (GameObject child in personalListings)
+            // {
+            //     Destroy(child);
+            // }
+            //
+            // foreach (GameObject child in marketBidListings)
+            // {
+            //     Destroy(child);
+            // }
+            
             GenerateMarketListings();
             GenerateMarketBidListings();
             GeneratePersonalListings();
@@ -161,8 +177,8 @@ namespace Version1.Market.Scripts.UI
 
         private void GenerateMarketListing(Listing listing)
         {
-            if (marketListingDisplays.ContainsKey(listing.ListingId.ToString()))
-                return;
+            // if (marketListingDisplays.ContainsKey(listing.ListingId.ToString()))
+            //     return;
             
             var obj = Instantiate(marketListingDisplay, marketListings);
             obj.Init(listing,
@@ -180,7 +196,7 @@ namespace Version1.Market.Scripts.UI
                     }
                 });
             
-            marketListingDisplays.Add(listing.ListingId.ToString(), obj);
+            // marketListingDisplays.Add(listing.ListingId.ToString(), obj);
         }
         
         
@@ -222,8 +238,8 @@ namespace Version1.Market.Scripts.UI
 
         private void GeneratePersonalListing(Listing listing)
         {
-            if (personalListingDisplays.ContainsKey(listing.ListingId.ToString()))
-                return;
+            // if (personalListingDisplays.ContainsKey(listing.ListingId.ToString()))
+            //     return;
             
             var obj = Instantiate(personalListingDisplay, personalListings);
             obj.Init(listing,
@@ -238,7 +254,7 @@ namespace Version1.Market.Scripts.UI
                     } }
                 });
             
-            personalListingDisplays.Add(listing.ListingId.ToString(), obj);
+            // personalListingDisplays.Add(listing.ListingId.ToString(), obj);
         }
 
         

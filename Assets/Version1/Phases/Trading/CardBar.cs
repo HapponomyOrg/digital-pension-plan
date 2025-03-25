@@ -25,10 +25,12 @@ namespace Version1.Phases.Trading
             // foreach (Transform child in cardList)
             //     Destroy(child.gameObject);
             
-            // for (var i = cardList.childCount - 1; i >= 0; i--)
-            // {
-            //     DestroyImmediate(cardList.GetChild(i).gameObject);
-            // }
+            
+            
+            for (var i = cardList.childCount - 1; i >= 0; i--)
+            {
+                Destroy(cardList.GetChild(i).gameObject);
+            }
             
             
             

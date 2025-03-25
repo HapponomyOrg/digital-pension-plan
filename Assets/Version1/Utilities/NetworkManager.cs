@@ -173,8 +173,10 @@ namespace Version1.Utilities
 
         private void NatsClientOnOnListCards(object sender, ListCardsmessage e)
         {
-            // TODO MARKET FUNCTION
-            //throw new NotImplementedException();
+            if (e.PlayerID == PlayerData.PlayerData.Instance.PlayerId)
+                return;
+            
+            Utilities.GameManager.Instance.MarketManager.HandleAddListingMessage(e);
         }
 
         // Host Function
