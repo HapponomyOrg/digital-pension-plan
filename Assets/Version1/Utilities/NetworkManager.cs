@@ -15,7 +15,9 @@ namespace Version1.Utilities
         public int heartbeatInterval = 2;
 
         public event EventHandler<RejectedMessage> OnRejected;
-        
+        public event EventHandler<string> OnError;
+
+
         public NetworkManager()
         {
             if (Instance != null) return;
@@ -39,6 +41,8 @@ namespace Version1.Utilities
             DontDestroyOnLoad(gameObject);
 
             _natsClient = new Nats.NatsClient();
+            _natsClient.onError += (sender, s) => OnError?.Invoke(sender, s);
+
             _natsClient.Connect();
 
             //_natsClient.OnJoinrequest += NatsClientOnOnJoinrequest;
@@ -190,7 +194,6 @@ namespace Version1.Utilities
 
         private void NatsClientOnOnDonatePoints(object sender, DonatePointsMessage e)
         {
-            
             PlayerData.PlayerData.Instance.PointsDonated(e);
         }
 
