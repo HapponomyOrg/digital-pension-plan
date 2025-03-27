@@ -202,7 +202,7 @@ namespace Version1.Host.Scripts
 
         private void StartSessionOnClick()
         {
-            _cardManager.StartGame(players.Count);
+            _cardManager.StartGame(players);
 
             startRound.interactable = true;
             skipRound.interactable = true;
