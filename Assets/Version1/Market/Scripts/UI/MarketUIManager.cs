@@ -128,17 +128,17 @@ namespace Version1.Market.Scripts.UI
         {
             foreach (Transform child in marketListings)
             {
-                Destroy(child);
+                Destroy(child.gameObject);
             }
             
             foreach (Transform child in personalListings)
             {
-                Destroy(child);
+                Destroy(child.gameObject);
             }
             
             foreach (Transform child in marketBidListings)
             {
-                Destroy(child);
+                Destroy(child.gameObject);
             }
             
             GenerateMarketListings();
