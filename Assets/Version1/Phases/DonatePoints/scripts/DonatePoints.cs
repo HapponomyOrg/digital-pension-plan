@@ -109,9 +109,18 @@ namespace Version1.Phases.DonatePoints.scripts
                 new DonatePointsMessage(DateTime.Now.ToString("o"), PlayerData.PlayerData.Instance.LobbyID,
                     PlayerData.PlayerData.Instance.PlayerId, _otherPlayer.PlayerId, _pointsToDonate));
 
-            descriptionText.text = OwnPoints ! >= 1
-                ? "Please click on another player if you want to donate your point?"
-                : "Please click on another player if you want to donate one of your points?";
+            if (OwnPoints == 0)
+            {
+                descriptionText.text = "Please click on another player if you want to donate your point?";
+            }
+            else if (OwnPoints >= 1)
+            {
+                descriptionText.text = "Please click on another player if you want to donate your point?";
+            }
+            else
+            {
+                descriptionText.text = "Please click on another player if you want to donate one of your points?";
+            }
 
             otherNameTMP.text = "";
             OwnPoints = PlayerData.PlayerData.Instance.Points;
