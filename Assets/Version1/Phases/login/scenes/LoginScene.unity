@@ -1058,6 +1058,14 @@ PrefabInstance:
       propertyPath: NatsError
       value: 
       objectReference: {fileID: 1047965840}
+    - target: {fileID: 3417598839699333190, guid: 8609ef5d52802f049ac4becaf749f0e1, type: 3}
+      propertyPath: NameErrorText
+      value: 
+      objectReference: {fileID: 2694903634111116726}
+    - target: {fileID: 3417598839699333190, guid: 8609ef5d52802f049ac4becaf749f0e1, type: 3}
+      propertyPath: NameErrorRefCode
+      value: 
+      objectReference: {fileID: 6098999991612067373}
     - target: {fileID: 4065804672437165788, guid: 8609ef5d52802f049ac4becaf749f0e1, type: 3}
       propertyPath: m_Name
       value: LoginScene
