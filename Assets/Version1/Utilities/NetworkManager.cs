@@ -227,12 +227,15 @@ namespace Version1.Utilities
         {
             // TODO MARKET FUNCTION
             //throw new NotImplementedException();
+
         }
 
         private void NatsClientOnOnCancelListing(object sender, CancelListingMessage e)
         {
-            // TODO MARKET FUNCTION
-            //throw new NotImplementedException();
+            if (e.PlayerID == PlayerData.PlayerData.Instance.PlayerId)
+                return;
+            
+            Utilities.GameManager.Instance.MarketManager.HandleCancelListingMessage(e);
         }
 
         private void NatsClientOnOnCancelBidding(object sender, CancelBiddingMessage e)
@@ -245,6 +248,8 @@ namespace Version1.Utilities
         {
             // TODO MARKET FUNCTION
             //throw new NotImplementedException();
+            Utilities.GameManager.Instance.MarketManager.HandleBuyCardsMessage(e);
+
         }
 
         private void NatsClientOnOnAcceptBidding(object sender, AcceptBiddingMessage e)

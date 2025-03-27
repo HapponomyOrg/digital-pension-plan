@@ -14,7 +14,6 @@ namespace Version1.Market.Scripts
 
         public event EventHandler MarketDataChanged;
         public event EventHandler<string> ListingRemoved;
-        public event EventHandler<string> ListingAdded;
 
         public MarketManager()
         {
@@ -22,15 +21,15 @@ namespace Version1.Market.Scripts
             // Nats.NatsClient.C.OnCancelListing += (sender, message) => { HandleCancelListingMessage(message); };
         }
 
-        private void HandleBuyCardsMessage(BuyCardsRequestMessage message)
+        public void HandleBuyCardsMessage(BuyCardsRequestMessage message)
         {
             var guid = Guid.Parse(message.AuctionID);
             var listing = listings[guid];
             
             if (listing.Lister == PlayerData.PlayerData.Instance.PlayerId)
                 SellListing(guid);
-            
-            RemoveListing(guid);
+            else
+                RemoveListing(guid);
         }
 
         public void HandleAddListingMessage(ListCardsmessage message)
@@ -50,9 +49,9 @@ namespace Version1.Market.Scripts
                 return;
             }
 
-            PlayerData.PlayerData.Instance.RemoveCards(listing.Cards);
+            //PlayerData.PlayerData.Instance.RemoveCards(listing.Cards);
             listings.Add(listingId, listing);
-            ListingAdded?.Invoke(this, listingId.ToString());
+            MarketDataChanged?.Invoke(this, EventArgs.Empty);
             //MarketDataChanged?.Invoke(this, EventArgs.Empty);
         }
         
@@ -69,7 +68,7 @@ namespace Version1.Market.Scripts
 
             PlayerData.PlayerData.Instance.RemoveCards(listing.Cards);
             listings.Add(listingId, listing);
-            ListingAdded?.Invoke(this, listingId.ToString());
+            MarketDataChanged?.Invoke(this, EventArgs.Empty);
 
             //MarketDataChanged?.Invoke(this, EventArgs.Empty);
             
@@ -123,8 +122,8 @@ namespace Version1.Market.Scripts
             Debug.LogWarning("removed listing");
             
             listings.Remove(listingId);
-            ListingRemoved?.Invoke(this, listingId.ToString());
-            //MarketDataChanged?.Invoke(this, EventArgs.Empty);
+            // ListingRemoved?.Invoke(this, listingId.ToString());
+            MarketDataChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public void AddBidToListing(Listing listing, int buyer, int offeredPrice, bool listerBid = false)

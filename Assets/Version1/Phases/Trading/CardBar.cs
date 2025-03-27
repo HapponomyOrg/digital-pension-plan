@@ -8,29 +8,47 @@ namespace Version1.Phases.Trading
 {
     public class CardBar : MonoBehaviour
     {
-        [SerializeField] private Transform cardList;
+        [SerializeField] private RectTransform cardList;
         [SerializeField] private DetailsCardDisplay cardDisplay;
-        
+
+
+        private bool generateDisplays;
         
         public void Init()
         {
             GenerateCardDisplays();
+            
+            PlayerData.PlayerData.Instance.OnCardsChange += (sender, ints) =>
+            {
+                generateDisplays = true;
+                // Debug.LogWarning($"[OnCardsChange] Triggered. cardList: {cardList}");
+                // GenerateCardDisplays();
+            };
+        }
 
-            PlayerData.PlayerData.Instance.OnCardsChange += (sender, ints) => { GenerateCardDisplays(); };
+        private void Update()
+        {
+            if (generateDisplays)
+            {
+                generateDisplays = false;
+                GenerateCardDisplays();
+            }
         }
         
         private void GenerateCardDisplays()
         {
             //TODO here it goes wrong for the hand in.
-            // foreach (Transform child in cardList)
-            //     Destroy(child.gameObject);
+            if (cardList == null)
+                throw new NullReferenceException("cardlist is not here");
             
+            foreach (Transform child in cardList)
+                Destroy(child.gameObject);
             
-            
-            for (var i = cardList.childCount - 1; i >= 0; i--)
-            {
-                Destroy(cardList.GetChild(i).gameObject);
-            }
+
+            // for (var i = cardList.childCount - 1; i >= 0; i--)
+            // {
+            //     Destroy(cardList.GetChild(i).gameObject);
+            // }
             
             
             
