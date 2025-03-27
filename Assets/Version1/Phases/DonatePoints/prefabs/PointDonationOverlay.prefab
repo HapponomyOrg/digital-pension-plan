@@ -654,7 +654,7 @@ MonoBehaviour:
   decreaseButton: {fileID: 362015671600484963}
   donateButton: {fileID: 5765502214217512844}
   playerListPrefab: {fileID: 8846001963057236029}
-  playerScrollView: {fileID: 486473963913114578}
+  playerScrollView: {fileID: 2819575225880280036}
 --- !u!1 &1082767354583837339
 GameObject:
   m_ObjectHideFlags: 0

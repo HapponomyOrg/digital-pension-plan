@@ -201,7 +201,6 @@ namespace Version1.Nats
 
         public string NATSURL = DefaultNATSURL;
         protected IConnection NATSConnection;
-        protected AsyncSubscription AsyncSubscription;
         public Queue<BaseMessage> EventsReceived = new Queue<BaseMessage>();
 
         public event EventHandler OnConnect;

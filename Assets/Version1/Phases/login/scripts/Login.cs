@@ -25,7 +25,7 @@ namespace Version1.Phases.login.scripts
       private int gender;
       private int gamecode;
    
-      private void Start()
+      private void Awake()
       {
          PlayerName.onValueChanged.AddListener(PlayerNameChanged);
          Age.onValueChanged.AddListener(AgeChanged);
@@ -33,11 +33,20 @@ namespace Version1.Phases.login.scripts
          GameCode.onValueChanged.AddListener(GameCodeChanged);
          CreateButton.onClick.AddListener(JoinSession);
          NetworkManager.Instance.OnRejected += InstanceOnOnRejected;
+         NetworkManager.Instance.OnError += InstanceOnError;
       }
 
+      private void InstanceOnError (object sender, string e)
+      {
+         NatsError.SetActive(true);
+        // NatsError.GetComponentAtIndex<TMP_Text>(2).text = e;
+      }
+      
       private void InstanceOnOnRejected(object sender, RejectedMessage e)
       {
          // TODO this is wrong select right text.
+         if (e.TargetPlayer != PlayerData.PlayerData.Instance.PlayerName && e.RequestID != PlayerData.PlayerData.Instance.RequestID) return;
+         
          NameError.SetActive(true);
          NameError.GetComponentAtIndex<TMP_Text>(2).text = e.Message;
          NameError.GetComponentAtIndex<TMP_Text>(3).text = e.ReferenceID;
@@ -55,7 +64,7 @@ namespace Version1.Phases.login.scripts
          PlayerData.PlayerData.Instance.RequestID = uid;
          
          var msg = new JoinRequestMessage(DateTime.Now.ToString("o"), gamecode, 0, playername,age,gender,uid );
-         NetworkManager.Instance.SubscribeToSubject(gamecode.ToString());
+         Nats.NatsClient.C.SubscribeToSubject(gamecode.ToString());
          NetworkManager.Instance.Publish(gamecode.ToString(),msg);
          
       }

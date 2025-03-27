@@ -15,7 +15,9 @@ namespace Version1.Utilities
         public int heartbeatInterval = 2;
 
         public event EventHandler<RejectedMessage> OnRejected;
-        
+        public event EventHandler<string> OnError;
+
+
         public NetworkManager()
         {
             if (Instance != null) return;
@@ -23,11 +25,6 @@ namespace Version1.Utilities
         }
 
         private Nats.NatsClient _natsClient;
-
-        public void SubscribeToSubject(string subject)
-        {
-            _natsClient.SubscribeToSubject(subject);
-        }
 
         public void Publish(string sessionID, BaseMessage baseMessage, bool flushImmediately = true)
         {
@@ -38,7 +35,12 @@ namespace Version1.Utilities
         {
             DontDestroyOnLoad(gameObject);
 
-            _natsClient = new Nats.NatsClient();
+            _natsClient = Nats.NatsClient.C ?? // Use existing instance
+                          new Nats.NatsClient(); // Create a new instance if none exists
+            
+            
+            _natsClient.onError += (sender, s) => OnError?.Invoke(sender, s);
+
             _natsClient.Connect();
 
             //_natsClient.OnJoinrequest += NatsClientOnOnJoinrequest;
@@ -68,8 +70,6 @@ namespace Version1.Utilities
             _natsClient.OnConfirmHandIn += NatsClientOnOnConfirmHandIn;
             _natsClient.OnEndOfRounds += NatsClientOnOnEndOfRounds;
             //_natsClient.OnConnect += NatsClientOnOnConnect;
-
-            _natsClient.SubscribeToSubject("*");
         }
 
         private IEnumerator HeartbeatRoutine()
@@ -94,7 +94,7 @@ namespace Version1.Utilities
         }
 
 
-        private void FixedUpdate()
+        private void Update()
         {
             _natsClient.HandleMessages();
         }
@@ -192,7 +192,6 @@ namespace Version1.Utilities
 
         private void NatsClientOnOnDonatePoints(object sender, DonatePointsMessage e)
         {
-            
             PlayerData.PlayerData.Instance.PointsDonated(e);
         }
 

@@ -31,7 +31,7 @@ namespace Version1.Host.Scripts
             ShuffleDeck();
 
             var cardsPerPlayer = CalculateCardsPerPlayer(numOfPlayers);
-
+            
             for (int i = 0; i < numOfPlayers; i++)
             {
                 List<CardData> playerCards = TakeCards(cardsPerPlayer);

@@ -77,7 +77,7 @@ namespace Version1.Host.Scripts
             stopRound.onClick.AddListener(StopRoundOnClick);
             skipRound.onClick.AddListener(ContinueOnClick);
             startRound.onClick.AddListener(StartRoundOnClick);
-            
+
             // hostscene
             Nats.NatsHost.C.OnHeartBeat += OnOnHeartBeat;
             Nats.NatsHost.C.OnJoinrequest += OnOnJoinrequest;
@@ -128,12 +128,13 @@ namespace Version1.Host.Scripts
             {
                 RejectedMessage rejectedMessage = new RejectedMessage(DateTime.Now.ToString("o"), msg.LobbyID,
                     -1, msg.PlayerName, "PlayerNameAlreadyTaken",
-                    $"{msg.PlayerName} is already taken in the session you are trying to join. \n Please fill in another name and try again.");
+                    $"{msg.PlayerName} is already taken in the session you are trying to join. \n Please fill in another name and try again.",
+                    msg.RequestID);
 
-                Nats.NatsHost.C.Publish(msg.LobbyID.ToString(),rejectedMessage);
+                Nats.NatsHost.C.Publish(msg.LobbyID.ToString(), rejectedMessage);
                 return;
             }
-            
+
 
             Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(), new ConfirmJoinMessage(
                 DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode,
@@ -141,7 +142,7 @@ namespace Version1.Host.Scripts
                 playerId,
                 msg.PlayerName,
                 msg.Age,
-                msg.Gender, 
+                msg.Gender,
                 msg.RequestID));
 
             var player = Instantiate(playerListPrefab, playerScrolView.transform);
@@ -161,7 +162,7 @@ namespace Version1.Host.Scripts
         private void OnOnHeartBeat(object sender, HeartBeatMessage e)
         {
             Debug.Log("HEARTBEAT");
-            
+
             DateTime parsedDate = DateTime.Parse(e.DateTimeStamp);
 
             if (!players.ContainsKey(e.PlayerID))
@@ -179,10 +180,10 @@ namespace Version1.Host.Scripts
             }
             else
             {
-                    players[e.PlayerID].LastPing = parsedDate;
-                    players[e.PlayerID].Name = e.PlayerName;
-                    players[e.PlayerID].Balance = e.Balance;
-                    players[e.PlayerID].Points = e.Points;   
+                players[e.PlayerID].LastPing = parsedDate;
+                players[e.PlayerID].Name = e.PlayerName;
+                players[e.PlayerID].Balance = e.Balance;
+                players[e.PlayerID].Points = e.Points;
             }
         }
 
@@ -225,7 +226,7 @@ namespace Version1.Host.Scripts
                 SessionData.Instance.LobbyCode,
                 -1));*/
         }
-        
+
         private void StartRoundOnClick()
         {
             Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(), new StartRoundMessage(
@@ -254,14 +255,14 @@ namespace Version1.Host.Scripts
 
                 var keysToRemove = new List<int>();
 
-                // foreach (var player in players)
-                // {
-                //     if (DateTime.Now - TimeSpan.FromSeconds(5) > player.Value.LastPing)
-                //     {
-                //         Destroy(player.Value.gameObject);
-                //         keysToRemove.Add(player.Key);
-                //     }
-                // }
+                foreach (var player in players)
+                {
+                    if (DateTime.Now - TimeSpan.FromSeconds(5) > player.Value.LastPing)
+                    {
+                        Destroy(player.Value.gameObject);
+                        keysToRemove.Add(player.Key);
+                    }
+                }
 
                 foreach (var key in keysToRemove)
                 {
