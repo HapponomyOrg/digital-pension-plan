@@ -649,12 +649,12 @@ MonoBehaviour:
   ownPointsTMP: {fileID: 620274628452221386}
   otherPointsTMP: {fileID: 4866470223542327195}
   descriptionText: {fileID: 7546914535289790715}
-  otherNameTMP: {fileID: 7546914535289790715}
+  otherNameTMP: {fileID: 6935923804957746767}
   increaseButton: {fileID: 2657679456317568249}
   decreaseButton: {fileID: 362015671600484963}
   donateButton: {fileID: 5765502214217512844}
   playerListPrefab: {fileID: 8846001963057236029}
-  playerScrollView: {fileID: 486473963913114578}
+  playerScrollView: {fileID: 2819575225880280036}
 --- !u!1 &1082767354583837339
 GameObject:
   m_ObjectHideFlags: 0

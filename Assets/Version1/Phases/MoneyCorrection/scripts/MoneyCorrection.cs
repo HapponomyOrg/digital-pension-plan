@@ -19,22 +19,25 @@ namespace Version1.Phases.MoneyCorrection.scripts
                     {
                         case > 6000:
                         {
+                            var oldAmount = PlayerData.PlayerData.Instance.Balance;
+                            
                             var amountToPay = RoundToThousand((PlayerData.PlayerData.Instance.Balance - 6000) / 2);
                             PlayerData.PlayerData.Instance.Balance -= amountToPay;
 
                             Debug.LogWarning($"Over or equal 6000     {amountToPay}       {PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}");
                             
                             StartCoroutine(DisplayTextLetterByLetter(
-                                $"Because your balance is over 6.000\nyou will get a penalty of {amountToPay.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}\n\nYour new balance is {PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}"));
+                                $"Because your balance is over 6.000\nyou will get a penalty of {amountToPay.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}\n\nYour old balance was {oldAmount.ToString("N0", new System.Globalization.CultureInfo("de-DE"))} \n\nYour new balance is {PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}"));
                             break;
                         }
                         case < 4000:
                         {
+                            var oldAmount = PlayerData.PlayerData.Instance.Balance;
                             PlayerData.PlayerData.Instance.Balance += 2000;
                             Debug.LogWarning(
                                 $"under or equal 4000  {PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}");
                             StartCoroutine(DisplayTextLetterByLetter(
-                                $"Because your balance is less then 4.000\n2.000 will be added to your balance\n\nYour balance is now {PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}"));
+                                $"Because your balance is less then 4.000\n2.000 will be added to your balance\n\nYour old balance was {oldAmount}\n\nYour new balance is now {PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}"));
                             break;
                         }
                         default:

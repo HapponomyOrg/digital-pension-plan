@@ -201,7 +201,6 @@ namespace Version1.Nats
 
         public string NATSURL = DefaultNATSURL;
         protected IConnection NATSConnection;
-        protected AsyncSubscription AsyncSubscription;
         public Queue<BaseMessage> EventsReceived = new Queue<BaseMessage>();
 
         public event EventHandler OnConnect;
@@ -270,6 +269,12 @@ namespace Version1.Nats
 
         public void SubscribeToSubject(string subject)
         {
+            if (NATSConnection.SubscriptionCount >= 1)
+            {
+                Debug.LogWarning("There is already a nats subscription");
+                return;
+            }
+            
             string fullSubject = $"{subject}.>";
             Debug.Log("Subscribing to: " + fullSubject);
             NATSConnection.SubscribeAsync(fullSubject, (sender, args) => { QueueMsg(args); });

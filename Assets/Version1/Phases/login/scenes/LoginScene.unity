@@ -376,10 +376,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: NatsError
       objectReference: {fileID: 0}
-    - target: {fileID: 2652275544895351360, guid: 8838448351c430d468de528ad0f1c01d, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7860336223813150855, guid: 8838448351c430d468de528ad0f1c01d, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -411,18 +407,6 @@ PrefabInstance:
     - target: {fileID: 7860336223813150855, guid: 8838448351c430d468de528ad0f1c01d, type: 3}
       propertyPath: m_SizeDelta.y
       value: 1079.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 7860336223813150855, guid: 8838448351c430d468de528ad0f1c01d, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7860336223813150855, guid: 8838448351c430d468de528ad0f1c01d, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7860336223813150855, guid: 8838448351c430d468de528ad0f1c01d, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7860336223813150855, guid: 8838448351c430d468de528ad0f1c01d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1074,6 +1058,14 @@ PrefabInstance:
       propertyPath: NatsError
       value: 
       objectReference: {fileID: 1047965840}
+    - target: {fileID: 3417598839699333190, guid: 8609ef5d52802f049ac4becaf749f0e1, type: 3}
+      propertyPath: NameErrorText
+      value: 
+      objectReference: {fileID: 2694903634111116726}
+    - target: {fileID: 3417598839699333190, guid: 8609ef5d52802f049ac4becaf749f0e1, type: 3}
+      propertyPath: NameErrorRefCode
+      value: 
+      objectReference: {fileID: 6098999991612067373}
     - target: {fileID: 4065804672437165788, guid: 8609ef5d52802f049ac4becaf749f0e1, type: 3}
       propertyPath: m_Name
       value: LoginScene

@@ -23,16 +23,16 @@ namespace Version1.Host.Scripts
             _cardLibrary = cardLibrary;
         }
 
-        public void StartGame(int numOfPlayers)
+        public void StartGame(Dictionary<int,PlayerListPrefab> players)
         {
             _cardDeck = new List<CardData>();
 
             FillDeck();
             ShuffleDeck();
 
-            var cardsPerPlayer = CalculateCardsPerPlayer(numOfPlayers);
+            var cardsPerPlayer = CalculateCardsPerPlayer(players.Count);
 
-            for (int i = 0; i < numOfPlayers; i++)
+            foreach (var player in players)
             {
                 List<CardData> playerCards = TakeCards(cardsPerPlayer);
 
@@ -47,20 +47,20 @@ namespace Version1.Host.Scripts
                 if (SessionData.Instance.InbalanceMode)
                 {
                     Debug.Log($"Players get something");
-                    msg = new StartGameMessage(DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, -1, i,
-                        CalculateBalancePerPlayer(i), handCards, (int)SessionData.Instance.CurrentMoneySystem);
+                    msg = new StartGameMessage(DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, -1, player.Key,
+                        CalculateBalancePerPlayer(player.Key), handCards, (int)SessionData.Instance.CurrentMoneySystem);
                 }
                 else
                 {
                     Debug.Log($"6000");
-                    msg = new StartGameMessage(DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, -1, i, 6000,
+                    msg = new StartGameMessage(DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, -1, player.Key, 6000,
                         handCards,
                         (int)SessionData.Instance.CurrentMoneySystem);
                 }
 
                 Debug.Log($"sent cards, msg: {msg}");
                 
-                Nats.NatsHost.C.Publish($"{SessionData.Instance.LobbyCode}.{i}", msg);
+                Nats.NatsHost.C.Publish($"{SessionData.Instance.LobbyCode}", msg);
             }
         }
 
