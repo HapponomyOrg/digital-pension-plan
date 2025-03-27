@@ -26,11 +26,6 @@ namespace Version1.Utilities
 
         private Nats.NatsClient _natsClient;
 
-        public void SubscribeToSubject(string subject)
-        {
-            _natsClient.SubscribeToSubject(subject);
-        }
-
         public void Publish(string sessionID, BaseMessage baseMessage, bool flushImmediately = true)
         {
             _natsClient.Publish(sessionID, baseMessage, flushImmediately);
@@ -40,7 +35,10 @@ namespace Version1.Utilities
         {
             DontDestroyOnLoad(gameObject);
 
-            _natsClient = new Nats.NatsClient();
+            _natsClient = Nats.NatsClient.C ?? // Use existing instance
+                          new Nats.NatsClient(); // Create a new instance if none exists
+            
+            
             _natsClient.onError += (sender, s) => OnError?.Invoke(sender, s);
 
             _natsClient.Connect();
@@ -72,8 +70,6 @@ namespace Version1.Utilities
             _natsClient.OnConfirmHandIn += NatsClientOnOnConfirmHandIn;
             _natsClient.OnEndOfRounds += NatsClientOnOnEndOfRounds;
             //_natsClient.OnConnect += NatsClientOnOnConnect;
-
-            _natsClient.SubscribeToSubject("*");
         }
 
         private IEnumerator HeartbeatRoutine()
@@ -98,7 +94,7 @@ namespace Version1.Utilities
         }
 
 
-        private void FixedUpdate()
+        private void Update()
         {
             _natsClient.HandleMessages();
         }
