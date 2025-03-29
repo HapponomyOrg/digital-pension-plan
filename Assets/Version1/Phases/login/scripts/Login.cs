@@ -21,10 +21,10 @@ namespace Version1.Phases.login.scripts
         [SerializeField] private TMP_Text NameErrorRefCode;
 
 
-        private string playername;
-        private int age;
-        private int gender;
-        private int gamecode;
+        private string playername = "";
+        private int age = -1;
+        private int gender = -1;
+        private int gamecode = -1;
 
         private void Awake()
         {
@@ -107,7 +107,7 @@ namespace Version1.Phases.login.scripts
 
         private void CheckButton()
         {
-            if (playername != "" && age != -1 && gender != -1 && gamecode != -1)
+            if (playername != "" && age != -1 && gamecode != -1)
             {
                 CreateButton.interactable = true;
             }
