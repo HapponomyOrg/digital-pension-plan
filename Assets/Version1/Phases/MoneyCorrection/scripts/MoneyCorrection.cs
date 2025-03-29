@@ -9,7 +9,6 @@ namespace Version1.Phases.MoneyCorrection.scripts
     public class MoneyCorrection : MonoBehaviour
     {
         [SerializeField] private TMP_Text text;
-
         private void Start()
         {
             switch (PlayerData.PlayerData.Instance.CurrentMoneySystem)
@@ -54,46 +53,41 @@ namespace Version1.Phases.MoneyCorrection.scripts
                     throw new NotImplementedException();
                 case MoneySystems.InterestAtIntervals:
                     int newInterest =
-                        (int)(PlayerData.PlayerData.Instance.Debt * 0.10); // Calculate 10% interest of current debt
+                        (int)(PlayerData.PlayerData.Instance.Debt * 0.10);
                     var interestDue =
                         PlayerData.PlayerData.Instance.InterestRemainder +
-                        newInterest; // Add remaining interest from previous round
+                        newInterest;
 
                     int payment = 0;
 
-                    //TODO final round
-                    if (false) // You need to determine how to set `isFinalRound` (e.g., a flag or check)
+                    //TODO this is dirty
+                    if (Utilities.GameManager.Instance.CurrentPhase == 7 )
                     {
-                        // In the final payment, all debt and accumulated interest must be paid
-                        PlayerData.PlayerData.Instance.Debt += interestDue; // Add remaining interest to the debt
-                        interestDue = 0; // No more interest remains
-                        payment = PlayerData.PlayerData.Instance.Debt; // Pay the full debt + interest
-                        PlayerData.PlayerData.Instance.Balance -= payment; // Deduct from the player's balance
+                       
+                        PlayerData.PlayerData.Instance.Debt += interestDue;
+                        interestDue = 0;
+                        payment = PlayerData.PlayerData.Instance.Debt;
+                        PlayerData.PlayerData.Instance.Balance -= payment;
 
-                        text.text =
-                            $"You have a debt of {PlayerData.PlayerData.Instance.Debt} with an interest rate of 10%\n" +
-                            $"All remaining debt and interest ({interestDue}) have been added to the debt.\n" +
-                            $"Your total debt now is {PlayerData.PlayerData.Instance.Debt}. " +
-                            $"You have paid {payment} from your balance, leaving you with {PlayerData.PlayerData.Instance.Balance}.";
+                        StartCoroutine(DisplayTextLetterByLetter(
+                            $"You have a debt of {PlayerData.PlayerData.Instance.Debt.ToString("N0", new System.Globalization.CultureInfo("de-DE"))} with an interest rate of 10%\n" +
+                            $"All remaining debt and interest ({interestDue.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}) have been added to the debt.\n" +
+                            $"Your total debt now is {PlayerData.PlayerData.Instance.Debt.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}. " +
+                            $"You have paid {payment.ToString("N0", new System.Globalization.CultureInfo("de-DE"))} from your balance, leaving you with {PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}."));
                     }
                     else
                     {
-                        // Check if interest due is at least 1,000
                         if (interestDue >= 1000)
                         {
-                            // Calculate payment as the minimum of the available balance or the closest multiple of 1000
                             payment = Math.Min((interestDue / 1000) * 1000, PlayerData.PlayerData.Instance.Balance);
 
                             if (payment > 0)
                             {
-                                // Update the debt and interest after the payment
                                 PlayerData.PlayerData.Instance.Balance -= payment;
                                 interestDue -= payment;
 
-                                // If there's any leftover interest, it gets carried over to the next round
                                 PlayerData.PlayerData.Instance.InterestRemainder = interestDue;
-
-
+                                
                                 StartCoroutine(DisplayTextLetterByLetter(
                                     $"You have a debt of {PlayerData.PlayerData.Instance.Debt.ToString("N0", new System.Globalization.CultureInfo("de-DE"))} with an interest rate of 10%\n" +
                                     $"Remaining interest from last round: {PlayerData.PlayerData.Instance.InterestRemainder.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}\n" +

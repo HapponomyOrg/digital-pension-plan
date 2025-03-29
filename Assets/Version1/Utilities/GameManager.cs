@@ -6,6 +6,7 @@ using Version1.Nats.Messages.Host;
 using Version1.Phases;
 using Version1.Phases.BalanceModification;
 using Version1.Phases.Interest;
+using Version1.Phases.tmp;
 using Version1.Phases.Trading;
 using MarketManager = Version1.Market.Scripts.MarketManager;
 using NatsHost = Version1.Nats.NatsHost;
@@ -72,7 +73,7 @@ namespace Version1.Utilities
 
         private string[] phases;
 
-        private int currentPhase;
+        public int CurrentPhase;
 
         private GameManager()
         {
@@ -104,7 +105,7 @@ namespace Version1.Utilities
         
         private void LoadNextPhase()
         {
-            SceneManager.LoadScene(phases[++currentPhase]);
+            SceneManager.LoadScene(phases[++CurrentPhase]);
         }
 
         // public void InitPhase(int p)

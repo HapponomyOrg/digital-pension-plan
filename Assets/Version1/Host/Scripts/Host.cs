@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using Version1.Nats.Messages.Client;
@@ -46,14 +47,17 @@ namespace Version1.Host.Scripts
         [SerializeField] private Button abortSession;
         [SerializeField] private Button startSession;
         [SerializeField] private Button stopRound;
-        [SerializeField] private Button skipRound;
         [SerializeField] private Button startRound;
 
         // things from the hostscene
         private int playerId = 0;
         private Dictionary<int, PlayerListPrefab> players;
         [SerializeField] private Transform playerListPrefab;
-        [SerializeField] private GameObject playerScrolView;
+        [SerializeField] private GameObject playerScrollView;
+
+        private Dictionary<int, ProgressionCard> _progressionCards;
+        [SerializeField] private GameObject progressionPrefab;
+        [SerializeField] private Transform progressionScrollView;
 
         // things from the hostscene
         private List<GameObject> activities;
@@ -67,15 +71,16 @@ namespace Version1.Host.Scripts
         [SerializeField] private TMP_Text creationTime;
         [SerializeField] private TMP_Text sessionDurationTMP;
         [SerializeField] private TMP_Text timeLeftTMP;
-        [SerializeField] private TMP_Text phaseTypeTMP;
+        [SerializeField] private TMP_Text curretnPhaseTMP;
         [SerializeField] private TMP_Text nextPhaseTMP;
+        
+        
 
         private void Start()
         {
             abortSession.onClick.AddListener(AbortSessionOnClick);
             startSession.onClick.AddListener(StartSessionOnClick);
             stopRound.onClick.AddListener(StopRoundOnClick);
-            skipRound.onClick.AddListener(ContinueOnClick);
             startRound.onClick.AddListener(StartRoundOnClick);
 
             // hostscene
@@ -93,8 +98,11 @@ namespace Version1.Host.Scripts
             _sessionDuration = new Stopwatch();
 
             players = new Dictionary<int, PlayerListPrefab>();
+            _progressionCards = new Dictionary<int, ProgressionCard>();
+            
+            playerScrollView = GameObject.Find("PlayerScrollView");
+            progressionPrefab = Resources.Load<GameObject>("Prefabs/Host/ProgressionCard");
 
-            playerScrolView = GameObject.Find("PlayerScrollView");
 
             hostNameTMP.text = SessionData.Instance.HostName;
             gameModeTMP.text = SessionData.Instance.CurrentMoneySystem.ToString();
@@ -105,6 +113,20 @@ namespace Version1.Host.Scripts
             creationTime.text = DateTime.Now.ToString("HH:mm:ss");
             _sessionDuration.Start();
             _sessionIsActive = true;
+
+            curretnPhaseTMP.text = testPhases[current_round].Split("Scene")[0];
+            nextPhaseTMP.text = testPhases[current_round + 1].Split("Scene")[0];
+
+            for (int i = 0; i < testPhases.Length; i++)
+            {
+                var phaseName = testPhases[i].Split("Scene");
+                var prefab = Instantiate(progressionPrefab, progressionScrollView);
+                prefab.gameObject.SetActive(true);
+                var card = prefab.GetComponent<ProgressionCard>();
+                card.Name.text = phaseName[0];
+                card.Status.text = "Not Started";
+                _progressionCards.Add(i, card);
+            }
         }
 
         private void OnMessageLog(object sender, string e)
@@ -145,7 +167,7 @@ namespace Version1.Host.Scripts
                 msg.Gender,
                 msg.RequestID));
 
-            var player = Instantiate(playerListPrefab, playerScrolView.transform);
+            var player = Instantiate(playerListPrefab, playerScrollView.transform);
             player.gameObject.SetActive(true);
             var plistprefab = player.GetComponent<PlayerListPrefab>();
             plistprefab.LastPing = DateTime.Parse(msg.DateTimeStamp);
@@ -167,7 +189,7 @@ namespace Version1.Host.Scripts
 
             if (!players.ContainsKey(e.PlayerID))
             {
-                var player = Instantiate(playerListPrefab, playerScrolView.transform);
+                var player = Instantiate(playerListPrefab, playerScrollView.transform);
                 player.gameObject.SetActive(true);
                 var plistprefab = player.GetComponent<PlayerListPrefab>();
                 plistprefab.LastPing = parsedDate;
@@ -205,11 +227,12 @@ namespace Version1.Host.Scripts
             _cardManager.StartGame(players);
 
             startRound.interactable = true;
-            skipRound.interactable = true;
         }
 
         private void StopRoundOnClick()
         {
+            _progressionCards[current_round].Status.text = "Finished";
+            
             Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(), new StopRoundMessage(
                 DateTime.Now.ToString("o"),
                 SessionData.Instance.LobbyCode,
@@ -219,16 +242,13 @@ namespace Version1.Host.Scripts
             current_round++;
         }
 
-        private void ContinueOnClick()
-        {
-            /*Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(), new SkipRoundMessage(
-                DateTime.Now.ToString("o"),
-                SessionData.Instance.LobbyCode,
-                -1));*/
-        }
-
         private void StartRoundOnClick()
         {
+            _progressionCards[current_round].Status.text = "Current";
+
+            curretnPhaseTMP.text = testPhases[current_round].Split("Scene")[0];
+            nextPhaseTMP.text = testPhases.Length == current_round + 1 ? "" : testPhases[current_round + 1].Split("Scene")[0];
+            
             Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(), new StartRoundMessage(
                 DateTime.Now.ToString("o"),
                 SessionData.Instance.LobbyCode,

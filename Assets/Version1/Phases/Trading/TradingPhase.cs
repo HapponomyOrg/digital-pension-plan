@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Version1.Market.Scripts;
 using Version1.Market.Scripts.UI;
+using Version1.Phases.tmp;
 using Object = UnityEngine.Object;
 
 namespace Version1.Phases.Trading

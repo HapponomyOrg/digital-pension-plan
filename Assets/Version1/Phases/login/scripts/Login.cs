@@ -95,7 +95,15 @@ namespace Version1.Phases.login.scripts
 
         private void AgeChanged(string arg)
         {
-            age = int.Parse(arg);
+            if (int.TryParse(arg, out int val))
+            {
+                age = val;
+            }
+            else
+            {
+                age = 0;
+                Console.WriteLine("Invalid input. Please enter a valid number.");
+            }
             CheckButton();
         }
 

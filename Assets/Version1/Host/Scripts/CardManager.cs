@@ -104,11 +104,12 @@ namespace Version1.Host.Scripts
         {
             return numberOfPlayers switch
             {
+                <= 3 => 12,
                 4 => 10,
                 5 => 9,
                 6 => 8,
                 7 => 7,
-                _ => 12
+                _ => 6  //TODO check dit
             };
         }
 
