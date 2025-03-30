@@ -668,10 +668,6 @@ PrefabInstance:
       propertyPath: natsErrorTMP
       value: 
       objectReference: {fileID: 6215496504276992790}
-    - target: {fileID: 4572458904322300796, guid: 74b8aad4d06971f4287d1f198c997f3c, type: 3}
-      propertyPath: nextPhaseTMP
-      value: 
-      objectReference: {fileID: 3126027745964367767}
     - target: {fileID: 4604813635011723707, guid: 74b8aad4d06971f4287d1f198c997f3c, type: 3}
       propertyPath: m_Name
       value: HostScene
@@ -705,22 +701,10 @@ PrefabInstance:
       value: -17
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 5593394465542008487, guid: 74b8aad4d06971f4287d1f198c997f3c, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 74b8aad4d06971f4287d1f198c997f3c, type: 3}
---- !u!114 &3126027745964367767 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 59760988325641722, guid: 74b8aad4d06971f4287d1f198c997f3c, type: 3}
-  m_PrefabInstance: {fileID: 3126027745964367766}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6215496504276992790 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 977609235489644681, guid: 8838448351c430d468de528ad0f1c01d, type: 3}

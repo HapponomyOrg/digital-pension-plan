@@ -2,7 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 
-namespace Version1.TakeALoan.scripts
+namespace Version1.Phases.TakeALoan.scripts
 {
     public class TakeALoan : MonoBehaviour
     {

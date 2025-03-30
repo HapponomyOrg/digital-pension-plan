@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using TMPro;
@@ -15,6 +16,39 @@ namespace Version1.Host.Scripts
     public class Host : MonoBehaviour
     {
         private int current_round = 0;
+
+        private readonly string[] debtBasedPhases =
+        {
+            "MarketScene", // Trading
+            "",// Debt payment
+            "",// Take out loan
+            "Loading",  
+            "MarketScene",// Trading
+            "",// Debt payment
+            "",// Take out loan
+            "Loading",            
+            "MarketScene", // Trading
+            "",// Debt payment
+            "MoneyToPointScene",// Pension point buying
+            "DonatePointsScene",// Pension point donation
+            "EndScene" // Pension Calculation
+        };
+        
+        private readonly string[] sustainableMoneyPhases =
+        {
+            "MarketScene", // Trading
+            "MoneyCorrectionScene", // Money correction
+            "Loading",
+            "MarketScene", // Trading
+            "MoneyCorrectionScene", // Money correction
+            "Loading",
+            "MarketScene", // Trading
+            "MoneyCorrectionScene", // Money correction
+            "Loading",
+            "MoneyToPointScene", // Pension point buying
+            "DonatePointsScene", // Pension point donation
+            "EndScene" // Pension Calculation
+        };
 
         private readonly string[] testPhases =
         {
@@ -32,6 +66,8 @@ namespace Version1.Host.Scripts
             "EndScene"
         };
 
+        private string[] currentPhases;
+
         [SerializeField] private CardManager _cardManager;
 
         [SerializeField] private GameObject natsError;
@@ -39,7 +75,9 @@ namespace Version1.Host.Scripts
 
         private Stopwatch _sessionDuration;
         private bool _sessionIsActive = false;
-
+        
+        private float _timeLeft = 300f;
+        
         // scenes
         [SerializeField] private GameObject CreateScene;
 
@@ -48,6 +86,7 @@ namespace Version1.Host.Scripts
         [SerializeField] private Button startSession;
         [SerializeField] private Button stopRound;
         [SerializeField] private Button startRound;
+        [SerializeField] private Button endGame;
 
         // things from the hostscene
         private int playerId = 0;
@@ -73,8 +112,8 @@ namespace Version1.Host.Scripts
         [SerializeField] private TMP_Text timeLeftTMP;
         [SerializeField] private TMP_Text curretnPhaseTMP;
         [SerializeField] private TMP_Text nextPhaseTMP;
-        
-        
+
+        private bool roundStarted = false;
 
         private void Start()
         {
@@ -82,17 +121,72 @@ namespace Version1.Host.Scripts
             startSession.onClick.AddListener(StartSessionOnClick);
             stopRound.onClick.AddListener(StopRoundOnClick);
             startRound.onClick.AddListener(StartRoundOnClick);
+            endGame.onClick.AddListener(EndGameOnClick);
 
             // hostscene
             Nats.NatsHost.C.OnHeartBeat += OnOnHeartBeat;
             Nats.NatsHost.C.OnJoinrequest += OnOnJoinrequest;
             Nats.NatsHost.C.MessageLog += OnMessageLog;
-
-            Init();
+            Nats.NatsHost.C.OnCardHandIn += OnCardHandIn;
+           
         }
 
-        private void Init()
+        private void EndGameOnClick()
         {
+            Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(),new EndGameMessage(DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode,-1));
+            
+            SessionData.Instance.Reset(false);
+            
+            // TODO
+            // Player to endscreen loading screen where they get info that the host is setting up the next round.
+            
+            this.gameObject.SetActive(false);
+            CreateScene.SetActive(true);
+            // Host is sent to create screen again.
+
+        }
+
+        private void OnCardHandIn(object sender, CardHandInMessage msg)
+        {
+            var cards = _cardManager.TakeCards(4);
+            
+            int[] intArray = new int[4];
+            
+            foreach (var card in cards)
+            {
+                intArray.Append(card.ID);
+            }
+            
+            
+            Nats.NatsHost.C.Publish(msg.LobbyID.ToString(), new ConfirmHandInMessage(DateTime.Now.ToString("o"), msg.LobbyID,
+                -1, msg.PlayerID,intArray),false);
+        }
+
+        private void OnEnable()
+        {
+
+            abortSession.interactable = false;
+            startSession.interactable = true;
+            stopRound.interactable = false;
+            startRound.interactable = false;
+
+            roundStarted = false;
+            _sessionIsActive = false;
+            
+            if (activities != null)
+            {
+                for (int i = 0; i < activities.Count; i++)
+                {
+                    Destroy(activities[i].gameObject);
+                }
+            }
+    
+            // Load phase system based on creation
+
+            // TODO SET TO RIGHT PHASE SYSTEM
+            current_round = 0;
+            currentPhases = testPhases;
+            
             activities = new List<GameObject>();
 
             _sessionDuration = new Stopwatch();
@@ -103,7 +197,9 @@ namespace Version1.Host.Scripts
             playerScrollView = GameObject.Find("PlayerScrollView");
             progressionPrefab = Resources.Load<GameObject>("Prefabs/Host/ProgressionCard");
 
-
+            _sessionDuration.Reset();
+            sessionDurationTMP.text = "";
+            timeLeftTMP.text = "-";
             hostNameTMP.text = SessionData.Instance.HostName;
             gameModeTMP.text = SessionData.Instance.CurrentMoneySystem.ToString();
             seedTMP.text = SessionData.Instance.Seed.ToString();
@@ -113,13 +209,13 @@ namespace Version1.Host.Scripts
             creationTime.text = DateTime.Now.ToString("HH:mm:ss");
             _sessionDuration.Start();
             _sessionIsActive = true;
+            
+            curretnPhaseTMP.text = currentPhases[current_round].Split("Scene")[0];
+            nextPhaseTMP.text = currentPhases[current_round + 1].Split("Scene")[0];
 
-            curretnPhaseTMP.text = testPhases[current_round].Split("Scene")[0];
-            nextPhaseTMP.text = testPhases[current_round + 1].Split("Scene")[0];
-
-            for (int i = 0; i < testPhases.Length; i++)
+            for (int i = 0; i < currentPhases.Length; i++)
             {
-                var phaseName = testPhases[i].Split("Scene");
+                var phaseName = currentPhases[i].Split("Scene");
                 var prefab = Instantiate(progressionPrefab, progressionScrollView);
                 prefab.gameObject.SetActive(true);
                 var card = prefab.GetComponent<ProgressionCard>();
@@ -217,6 +313,8 @@ namespace Version1.Host.Scripts
                 DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode,
                 -1));
 
+            SessionData.Instance.Reset(true);
+            
             CreateScene.SetActive(true);
 
             gameObject.SetActive(false);
@@ -225,8 +323,9 @@ namespace Version1.Host.Scripts
         private void StartSessionOnClick()
         {
             _cardManager.StartGame(players);
-
             startRound.interactable = true;
+            startSession.interactable = false;
+            abortSession.interactable = true;
         }
 
         private void StopRoundOnClick()
@@ -240,27 +339,71 @@ namespace Version1.Host.Scripts
                 current_round
             ));
             current_round++;
+
+            roundStarted = false;
         }
 
         private void StartRoundOnClick()
         {
             _progressionCards[current_round].Status.text = "Current";
 
-            curretnPhaseTMP.text = testPhases[current_round].Split("Scene")[0];
-            nextPhaseTMP.text = testPhases.Length == current_round + 1 ? "" : testPhases[current_round + 1].Split("Scene")[0];
+            curretnPhaseTMP.text = currentPhases[current_round].Split("Scene")[0];
+            nextPhaseTMP.text = currentPhases.Length == current_round + 1 ? "" : currentPhases[current_round + 1].Split("Scene")[0];
+            
+            // TODO change this
+            if (currentPhases[current_round].Contains("Market"))
+            {
+                _timeLeft = 300; // TODO get this from a variable
+            }
             
             Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(), new StartRoundMessage(
                 DateTime.Now.ToString("o"),
                 SessionData.Instance.LobbyCode,
                 -1,
                 current_round,
-                testPhases[current_round],
+                currentPhases[current_round],
                 100 // TODO CHANGE TO DURATION OF PHASE, GET FROM PHASE SYSTEM OF LUUK
             ));
+
+            roundStarted = true;
         }
 
         private void Update()
         {
+            if (current_round <= currentPhases.Length)
+            {
+                endGame.gameObject.SetActive(current_round == currentPhases.Length);
+                if (current_round == currentPhases.Length)
+                {
+                    startRound.interactable = false;
+                }
+            }
+
+            if (current_round < currentPhases.Length && roundStarted)
+            {
+                if (currentPhases[current_round].Contains("Market"))
+                {
+                    // TODO check if that round is active
+                    if (_timeLeft > 0)
+                    {
+                        _timeLeft -= Time.deltaTime;
+                        UpdateTimerDisplay();
+                    }
+                    else
+                    {
+                        _timeLeft = 0;
+                        StopRoundOnClick();
+                    }
+                }
+                else
+                {
+                    timeLeftTMP.text = "-";
+                }
+            }                else
+            {
+                timeLeftTMP.text = "-";
+            }
+            
             if (_sessionIsActive)
             {
                 float totalSeconds = (float)_sessionDuration.Elapsed.TotalSeconds;
@@ -291,6 +434,13 @@ namespace Version1.Host.Scripts
             }
 
             Nats.NatsHost.C.HandleMessages();
+        }
+        
+        void UpdateTimerDisplay()
+        {
+            int minutes = Mathf.FloorToInt(_timeLeft / 60);
+            int seconds = Mathf.FloorToInt(_timeLeft % 60);
+            timeLeftTMP.text = $"{minutes:D2}:{seconds:D2}";
         }
     }
 }

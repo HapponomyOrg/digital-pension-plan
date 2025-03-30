@@ -38,15 +38,14 @@ namespace Version1.Host.Scripts
             };
 
             Nats.NatsHost.C.Connect();
-
-
+            
             AddListeners();
         }
 
         private void OnEnable()
         {
-            SessionData.Instance.Reset();
-
+            SessionData.Instance.Reset(false);
+            
             hostInputField.text = SessionData.Instance.HostName;
             seedInputField.text = SessionData.Instance.Seed.ToString();
             

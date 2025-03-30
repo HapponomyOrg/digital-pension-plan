@@ -27,32 +27,37 @@ namespace Version1.Utilities
         public MarketManager MarketManager { get; }
 
 
-        private readonly Phase[] debtBasedPhases =
+        private readonly string[] debtBasedPhases =
         {
-            // Trading
-            // Debt payment
-            // Take out loan
-            // Trading
-            // Debt payment
-            // Take out loan
-            // Trading
-            // Debt payment
-            // Pension point buying
-            // Pension point donation
-            // Pension Calculation
+            "MarketScene", // Trading
+            "",// Debt payment
+            "",// Take out loan
+            "Loading",  
+            "MarketScene",// Trading
+            "",// Debt payment
+            "",// Take out loan
+            "Loading",            
+            "MarketScene", // Trading
+            "",// Debt payment
+            "MoneyToPointScene",// Pension point buying
+            "DonatePointsScene",// Pension point donation
+            "EndScene" // Pension Calculation
         };
         
-        private readonly Phase[] sustainableMoneyPhases =
+        private readonly string[] sustainableMoneyPhases =
         {
-            // Trading
-            // Money correction
-            // Trading
-            // Money correction
-            // Trading
-            // Money correction
-            // Pension point buying
-            // Pension point donation
-            // Pension Calculation
+            "MarketScene", // Trading
+            "MoneyCorrectionScene", // Money correction
+            "Loading",
+            "MarketScene", // Trading
+            "MoneyCorrectionScene", // Money correction
+            "Loading",
+            "MarketScene", // Trading
+            "MoneyCorrectionScene", // Money correction
+            "Loading",
+            "MoneyToPointScene", // Pension point buying
+            "DonatePointsScene", // Pension point donation
+            "EndScene" // Pension Calculation
         };
 
         private readonly string[] testPhases =

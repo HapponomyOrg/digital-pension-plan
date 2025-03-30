@@ -48,10 +48,15 @@ namespace Version1.Host.Scripts
         /// <param name="InbalanceMode"> true</param>
         /// <param name="Seed"> 0</param>
         /// <param name="RoundDuration"> 4 minutes</param>
-        public void Reset()
+        /// <param name="hard"></param>
+        public void Reset(bool hard)
         {
-            HostName = "";
-            LobbyCode = Random.Range(100000000, 999999999);
+            if (hard)
+            {
+                LobbyCode = Random.Range(100000000, 999999999);
+                HostName = "";
+            }
+            
             CurrentMoneySystem = MoneySystems.Sustainable;
             InbalanceMode = false;
             Seed = 0;

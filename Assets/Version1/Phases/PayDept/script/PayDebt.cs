@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Version1.PayDept.script
 {
@@ -16,7 +17,7 @@ namespace Version1.PayDept.script
         private void Start()
         {
             // TODO skip to next phase
-            if (PlayerData.PlayerData.Instance.Debt <= 0) gameObject.SetActive(false);
+            if (PlayerData.PlayerData.Instance.Debt <= 0) SceneManager.LoadScene(Utilities.GameManager.LOADING);
 
             amountText.text = "0";
 
@@ -45,6 +46,11 @@ namespace Version1.PayDept.script
         private void UpdateOverlay()
         {
             amountText.text = _currentAmount.ToString("N0", new System.Globalization.CultureInfo("de-DE"));
+        }
+
+        public void Continue()
+        {
+            SceneManager.LoadScene(Utilities.GameManager.LOADING);
         }
 
         public void PayDeptButton()
