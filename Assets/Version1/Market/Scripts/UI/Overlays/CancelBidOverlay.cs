@@ -24,18 +24,18 @@ namespace Version1.Market.Scripts.UI.Overlays
         {
             gameObject.SetActive(true);
             var playerId = PlayerData.PlayerData.Instance.PlayerId;
-            var bid = listing.BidHistories[playerId].GetSortedBiddingHistory()
-                .Last(b => b.Bidder == playerId);
+            //var bid = listing.BidHistories[playerId].GetSortedBiddingHistory()
+                //.Last(b => b.Bidder == playerId);
             
             
             sellerName.text = listing.Lister.ToString();
             price.text = listing.Price.ToString();
-            offer.text = bid.OfferedPrice.ToString();
+            //offer.text = bid.OfferedPrice.ToString();
             
             GenerateCardDisplays(listing);
             
             confirm.onClick.RemoveAllListeners();
-            confirm.onClick.AddListener(() => CancelBid(listing, bid));
+            //confirm.onClick.AddListener(() => CancelBid(listing, bid));
         }
 
         private void GenerateCardDisplays(Listing listing)

@@ -13,25 +13,46 @@ namespace Version1.Market.Scripts
         private readonly Dictionary<Guid, Listing> listings = new();
 
         public event EventHandler MarketDataChanged;
-        public event EventHandler<string> ListingRemoved;
 
         public MarketManager()
         {
+            Nats.NatsClient.C.OnListCards += (sender, message) =>
+            {
+                if (message.PlayerID == PlayerData.PlayerData.Instance.PlayerId)
+                    return;
+            
+                Utilities.GameManager.Instance.MarketManager.HandleAddListingMessage(message);
+
+            };
+            
+            Nats.NatsClient.C.OnCancelListing += (sender, message) =>
+            {
+                {
+                    if (message.PlayerID == PlayerData.PlayerData.Instance.PlayerId)
+                        return;
+                    HandleCancelListingMessage(message);
+                }
+            };
+
+            Nats.NatsClient.C.OnBuyCards += HandleBuyCardsMessage;
+
+            Nats.NatsClient.C.OnMakeBidding += HandleReceiveBid;
+
+            //     += (CancelListingMessage e) =>
+            // {
+            //     if (e.PlayerID == PlayerData.PlayerData.Instance.PlayerId)
+            //         return;
+            //
+            //     Utilities.GameManager.Instance.MarketManager.HandleCancelListingMessage(e);
+            // }
+
             // Nats.NatsClient.C.OnBuyCards += (sender, message) => { HandleBuyCardsMessage(message); };
             // Nats.NatsClient.C.OnCancelListing += (sender, message) => { HandleCancelListingMessage(message); };
         }
 
-        public void HandleBuyCardsMessage(BuyCardsRequestMessage message)
-        {
-            var guid = Guid.Parse(message.AuctionID);
-            var listing = listings[guid];
-            
-            if (listing.Lister == PlayerData.PlayerData.Instance.PlayerId)
-                SellListing(guid);
-            else
-                RemoveListing(guid);
-        }
 
+        #region AddListing
+        
         public void HandleAddListingMessage(ListCardsmessage message)
         {
             var guid = Guid.Parse(message.AuctionID);
@@ -49,10 +70,8 @@ namespace Version1.Market.Scripts
                 return;
             }
 
-            //PlayerData.PlayerData.Instance.RemoveCards(listing.Cards);
             listings.Add(listingId, listing);
             MarketDataChanged?.Invoke(this, EventArgs.Empty);
-            //MarketDataChanged?.Invoke(this, EventArgs.Empty);
         }
         
         public void AddListing(int listerId, DateTime timestamp, int price, int[] cards)
@@ -70,25 +89,17 @@ namespace Version1.Market.Scripts
             listings.Add(listingId, listing);
             MarketDataChanged?.Invoke(this, EventArgs.Empty);
 
-            //MarketDataChanged?.Invoke(this, EventArgs.Empty);
             
-            // TODO() networking
             var data = PlayerData.PlayerData.Instance;
             
             var message = new ListCardsmessage(DateTime.Now.ToString("o"), data.LobbyID, listerId, data.PlayerName, listingId.ToString(), cards, price);
             Nats.NatsClient.C.Publish(data.LobbyID.ToString(), message);
         }
-        
-        // Test method
-        public void AddListing(Listing listing)
-        {
-            if (listings.ContainsKey(listing.ListingId))
-                return;
-            
-            listings.Add(listing.ListingId, listing);
-            MarketDataChanged?.Invoke(this, EventArgs.Empty);
-        }
 
+        #endregion
+        
+        #region CancelListing
+        
         public void HandleCancelListingMessage(CancelListingMessage message)
         {
             var guid = Guid.Parse(message.AuctionID);
@@ -109,10 +120,63 @@ namespace Version1.Market.Scripts
                 PlayerData.PlayerData.Instance.LobbyID,
                 PlayerData.PlayerData.Instance.PlayerId,
                 listing.ListingId.ToString()
-                );
+            );
             
             Nats.NatsClient.C.Publish(PlayerData.PlayerData.Instance.LobbyID.ToString(), message);        
         }
+
+        #endregion
+
+        #region BuyListing
+
+        public void HandleBuyCardsMessage(object sender, BuyCardsRequestMessage message)
+        {
+            var guid = Guid.Parse(message.AuctionID);
+            var listing = listings[guid];
+            
+            if (listing.Lister == PlayerData.PlayerData.Instance.PlayerId)
+                SellListing(guid);
+            else
+                RemoveListing(guid);
+        }
+        
+        public void BuyListing(Guid listingId)
+        {
+            var listing = listings[listingId];
+            
+            if (PlayerData.PlayerData.Instance.Balance < listing.Price)
+                return;
+
+            PlayerData.PlayerData.Instance.Balance -= listing.Price;
+            PlayerData.PlayerData.Instance.AddCards(listing.Cards);
+            
+            RemoveListing(listingId);
+
+            MarketDataChanged?.Invoke(this, EventArgs.Empty);
+            
+            var data = PlayerData.PlayerData.Instance;
+            
+            var message = new BuyCardsRequestMessage(
+                DateTime.Now.ToString("o"), 
+                data.LobbyID,
+                data.PlayerId,
+                listingId.ToString()
+            );
+            Nats.NatsClient.C.Publish(data.LobbyID.ToString(), message);       
+        }
+
+        private void SellListing(Guid listingId)
+        {
+            var listing = listings[listingId];
+            
+            PlayerData.PlayerData.Instance.Balance += listing.Price;
+
+            RemoveListing(listingId);
+
+            MarketDataChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        #endregion
         
         private void RemoveListing(Guid listingId)
         {
@@ -126,22 +190,69 @@ namespace Version1.Market.Scripts
             MarketDataChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        public void AddBidToListing(Listing listing, int buyer, int offeredPrice, bool listerBid = false)
+        
+        
+        
+        
+        #region Bids
+
+        private void HandleReceiveBid(object sender, MakeBiddingMessage message)
         {
-            if (listing == null)
+            var listing = listings[Guid.Parse(message.AuctionID)];
+
+            if (listings == null)
+            {
+                Debug.LogWarning($"Listing: {message.AuctionID} does not exist for bid: {message}");
                 return;
+            }
+
+            var playerId = PlayerData.PlayerData.Instance.PlayerId;
+
+            if (playerId != message.OriginalBidder && playerId != listing.Lister)
+                return;
+
+            var bid = new Bid(Guid.Parse(message.BidID), message.PlayerID, message.OfferPrice, DateTime.Parse(message.DateTimeStamp));
             
-            if (listerBid)
-                listing.AddListerBid(buyer, offeredPrice);
-            else
-                listing.AddBuyerBid(buyer, offeredPrice);
-            
-            PlayerData.PlayerData.Instance.Balance -= offeredPrice;
-            
-            MarketDataChanged?.Invoke(this, EventArgs.Empty);
-            // TODO() networking
+            AddBidToListing(listing, bid, message.OriginalBidder);
         }
         
+
+        public void AddBidToListing(Listing listing, int originalBidder, int offeredPrice)
+        {
+            if (listing == null)
+            {
+                Debug.Log("listing doesnt exist");
+                return;
+            }
+            
+            var bidId = Guid.NewGuid();
+            var bid = new Bid(bidId, PlayerData.PlayerData.Instance.PlayerId, offeredPrice, DateTime.Now);
+            
+            // TODO decide when to subtract money from original bidder
+            //PlayerData.PlayerData.Instance.Balance -= offeredPrice;
+            listing.AddBid(originalBidder, bid);
+            MarketDataChanged?.Invoke(this, EventArgs.Empty);
+
+            var data = PlayerData.PlayerData.Instance;
+            var message = new MakeBiddingMessage(bid.TimeStamp.ToString("o"), data.LobbyID, data.PlayerId, listing.ListingId.ToString(), bid.BidId.ToString(), originalBidder, data.PlayerName, offeredPrice);
+
+            Nats.NatsClient.C.Publish(PlayerData.PlayerData.Instance.LobbyID.ToString(), message);
+        }
+        
+        private void AddBidToListing(Listing listing, Bid bid, int originalBidder)
+        {
+            if (listing == null)
+            {
+                Debug.Log("listing doesnt exist");
+                return;
+            }
+            
+            listing.AddBid(originalBidder, bid);
+
+            MarketDataChanged?.Invoke(this, EventArgs.Empty);
+            Debug.Log($"Bid added to listing {listing}");
+        }
+
         public void RemoveBidFromListing(Guid listingId, Guid bidId, int bidder)
         {
             var listing = listings[listingId];
@@ -154,7 +265,7 @@ namespace Version1.Market.Scripts
             if (bid == null)
                 return;
 
-            PlayerData.PlayerData.Instance.Balance += bid.Value.OfferedPrice;
+            //PlayerData.PlayerData.Instance.Balance += bid.Value.OfferedPrice;
             listing.BidHistories.Remove(bidder);
             
             
@@ -164,45 +275,15 @@ namespace Version1.Market.Scripts
             // TODO() networking
         }
 
-
-        public void BuyListing(Guid listingId)
-        {
-            var listing = listings[listingId];
-            
-            if (PlayerData.PlayerData.Instance.Balance < listing.Price)
-                return;
-
-            PlayerData.PlayerData.Instance.Balance -= listing.Price;
-            PlayerData.PlayerData.Instance.AddCards(listing.Cards);
+        #endregion
 
 
-            RemoveListing(listingId);
 
-            MarketDataChanged?.Invoke(this, EventArgs.Empty);
-            
-            // TODO() networking
-            var data = PlayerData.PlayerData.Instance;
-            
-            var message = new BuyCardsRequestMessage(
-                DateTime.Now.ToString("o"), 
-                data.LobbyID,
-                data.PlayerId,
-                listingId.ToString()
-            );
-            Nats.NatsClient.C.Publish(data.LobbyID.ToString(), message);       
-        }
 
-        public void SellListing(Guid listingId)
-        {
-            var listing = listings[listingId];
-            
-            PlayerData.PlayerData.Instance.Balance += listing.Price;
 
-            RemoveListing(listingId);
 
-            MarketDataChanged?.Invoke(this, EventArgs.Empty);
-        }
-        
+        #region ListingFetchers
+
         public Listing[] PersonalListings(int playerId)
         {
             return listings.Values.Where(l => l.Lister == playerId).OrderBy(l => l.TimeStamp).ToArray();
@@ -217,49 +298,12 @@ namespace Version1.Market.Scripts
         {
             return listings.Values.Where(l => l.Lister != playerId).Where(l => !l.BidHistories.ContainsKey(playerId)).ToArray();
         }
-        
-        /*public Listing[] PeerListingsWithoutBid(int playerId)
-        {
-            var ls = new List<Listing>();
 
-            foreach (var listing in listings.Values)
-            {
-                if (listing.Lister == playerId)
-                    continue;
-
-                if (listing.BidHistories.TryGetValue(playerId, out var history))
-                    if (history.LastActiveBid() == null)
-                        continue;
-                
-                ls.Add(listing);
-            }
-
-            return ls.ToArray();
-        }*/
-        
         public Listing[] PeerListingsWithBid(int playerId)
         {
             return listings.Values.Where(l => l.Lister != playerId).Where(l => l.BidHistories.ContainsKey(playerId)).ToArray();
         }
-        
-        /*public Listing[] PeerListingsWithBid(int playerId)
-        {
-            var ls = new List<Listing>();
-        
-            foreach (var listing in listings.Values)
-            {
-                if (listing.Lister == playerId)
-                    continue;
-        
-                if (!listing.BidHistories.TryGetValue(playerId, out var history)) 
-                    continue;
-                
-                if (history.LastActiveBid() != null)
-                    ls.Add(listing);
-            }
-        
-            return ls.ToArray();
-        }*/
-        
+
+        #endregion
     }
 }

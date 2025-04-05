@@ -31,9 +31,9 @@ namespace Version1.Market.Scripts.UI.Displays
                 return;
             
             sellerName.text = listing.Lister.ToString();
-            state.text = lastBid.Value.BidStatus.ToString();
+            state.text = lastBid.Item2.BidStatus.ToString();
             
-            offer.text = lastBid.Value.OfferedPrice.ToString();
+            offer.text = lastBid.Item2.OfferedPrice.ToString();
 
             GenerateCardDisplays();
             

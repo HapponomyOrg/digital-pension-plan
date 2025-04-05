@@ -86,7 +86,11 @@ namespace Version1.Market.Scripts.UI
         {
             AddListingButton.onClick.AddListener(() => addListingOverlay.Open());
 
-            Utilities.GameManager.Instance.MarketManager.MarketDataChanged += (sender, args) => { generateDisplays = true; }; 
+            Utilities.GameManager.Instance.MarketManager.MarketDataChanged += (sender, args) =>
+            {
+                // GenerateDisplays();
+                generateDisplays = true;
+            }; 
             
             /*foreach (var listing in testListings)
             {
@@ -157,9 +161,6 @@ namespace Version1.Market.Scripts.UI
 
         private void GenerateMarketListing(Listing listing)
         {
-            // if (marketListingDisplays.ContainsKey(listing.ListingId.ToString()))
-            //     return;
-            
             var obj = Instantiate(marketListingDisplay, marketListings);
             obj.Init(listing,
                 new Dictionary<ListingDisplayAction, Action>
@@ -175,8 +176,6 @@ namespace Version1.Market.Scripts.UI
                             })
                     }
                 });
-            
-            // marketListingDisplays.Add(listing.ListingId.ToString(), obj);
         }
         
         
@@ -204,8 +203,6 @@ namespace Version1.Market.Scripts.UI
                     { ListingDisplayAction.Select, () => { Debug.Log($"Selected bid: {listing.ListingId}"); } }
                 }
             );
-
-            //listingDisplays[listing.ListingId] = obj;
         }
 
         private void GeneratePersonalListings()
@@ -218,25 +215,26 @@ namespace Version1.Market.Scripts.UI
 
         private void GeneratePersonalListing(Listing listing)
         {
-            // if (personalListingDisplays.ContainsKey(listing.ListingId.ToString()))
-            //     return;
-            
             var obj = Instantiate(personalListingDisplay, personalListings);
             obj.Init(listing,
                 new Dictionary<ListingDisplayAction, Action>
                 {
                     { ListingDisplayAction.Cancel, () => { cancelListingOverlay.Open(listing); } },
-                    { ListingDisplayAction.Select, () => { personalListingDetailsDisplay.Init(listing,
+                    { ListingDisplayAction.Select, () => { 
+                        
+                        
+                        personalListingDetailsDisplay.Init(listing,
                             new Dictionary<ListingDisplayAction, Action>
                             {
                                 { ListingDisplayAction.Cancel, () => { cancelListingOverlay.Open(listing); } }
                             });
                     } }
                 });
-            
-            // personalListingDisplays.Add(listing.ListingId.ToString(), obj);
         }
 
-        
+        private void GenerateReceivedBids()
+        {
+            
+        }
     }
 }
