@@ -211,7 +211,7 @@ namespace Version1.Market.Scripts
             if (playerId != message.OriginalBidder && playerId != listing.Lister)
                 return;
 
-            var bid = new Bid(Guid.Parse(message.BidID), message.PlayerID, message.OfferPrice, DateTime.Parse(message.DateTimeStamp));
+            var bid = new Bid(Guid.Parse(message.BidID), message.PlayerID, message.PlayerName, message.OfferPrice, DateTime.Parse(message.DateTimeStamp));
             
             AddBidToListing(listing, bid, message.OriginalBidder);
         }
@@ -226,7 +226,7 @@ namespace Version1.Market.Scripts
             }
             
             var bidId = Guid.NewGuid();
-            var bid = new Bid(bidId, PlayerData.PlayerData.Instance.PlayerId, offeredPrice, DateTime.Now);
+            var bid = new Bid(bidId, PlayerData.PlayerData.Instance.PlayerId, PlayerData.PlayerData.Instance.PlayerName, offeredPrice, DateTime.Now);
             
             // TODO decide when to subtract money from original bidder
             //PlayerData.PlayerData.Instance.Balance -= offeredPrice;

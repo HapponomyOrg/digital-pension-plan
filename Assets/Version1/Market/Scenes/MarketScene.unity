@@ -4707,10 +4707,12 @@ MonoBehaviour:
   AddListingButton: {fileID: 1357739812}
   closedMarketPanel: {fileID: 1171836335}
   personalListings: {fileID: 940594822}
+  receivedBids: {fileID: 787389148}
   marketListings: {fileID: 102178258}
   marketBidListings: {fileID: 1494311768}
   personalListingDisplay: {fileID: 1406116112081940865, guid: 090d8413f3022f64db28bb966da8706a, type: 3}
   personalListingDetailsDisplay: {fileID: 305372364}
+  receivedBidDisplay: {fileID: 6678214279446577732, guid: 3e560798e0c656d4881f60cec13573f6, type: 3}
   marketListingDisplay: {fileID: 1642182310382471839, guid: e3f6115362504234b91cf2ce7d0b3394, type: 3}
   marketListingDetailsDisplay: {fileID: 1859095815}
   marketBidListingDisplay: {fileID: 3645840900502771942, guid: 3cfcb29edfa3d5048bbd8efe028350e9, type: 3}
@@ -5164,6 +5166,7 @@ MonoBehaviour:
   balance: 47000
   points: 3
   lobbyID: 0
+  RequestID: 
 --- !u!4 &723705515
 Transform:
   m_ObjectHideFlags: 0
@@ -11516,7 +11519,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 1505893447}
   m_OnClick:
     m_PersistentCalls:

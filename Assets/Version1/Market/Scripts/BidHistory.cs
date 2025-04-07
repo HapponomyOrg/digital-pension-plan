@@ -40,10 +40,10 @@ namespace Version1.Market.Scripts
         //     return bids.LastOrDefault(bid => bid.BidStatus == BidStatus.Active);
         // }
 
-        public void AddBid(Guid guid, int offeredAmount, int bidder, DateTime timestamp)
-        {
-            history.Add(new Tuple<int, Bid>(bidder, new Bid(guid, bidder, offeredAmount, timestamp)));
-        }
+        // public void AddBid(Guid guid, int offeredAmount, int bidder, DateTime timestamp)
+        // {
+        //     history.Add(new Tuple<int, Bid>(bidder, new Bid(guid, bidder, offeredAmount, timestamp)));
+        // }
         
         public void AddBid(Bid bid)
         {

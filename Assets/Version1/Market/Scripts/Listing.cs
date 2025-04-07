@@ -51,31 +51,31 @@ namespace Version1.Market.Scripts
         //     bidderHistory.AddBid(offeredAmount, true);
         // }
 
-        public void AddBid(int offeredAmount, int bidder, int originalBidder, DateTime timestamp)
-        {
-            BidHistories.TryGetValue(originalBidder, out var bidHistory);
-
-            if (bidHistory == null)
-            {
-                bidHistory = new BidHistory();
-                BidHistories.Add(originalBidder, bidHistory);
-            }
-
-            bidHistory.AddBid(Guid.NewGuid(), offeredAmount, bidder, timestamp);
-        }
-        
-        public void AddBid(Guid guid, int offeredAmount, int bidder, int originalBidder, DateTime timestamp)
-        {
-            BidHistories.TryGetValue(originalBidder, out var bidHistory);
-
-            if (bidHistory == null)
-            {
-                bidHistory = new BidHistory();
-                BidHistories.Add(originalBidder, bidHistory);
-            }
-
-            bidHistory.AddBid(guid, offeredAmount, bidder, timestamp);
-        }
+        // public void AddBid(int offeredAmount, int bidder, int originalBidder, DateTime timestamp)
+        // {
+        //     BidHistories.TryGetValue(originalBidder, out var bidHistory);
+        //
+        //     if (bidHistory == null)
+        //     {
+        //         bidHistory = new BidHistory();
+        //         BidHistories.Add(originalBidder, bidHistory);
+        //     }
+        //
+        //     bidHistory.AddBid(Guid.NewGuid(), offeredAmount, bidder, timestamp);
+        // }
+        //
+        // public void AddBid(Guid guid, int offeredAmount, int bidder, int originalBidder, DateTime timestamp)
+        // {
+        //     BidHistories.TryGetValue(originalBidder, out var bidHistory);
+        //
+        //     if (bidHistory == null)
+        //     {
+        //         bidHistory = new BidHistory();
+        //         BidHistories.Add(originalBidder, bidHistory);
+        //     }
+        //
+        //     bidHistory.AddBid(guid, offeredAmount, bidder, timestamp);
+        // }
         
         public void AddBid(int originalBidder, Bid bid)
         {

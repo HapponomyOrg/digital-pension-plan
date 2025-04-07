@@ -57,6 +57,7 @@ namespace Version1.Market.Scripts.UI
 
         [Header("Display lists")]
         [SerializeField] private Transform personalListings;
+        [SerializeField] private Transform receivedBids;
         [SerializeField] private Transform marketListings;
         [SerializeField] private Transform marketBidListings;
 
@@ -64,6 +65,7 @@ namespace Version1.Market.Scripts.UI
         [Header("Display prefabs")]
         [SerializeField] private PersonalListingDisplay personalListingDisplay;
         [SerializeField] private PersonalListingDetailsDisplay personalListingDetailsDisplay;
+        [SerializeField] private ReceivedBidDisplay receivedBidDisplay;
         [SerializeField] private MarketListingDisplay marketListingDisplay;
         [SerializeField] private MarketListingDetailsDisplay marketListingDetailsDisplay;
         [SerializeField] private MarketBidListingDisplay marketBidListingDisplay;
@@ -221,8 +223,7 @@ namespace Version1.Market.Scripts.UI
                 {
                     { ListingDisplayAction.Cancel, () => { cancelListingOverlay.Open(listing); } },
                     { ListingDisplayAction.Select, () => { 
-                        
-                        
+                        GenerateReceivedBids(listing);
                         personalListingDetailsDisplay.Init(listing,
                             new Dictionary<ListingDisplayAction, Action>
                             {
@@ -232,9 +233,36 @@ namespace Version1.Market.Scripts.UI
                 });
         }
 
-        private void GenerateReceivedBids()
+        private void GenerateReceivedBids(Listing listing)
         {
-            
+            foreach (Transform child in receivedBids)
+            {
+                Destroy(child.gameObject);
+            }
+
+            foreach (var bidHistory in listing.BidHistories)
+            {
+                var obj = Instantiate(receivedBidDisplay, receivedBids);
+                obj.Init(
+                    bidHistory.Value.LastActiveBid().Item2,
+                    new Dictionary<BidDisplayAction, Action>
+                    {
+                        { BidDisplayAction.Accept, () => { Debug.Log("Accept Bid"); } },
+                        { BidDisplayAction.Counter, () => { Debug.Log("Counter Bid"); } },
+                        { BidDisplayAction.Decline, () => { Debug.Log("Decline Bid"); } },
+                    }
+                );
+            }
+        }
+
+        private void ClearPersonalListingDetails()
+        {
+            // TODO clear the personal listing details and received bids when the selected listing is sold/canceled
+        }
+
+        private void ClearMarketListingDetails()
+        {
+            // TODO clear the market listing details when the selected listing is sold/canceled
         }
     }
 }
