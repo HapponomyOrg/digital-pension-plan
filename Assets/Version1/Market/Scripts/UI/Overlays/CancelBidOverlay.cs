@@ -61,7 +61,7 @@ namespace Version1.Market.Scripts.UI.Overlays
 
         private void CancelBid(Listing listing, Bid bid)
         {
-            Utilities.GameManager.Instance.MarketManager.RemoveBidFromListing(listing.ListingId, bid.BidId, PlayerData.PlayerData.Instance.PlayerId);
+            //Utilities.GameManager.Instance.MarketManager.RemoveBidFromListing(listing.ListingId, bid.BidId, PlayerData.PlayerData.Instance.PlayerId);
             Close();
         }
 

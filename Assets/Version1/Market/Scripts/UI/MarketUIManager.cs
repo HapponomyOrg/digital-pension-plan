@@ -199,7 +199,14 @@ namespace Version1.Market.Scripts.UI
                         ListingDisplayAction.Cancel, () =>
                         {
                             Debug.Log($"Cancel bid {listing.ListingId}");
-                            cancelBidOverlay.Open(listing);
+                            
+                            var lastBid = listing.BidHistories[PlayerData.PlayerData.Instance.PlayerId].LastActiveBid();
+
+                            if (lastBid == null)
+                                return;
+                            
+                            Utilities.GameManager.Instance.MarketManager.CancelBidFromListing(listing, lastBid.Item2, PlayerData.PlayerData.Instance.PlayerId);
+                            //cancelBidOverlay.Open(listing);
                         }
                     },
                     { ListingDisplayAction.Select, () => { Debug.Log($"Selected bid: {listing.ListingId}"); } }
@@ -242,6 +249,14 @@ namespace Version1.Market.Scripts.UI
 
             foreach (var bidHistory in listing.BidHistories)
             {
+                var lastActiveBid = bidHistory.Value.LastActiveBid();
+                
+                if (lastActiveBid == null)
+                {
+                    Debug.Log("Bidhistory doesnt have active bids");
+                    continue;
+                }
+                
                 var obj = Instantiate(receivedBidDisplay, receivedBids);
                 obj.Init(
                     bidHistory.Value.LastActiveBid().Item2,

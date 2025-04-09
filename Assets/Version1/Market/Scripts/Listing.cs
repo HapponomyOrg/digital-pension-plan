@@ -26,56 +26,6 @@ namespace Version1.Market.Scripts
             Cards = cards;
             BidHistories = new Dictionary<int, BidHistory>();
         }
-
-        // public void AddBuyerBid(int buyer, int offeredAmount)
-        // {
-        //     BidHistories.TryGetValue(buyer, out var bidderHistory);
-        //
-        //     if (bidderHistory == null)
-        //     {
-        //         bidderHistory = new BidHistory(Lister, buyer);
-        //         bidderHistory.AddBid(offeredAmount);
-        //         BidHistories.Add(buyer, bidderHistory);
-        //     }
-        //     else
-        //         bidderHistory.AddBid(offeredAmount);
-        // }
-        //
-        // public void AddListerBid(int buyer, int offeredAmount)
-        // {
-        //     BidHistories.TryGetValue(buyer, out var bidderHistory);
-        //
-        //     if (bidderHistory == null)
-        //         return; // TODO error handling
-        //
-        //     bidderHistory.AddBid(offeredAmount, true);
-        // }
-
-        // public void AddBid(int offeredAmount, int bidder, int originalBidder, DateTime timestamp)
-        // {
-        //     BidHistories.TryGetValue(originalBidder, out var bidHistory);
-        //
-        //     if (bidHistory == null)
-        //     {
-        //         bidHistory = new BidHistory();
-        //         BidHistories.Add(originalBidder, bidHistory);
-        //     }
-        //
-        //     bidHistory.AddBid(Guid.NewGuid(), offeredAmount, bidder, timestamp);
-        // }
-        //
-        // public void AddBid(Guid guid, int offeredAmount, int bidder, int originalBidder, DateTime timestamp)
-        // {
-        //     BidHistories.TryGetValue(originalBidder, out var bidHistory);
-        //
-        //     if (bidHistory == null)
-        //     {
-        //         bidHistory = new BidHistory();
-        //         BidHistories.Add(originalBidder, bidHistory);
-        //     }
-        //
-        //     bidHistory.AddBid(guid, offeredAmount, bidder, timestamp);
-        // }
         
         public void AddBid(int originalBidder, Bid bid)
         {
@@ -88,6 +38,24 @@ namespace Version1.Market.Scripts
             }
 
             bidHistory.AddBid(bid);
+        }
+
+        public void AcceptBid(Bid bid)
+        {
+            if (PlayerData.PlayerData.Instance.PlayerId == Lister)
+            {
+                // Receive money
+            }
+
+            if (PlayerData.PlayerData.Instance.PlayerId == bid.Bidder)
+            {
+                // Receive cards
+            }
+        }
+
+        public void CancelBid(int originalBidder, Guid bidId)
+        {
+            BidHistories[originalBidder].CancelBid(bidId);
         }
         
         public override string ToString()

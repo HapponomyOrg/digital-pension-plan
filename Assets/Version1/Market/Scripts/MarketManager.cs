@@ -37,17 +37,7 @@ namespace Version1.Market.Scripts
             Nats.NatsClient.C.OnBuyCards += HandleBuyCardsMessage;
 
             Nats.NatsClient.C.OnMakeBidding += HandleReceiveBid;
-
-            //     += (CancelListingMessage e) =>
-            // {
-            //     if (e.PlayerID == PlayerData.PlayerData.Instance.PlayerId)
-            //         return;
-            //
-            //     Utilities.GameManager.Instance.MarketManager.HandleCancelListingMessage(e);
-            // }
-
-            // Nats.NatsClient.C.OnBuyCards += (sender, message) => { HandleBuyCardsMessage(message); };
-            // Nats.NatsClient.C.OnCancelListing += (sender, message) => { HandleCancelListingMessage(message); };
+            Nats.NatsClient.C.OnCancelBidding += HandleCancelBid;
         }
 
 
@@ -216,7 +206,7 @@ namespace Version1.Market.Scripts
             AddBidToListing(listing, bid, message.OriginalBidder);
         }
         
-
+        // Sender
         public void AddBidToListing(Listing listing, int originalBidder, int offeredPrice)
         {
             if (listing == null)
@@ -229,7 +219,7 @@ namespace Version1.Market.Scripts
             var bid = new Bid(bidId, PlayerData.PlayerData.Instance.PlayerId, PlayerData.PlayerData.Instance.PlayerName, offeredPrice, DateTime.Now);
             
             // TODO decide when to subtract money from original bidder
-            //PlayerData.PlayerData.Instance.Balance -= offeredPrice;
+            PlayerData.PlayerData.Instance.Balance -= offeredPrice;
             listing.AddBid(originalBidder, bid);
             MarketDataChanged?.Invoke(this, EventArgs.Empty);
 
@@ -239,6 +229,7 @@ namespace Version1.Market.Scripts
             Nats.NatsClient.C.Publish(PlayerData.PlayerData.Instance.LobbyID.ToString(), message);
         }
         
+        // Receiver
         private void AddBidToListing(Listing listing, Bid bid, int originalBidder)
         {
             if (listing == null)
@@ -253,27 +244,86 @@ namespace Version1.Market.Scripts
             Debug.Log($"Bid added to listing {listing}");
         }
 
-        public void RemoveBidFromListing(Guid listingId, Guid bidId, int bidder)
+
+        private void HandleCancelBid(object sender, CancelBiddingMessage message)
         {
-            var listing = listings[listingId];
+            var listing = listings[Guid.Parse(message.AuctionID)];
 
+            if (listings == null)
+            {
+                Debug.LogWarning($"Listing: {message.AuctionID} does not exist for bid: {message}");
+                return;
+            }
+
+            var playerId = PlayerData.PlayerData.Instance.PlayerId;
+            
+            if (playerId != message.OriginalBidder && playerId != listing.Lister)
+                return;
+            
+            CancelBidFromListing(listing, Guid.Parse(message.BidID), message.OriginalBidder);
+        }
+
+        // Sender
+        public void CancelBidFromListing(Listing listing, Bid bid, int originalBidder)
+        {
             if (listing == null)
+            {
+                Debug.Log("listing doesnt exist");
                 return;
-
-            var bid = listing.BidHistories[bidder].LastActiveBid();
+            }
             
-            if (bid == null)
-                return;
-
-            //PlayerData.PlayerData.Instance.Balance += bid.Value.OfferedPrice;
-            listing.BidHistories.Remove(bidder);
+            listing.CancelBid(originalBidder, bid.BidId);
             
-            
-            //listing.BidHistories[bidder].CancelBid(bidId);
+            // Restore balance
+            PlayerData.PlayerData.Instance.Balance += bid.OfferedPrice;
             
             MarketDataChanged?.Invoke(this, EventArgs.Empty);
-            // TODO() networking
+
+            var data = PlayerData.PlayerData.Instance;
+            var message = new CancelBiddingMessage(DateTime.Now.ToString("o"), data.LobbyID, data.PlayerId, listing.ListingId.ToString(), bid.BidId.ToString(), originalBidder);
+
+            Nats.NatsClient.C.Publish(PlayerData.PlayerData.Instance.LobbyID.ToString(), message);
         }
+        
+        
+        // Receiver
+        private void CancelBidFromListing(Listing listing, Guid bidId, int originalBidder)
+        {
+            if (listing == null)
+            {
+                Debug.Log("listing doesnt exist");
+                return;
+            }
+            
+            Debug.Log($"Cancel bid: {bidId}");
+            
+            listing.CancelBid(originalBidder, bidId);
+
+            MarketDataChanged?.Invoke(this, EventArgs.Empty);
+        }
+        
+        
+        // public void RemoveBidFromListing(Guid listingId, Guid bidId, int bidder)
+        // {
+        //     var listing = listings[listingId];
+        //
+        //     if (listing == null)
+        //         return;
+        //
+        //     var bid = listing.BidHistories[bidder].LastActiveBid();
+        //     
+        //     if (bid == null)
+        //         return;
+        //
+        //     //PlayerData.PlayerData.Instance.Balance += bid.Value.OfferedPrice;
+        //     listing.BidHistories.Remove(bidder);
+        //     
+        //     
+        //     //listing.BidHistories[bidder].CancelBid(bidId);
+        //     
+        //     MarketDataChanged?.Invoke(this, EventArgs.Empty);
+        //     // TODO() networking
+        // }
 
         #endregion
 
@@ -296,12 +346,39 @@ namespace Version1.Market.Scripts
 
         public Listing[] PeerListingsWithoutBid(int playerId)
         {
-            return listings.Values.Where(l => l.Lister != playerId).Where(l => !l.BidHistories.ContainsKey(playerId)).ToArray();
+            var listingsWithoutActiveBid = new List<Listing>();
+
+            foreach (var listing in listings.Values)
+            {
+                if (listing.Lister == playerId)
+                    continue;
+
+                // Either no bid history, or the bid is inactive
+                if (!listing.BidHistories.TryGetValue(playerId, out var bidHistory) || bidHistory.LastActiveBid() == null)
+                {
+                    listingsWithoutActiveBid.Add(listing);
+                }
+            }
+
+            return listingsWithoutActiveBid.ToArray();
         }
 
         public Listing[] PeerListingsWithBid(int playerId)
         {
-            return listings.Values.Where(l => l.Lister != playerId).Where(l => l.BidHistories.ContainsKey(playerId)).ToArray();
+            var listingsWithBid = new List<Listing>();
+
+            foreach (var listing in listings.Values)
+            {
+                if (listing.Lister == playerId)
+                    continue;
+
+                if (!listing.BidHistories.TryGetValue(playerId, out var bidHistory) || bidHistory.LastActiveBid() == null)
+                    continue;
+                
+                listingsWithBid.Add(listing);
+            }
+
+            return listingsWithBid.ToArray();
         }
 
         #endregion
