@@ -262,7 +262,11 @@ namespace Version1.Market.Scripts.UI
                     bidHistory.Value.LastActiveBid().Item2,
                     new Dictionary<BidDisplayAction, Action>
                     {
-                        { BidDisplayAction.Accept, () => { Debug.Log("Accept Bid"); } },
+                        { BidDisplayAction.Accept, () =>
+                        {
+                            Debug.Log("Accept Bid");
+                            Utilities.GameManager.Instance.MarketManager.AcceptBidOnListing(listing, lastActiveBid.Item2, bidHistory.Key);
+                        } },
                         { BidDisplayAction.Counter, () => { Debug.Log("Counter Bid"); } },
                         { BidDisplayAction.Decline, () => { Debug.Log("Decline Bid"); } },
                     }

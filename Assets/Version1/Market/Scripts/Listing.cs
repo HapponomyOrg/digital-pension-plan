@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Version1.Market.Scripts
 {
@@ -40,16 +41,30 @@ namespace Version1.Market.Scripts
             bidHistory.AddBid(bid);
         }
 
-        public void AcceptBid(Bid bid)
+        public void AcceptBid(int originalBidder, Guid bidId)
         {
+            var bid = BidHistories[originalBidder].GetBid(bidId);
+
+            if (bid == null)
+            {
+                Debug.LogWarning("bid not in history");
+                return;
+            }
+            
+            if (PlayerData.PlayerData.Instance.PlayerId != Lister || PlayerData.PlayerData.Instance.PlayerId != originalBidder)
+                return;
+            
             if (PlayerData.PlayerData.Instance.PlayerId == Lister)
             {
-                // Receive money
+                PlayerData.PlayerData.Instance.Balance += bid.OfferedPrice;
+                Debug.Log("Received money from accepted bid");
+
             }
 
-            if (PlayerData.PlayerData.Instance.PlayerId == bid.Bidder)
+            if (PlayerData.PlayerData.Instance.PlayerId == originalBidder)
             {
-                // Receive cards
+                PlayerData.PlayerData.Instance.AddCards(Cards);
+                Debug.Log("Received cards from accepted bid");
             }
         }
 

@@ -38,6 +38,7 @@ namespace Version1.Market.Scripts
 
             Nats.NatsClient.C.OnMakeBidding += HandleReceiveBid;
             Nats.NatsClient.C.OnCancelBidding += HandleCancelBid;
+            Nats.NatsClient.C.OnAcceptBidding += HandleAcceptBid;
         }
 
 
@@ -206,7 +207,7 @@ namespace Version1.Market.Scripts
             AddBidToListing(listing, bid, message.OriginalBidder);
         }
         
-        // Sender
+        // Sender (Buyer)
         public void AddBidToListing(Listing listing, int originalBidder, int offeredPrice)
         {
             if (listing == null)
@@ -229,7 +230,7 @@ namespace Version1.Market.Scripts
             Nats.NatsClient.C.Publish(PlayerData.PlayerData.Instance.LobbyID.ToString(), message);
         }
         
-        // Receiver
+        // Receiver (Lister)
         private void AddBidToListing(Listing listing, Bid bid, int originalBidder)
         {
             if (listing == null)
@@ -263,7 +264,7 @@ namespace Version1.Market.Scripts
             CancelBidFromListing(listing, Guid.Parse(message.BidID), message.OriginalBidder);
         }
 
-        // Sender
+        // Sender (Buyer)
         public void CancelBidFromListing(Listing listing, Bid bid, int originalBidder)
         {
             if (listing == null)
@@ -286,7 +287,7 @@ namespace Version1.Market.Scripts
         }
         
         
-        // Receiver
+        // Receiver (Lister)
         private void CancelBidFromListing(Listing listing, Guid bidId, int originalBidder)
         {
             if (listing == null)
@@ -299,6 +300,63 @@ namespace Version1.Market.Scripts
             
             listing.CancelBid(originalBidder, bidId);
 
+            MarketDataChanged?.Invoke(this, EventArgs.Empty);
+        }
+        
+        
+        
+        private void HandleAcceptBid(object sender, AcceptBiddingMessage message)
+        {
+            Debug.Log($"Received {message}");
+
+            
+            var listing = listings[Guid.Parse(message.AuctionID)];
+
+            if (listings == null)
+            {
+                Debug.LogWarning($"Listing: {message.AuctionID} does not exist for bid: {message}");
+                return;
+            }
+
+            AcceptBidOnListing(listing, message.OriginalBidder);
+        }
+
+        // Sender (lister)
+        public void AcceptBidOnListing(Listing listing, Bid bid, int originalBidder)
+        {
+            if (listing == null)
+            {
+                Debug.Log("listing doesnt exist");
+                return;
+            }
+
+            PlayerData.PlayerData.Instance.Balance += bid.OfferedPrice;
+            listings.Remove(listing.ListingId);
+            
+            MarketDataChanged?.Invoke(this, EventArgs.Empty);
+
+            var data = PlayerData.PlayerData.Instance;
+            var message = new AcceptBiddingMessage(DateTime.Now.ToString("o"), data.LobbyID, data.PlayerId, listing.ListingId.ToString(), bid.BidId.ToString(), originalBidder);
+
+            Debug.Log($"Sent {message}");
+            
+            Nats.NatsClient.C.Publish(PlayerData.PlayerData.Instance.LobbyID.ToString(), message);
+        }
+        
+        // Receiver (Buyer)
+        private void AcceptBidOnListing(Listing listing, int originalBidder)
+        {
+            if (listing == null)
+            {
+                Debug.Log("listing doesnt exist");
+                return;
+            }
+
+            if (PlayerData.PlayerData.Instance.PlayerId == originalBidder)
+                PlayerData.PlayerData.Instance.AddCards(listing.Cards);
+
+            listings.Remove(listing.ListingId);
+            
             MarketDataChanged?.Invoke(this, EventArgs.Empty);
         }
         

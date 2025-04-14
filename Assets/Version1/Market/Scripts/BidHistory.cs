@@ -26,6 +26,13 @@ namespace Version1.Market.Scripts
 
             bidTuple.Item2.BidStatus = BidStatus.Canceled;
         }
+
+        public Bid GetBid(Guid bidId)
+        {
+            var bid = history.FirstOrDefault(b => b.Item2.BidId == bidId);
+
+            return bid?.Item2;
+        }
         
         public Tuple<int, Bid>[] GetBiddingHistory()
         {

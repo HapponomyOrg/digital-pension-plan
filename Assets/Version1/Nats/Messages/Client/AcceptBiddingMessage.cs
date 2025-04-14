@@ -3,20 +3,20 @@ namespace Version1.Nats.Messages.Client
     public class AcceptBiddingMessage : BaseMessage
     {
         public string AuctionID;
-        public int OfferAmount;
-        public int BidderID;
+        public string BidID;
+        public int OriginalBidder;
         
 
-        public AcceptBiddingMessage(string dateTimeStamp, int lobbyID, int playerID, string auctionID, int offerAmount, int bidderID) : base(dateTimeStamp, MessageSubject.AcceptBidding, lobbyID, playerID)
+        public AcceptBiddingMessage(string dateTimeStamp, int lobbyID, int playerID, string auctionID, string bidID, int originalBidder) : base(dateTimeStamp, MessageSubject.AcceptBidding, lobbyID, playerID)
         {
             AuctionID = auctionID;
-            OfferAmount = offerAmount;
-            BidderID = bidderID;
+            BidID = bidID;
+            OriginalBidder = originalBidder;
         }
 
         public override string ToString()
         {
-            return $"{DateTimeStamp} , Lobby: {LobbyID} , Subject: {Subject} , Player: {PlayerID} , AuctionID: {AuctionID}, BidderID: {BidderID}, OfferAmount: {OfferAmount}";
+            return $"{DateTimeStamp} , Lobby: {LobbyID} , Subject: {Subject} , Player: {PlayerID} , AuctionID: {AuctionID}, BidId: {BidID}, OriginalBidder: {OriginalBidder}";
         }
     }
 }

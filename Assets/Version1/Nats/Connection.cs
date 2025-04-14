@@ -276,7 +276,6 @@ namespace Version1.Nats
             }
             
             string fullSubject = $"{subject}.>";
-            Debug.Log("Subscribing to: " + fullSubject);
             NATSConnection.SubscribeAsync(fullSubject, (sender, args) => { QueueMsg(args); });
         }
 
