@@ -162,6 +162,18 @@ namespace Version1.Host.Scripts
                 -1, msg.PlayerID,intArray),false);
         }
 
+        public void ClearLogs()
+        {
+            if (activities != null)
+            {
+                for (int i = 0; i < activities.Count; i++)
+                {
+                    Destroy(activities[i].gameObject);
+                }
+                activities.Clear();
+            }
+        }
+
         private void OnEnable()
         {
 
@@ -173,25 +185,38 @@ namespace Version1.Host.Scripts
             roundStarted = false;
             _sessionIsActive = false;
             
-            if (activities != null)
-            {
-                for (int i = 0; i < activities.Count; i++)
-                {
-                    Destroy(activities[i].gameObject);
-                }
-            }
+            ClearLogs();
     
             // Load phase system based on creation
 
             // TODO SET TO RIGHT PHASE SYSTEM
             current_round = 0;
-            currentPhases = testPhases;
+
+            currentPhases = SessionData.Instance.CurrentMoneySystem switch
+            {
+                MoneySystems.Sustainable => sustainableMoneyPhases,
+                MoneySystems.DebtBased => debtBasedPhases,
+                MoneySystems.InterestAtIntervals => throw new NotImplementedException(),
+                MoneySystems.ClosedEconomy => throw new NotImplementedException(),
+                MoneySystems.RealisticDebtDistribution => throw new NotImplementedException(),
+                _ => throw new ArgumentOutOfRangeException()
+            };
             
             activities = new List<GameObject>();
 
             _sessionDuration = new Stopwatch();
-
+            
             players = new Dictionary<int, PlayerListPrefab>();
+
+            if (_progressionCards != null)
+            {
+                for (int i = 0; i < _progressionCards.Count; i++)
+                {
+                    Destroy(_progressionCards[i].gameObject);
+                }
+                _progressionCards.Clear();
+            }
+            
             _progressionCards = new Dictionary<int, ProgressionCard>();
             
             playerScrollView = GameObject.Find("PlayerScrollView");
@@ -207,12 +232,11 @@ namespace Version1.Host.Scripts
                 $"{SessionData.Instance.LobbyCode.ToString().Substring(0, 3)} {SessionData.Instance.LobbyCode.ToString().Substring(3, 3)} {SessionData.Instance.LobbyCode.ToString().Substring(6, 3)}";
             roundDurationTMP.text = SessionData.Instance.RoundDuration.ToString();
             creationTime.text = DateTime.Now.ToString("HH:mm:ss");
-            _sessionDuration.Start();
             _sessionIsActive = true;
             
             curretnPhaseTMP.text = currentPhases[current_round].Split("Scene")[0];
             nextPhaseTMP.text = currentPhases[current_round + 1].Split("Scene")[0];
-
+            
             for (int i = 0; i < currentPhases.Length; i++)
             {
                 var phaseName = currentPhases[i].Split("Scene");
@@ -326,6 +350,7 @@ namespace Version1.Host.Scripts
             startRound.interactable = true;
             startSession.interactable = false;
             abortSession.interactable = true;
+            _sessionDuration.Start();
         }
 
         private void StopRoundOnClick()
