@@ -19,6 +19,7 @@ namespace Version1.Host.Scripts
         [SerializeField] private Sprite penSprite;
         [SerializeField] private TMP_InputField hostInputField;
         [SerializeField] private Button editButton;
+        [SerializeField] private Button editGameCodeButton;
         [SerializeField] private TMP_InputField seedInputField;
         [SerializeField] private TMP_Dropdown gameModeDropDown;
         [SerializeField] private Button regenerateButton;
@@ -27,6 +28,8 @@ namespace Version1.Host.Scripts
         [SerializeField] private GameObject seedInputError;
         [SerializeField] private GameObject gameCodeError;
 
+
+        private int oldCode;
         private void Start()
         {
             new Nats.NatsHost();
@@ -44,6 +47,13 @@ namespace Version1.Host.Scripts
 
         private void OnEnable()
         {
+            if (oldCode != SessionData.Instance.LobbyCode)
+            {
+                gameCodeInputField.interactable = true;
+                regenerateButton.gameObject.SetActive(true);
+                editGameCodeButton.gameObject.SetActive(false);
+            }
+            
             SessionData.Instance.Reset(false);
             
             hostInputField.text = SessionData.Instance.HostName;
@@ -51,6 +61,13 @@ namespace Version1.Host.Scripts
             
             gameCodeInputField.text =
                 $"{SessionData.Instance.LobbyCode.ToString().Substring(0, 3)} {SessionData.Instance.LobbyCode.ToString().Substring(3, 3)} {SessionData.Instance.LobbyCode.ToString().Substring(6, 3)}";
+
+            if (SessionData.Instance.LobbyCode == oldCode)
+            {
+                gameCodeInputField.interactable = false;
+                regenerateButton.gameObject.SetActive(false);
+                editGameCodeButton.gameObject.SetActive(true);
+            }
         }
 
         private void AddListeners()
@@ -58,6 +75,7 @@ namespace Version1.Host.Scripts
             gameModeDropDown.onValueChanged.AddListener(OnValueChanged);
             
             editButton.onClick.AddListener(EditButtonOnClick);
+            editGameCodeButton.onClick.AddListener(EditGameCodeOnClick);
             regenerateButton.onClick.AddListener(RegenerateButtonOnClick);
             createSession.onClick.AddListener(CreateSessionOnClick);
 
@@ -98,6 +116,13 @@ namespace Version1.Host.Scripts
             });
         }
 
+        private void EditGameCodeOnClick()
+        {
+            editGameCodeButton.image.sprite = editGameCodeButton.image.sprite == penSprite ? checkMarkSprite : penSprite;
+
+            gameCodeInputField.interactable = !gameCodeInputField.interactable;
+        }
+
         private void OnValueChanged(int val)
         {
             switch (val)
@@ -124,7 +149,8 @@ namespace Version1.Host.Scripts
                 SessionData.Instance.LobbyCode));
             Nats.NatsHost.C.SubscribeToSubject(SessionData.Instance.LobbyCode.ToString());
 
-
+            oldCode = SessionData.Instance.LobbyCode;
+            
             HostScene.SetActive(true);
             
             gameObject.SetActive(false);

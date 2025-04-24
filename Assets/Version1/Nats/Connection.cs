@@ -266,18 +266,21 @@ namespace Version1.Nats
         }
 
         protected abstract void Subscribe();
+        
+        private IAsyncSubscription _currentSubscription;
 
         public void SubscribeToSubject(string subject)
         {
-            if (NATSConnection.SubscriptionCount >= 1)
+            if (_currentSubscription != null)
             {
-                Debug.LogWarning("There is already a nats subscription");
-                return;
+                Debug.Log("Disposing existing subscription");
+                _currentSubscription.Dispose();
+                _currentSubscription = null;
             }
-            
+    
             string fullSubject = $"{subject}.>";
             Debug.Log("Subscribing to: " + fullSubject);
-            NATSConnection.SubscribeAsync(fullSubject, (sender, args) => { QueueMsg(args); });
+            _currentSubscription = NATSConnection.SubscribeAsync(fullSubject, (sender, args) => { QueueMsg(args); });
         }
 
   private void QueueMsg(MsgHandlerEventArgs args)

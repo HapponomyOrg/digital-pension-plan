@@ -205,8 +205,8 @@ namespace Version1.Host.Scripts
             activities = new List<GameObject>();
 
             _sessionDuration = new Stopwatch();
-            
-            players = new Dictionary<int, PlayerListPrefab>();
+
+            players ??= new Dictionary<int, PlayerListPrefab>();
 
             if (_progressionCards != null)
             {

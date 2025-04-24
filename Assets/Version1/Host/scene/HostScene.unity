@@ -564,14 +564,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2013094382}
     m_Modifications:
-    - target: {fileID: 3020303776437139628, guid: 74b8aad4d06971f4287d1f198c997f3c, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: -250.7398
-      objectReference: {fileID: 0}
-    - target: {fileID: 3290335724545322844, guid: 74b8aad4d06971f4287d1f198c997f3c, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: -250.7398
-      objectReference: {fileID: 0}
     - target: {fileID: 3456299276812665766, guid: 74b8aad4d06971f4287d1f198c997f3c, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -671,34 +663,6 @@ PrefabInstance:
     - target: {fileID: 4604813635011723707, guid: 74b8aad4d06971f4287d1f198c997f3c, type: 3}
       propertyPath: m_Name
       value: HostScene
-      objectReference: {fileID: 0}
-    - target: {fileID: 4604813635011723707, guid: 74b8aad4d06971f4287d1f198c997f3c, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5193934942193432022, guid: 74b8aad4d06971f4287d1f198c997f3c, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: -384.54
-      objectReference: {fileID: 0}
-    - target: {fileID: 5701835111524708222, guid: 74b8aad4d06971f4287d1f198c997f3c, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5701835111524708222, guid: 74b8aad4d06971f4287d1f198c997f3c, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8777424000486919210, guid: 74b8aad4d06971f4287d1f198c997f3c, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8777424000486919210, guid: 74b8aad4d06971f4287d1f198c997f3c, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8777424000486919210, guid: 74b8aad4d06971f4287d1f198c997f3c, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: -17
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

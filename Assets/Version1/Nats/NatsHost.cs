@@ -39,6 +39,7 @@ namespace Version1.Nats
             if (EventsReceived.Count < 1) return;
             var message = EventsReceived.Dequeue();
 
+            if (message == null) return;
 
             if (message.Subject != MessageSubject.HeartBeat)
             {
