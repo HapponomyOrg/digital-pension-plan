@@ -20,15 +20,15 @@ namespace Version1.Host.Scripts
         private readonly string[] debtBasedPhases =
         {
             "MarketScene", // Trading
-            "",// Debt payment
-            "",// Take out loan
+            "PayDeptScene",// Debt payment
+            "TakeALoanScene",// Take out loan
             "Loading",  
             "MarketScene",// Trading
-            "",// Debt payment
-            "",// Take out loan
+            "PayDeptScene",// Debt payment
+            "TakeALoanScene",// Take out loan
             "Loading",            
             "MarketScene", // Trading
-            "",// Debt payment
+            "MoneyCorrectionScene",// TODO money correction the loan + 10%, if the player doesnt have enough, it is taken from their points
             "MoneyToPointScene",// Pension point buying
             "DonatePointsScene",// Pension point donation
             "EndScene" // Pension Calculation
@@ -45,6 +45,44 @@ namespace Version1.Host.Scripts
             "MarketScene", // Trading
             "MoneyCorrectionScene", // Money correction
             "Loading",
+            "MoneyToPointScene", // Pension point buying
+            "DonatePointsScene", // Pension point donation
+            "EndScene" // Pension Calculation
+        };
+
+        private readonly string[] interestAtIntervalsPhases =
+        {
+            "MarketScene", // Trading
+            "MoneyCorrectionScene", // TODO pay 10% of current debt, at least 1000. fractions to next round, failure to pay added to debt.
+            "PayDeptScene", // Debt payment
+            "TakeALoanScene", // Take out loan
+            "Loading",
+            "MarketScene", // Trading
+            "MoneyCorrectionScene", // TODO pay 10% of current debt, at least 1000. fractions to next round, failure to pay added to debt.
+            "PayDeptScene", // Debt payment
+            "TakeALoanScene", // Take out loan
+            "Loading",
+            "MarketScene", // Trading
+            "MoneyCorrectionScene", // TODO money correction the debt + 10% plus the remaining interest from the previous round. if the player doesnt have enough, it is taken from their points
+            "MoneyToPointScene", // Pension point buying
+            "DonatePointsScene", // Pension point donation
+            "EndScene" // Pension Calculation
+        };
+        
+        private readonly string[] closedEconomyPhases =
+        {
+            "MarketScene", // Trading
+            "MoneyCorrectionScene", // TODO pay 10% of current debt, at least 1000. fractions to next round, failure to pay added to debt. SENT TO BANK PLAYER
+            "PayDeptScene", // Debt payment TODO if not the bank
+            "TakeALoanScene", // Take out loan TODO if not the bank
+            "Loading",
+            "MarketScene", // Trading 
+            "MoneyCorrectionScene", // TODO pay 10% of current debt, at least 1000. fractions to next round, failure to pay added to debt. SENT TO BANK PLAYER
+            "PayDeptScene", // Debt payment TODO if not the bank
+            "TakeALoanScene", // Take out loan TODO if not the bank
+            "Loading",
+            "MarketScene", // Trading
+            "MoneyCorrectionScene", // TODO money correction the debt + 10% plus the remaining interest from the previous round. if the player doesnt have enough, it is taken from their points
             "MoneyToPointScene", // Pension point buying
             "DonatePointsScene", // Pension point donation
             "EndScene" // Pension Calculation
@@ -186,10 +224,7 @@ namespace Version1.Host.Scripts
             _sessionIsActive = false;
             
             ClearLogs();
-    
-            // Load phase system based on creation
-
-            // TODO SET TO RIGHT PHASE SYSTEM
+            
             current_round = 0;
 
             currentPhases = SessionData.Instance.CurrentMoneySystem switch

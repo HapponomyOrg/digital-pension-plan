@@ -61,6 +61,7 @@ namespace Version1.Phases.MoneyCorrection.scripts
                     int payment = 0;
 
                     //TODO this is dirty
+                    // TODO maybe check here if there are any other money corrections in the array, if we remove the phases. im not sure
                     if (Utilities.GameManager.Instance.CurrentPhase == 7 )
                     {
                        
@@ -122,8 +123,8 @@ namespace Version1.Phases.MoneyCorrection.scripts
                 case MoneySystems.RealisticDebtDistribution:
                     throw new NotImplementedException();
                     // At the beginning the host sets the debt of players at the same random interval as the balance
-                    // After that it is just the interest at intervals or debt based TODO check this
-                    // If also closed economy. the bank does not have a debt, other players carry this debt.
+                    // After that it is just the interest at intervals with a close economy. TODO check this because the rules are not really descriptive
+                    // Also the bank does not have a debt, other players carry this debt.
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

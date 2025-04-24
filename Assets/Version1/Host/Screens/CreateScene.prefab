@@ -3041,8 +3041,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1599655959232253993, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 293.11
+      objectReference: {fileID: 0}
+    - target: {fileID: 1599655959232253993, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
       propertyPath: m_SizeDelta.y
       value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 1599655959232253993, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 146.555
       objectReference: {fileID: 0}
     - target: {fileID: 1790404883963299488, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
       propertyPath: m_IsActive
@@ -3075,6 +3083,10 @@ PrefabInstance:
     - target: {fileID: 4145294113076975667, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
       propertyPath: m_text
       value: Sustainable
+      objectReference: {fileID: 0}
+    - target: {fileID: 4145294113076975667, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
+      propertyPath: m_overflowMode
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5062449074504788644, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
       propertyPath: m_Name

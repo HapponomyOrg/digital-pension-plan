@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -69,9 +71,20 @@ namespace Version1.Host.Scripts
                 editGameCodeButton.gameObject.SetActive(true);
             }
         }
+        private string FormatEnumForDisplay(string enumValue)
+        {
+            // Insert space before each capital letter (except the first one)
+            return System.Text.RegularExpressions.Regex.Replace(enumValue, "(?<!^)([A-Z])", " $1");
+        }
 
         private void AddListeners()
         {
+            gameModeDropDown.ClearOptions();
+            var options = (from MoneySystems system in Enum.GetValues(typeof(MoneySystems)) select FormatEnumForDisplay(system.ToString()) into displayName select new TMP_Dropdown.OptionData(displayName)).ToList();
+
+            gameModeDropDown.options = options;
+            gameModeDropDown.RefreshShownValue();
+            
             gameModeDropDown.onValueChanged.AddListener(OnValueChanged);
             
             editButton.onClick.AddListener(EditButtonOnClick);
@@ -137,7 +150,8 @@ namespace Version1.Host.Scripts
                     SessionData.Instance.CurrentMoneySystem = MoneySystems.InterestAtIntervals;
                     break;
                 default:
-                    throw new NotImplementedException();
+                    Debug.LogWarning("This Money system is not implemented");
+                    break;
             }
         }
 
