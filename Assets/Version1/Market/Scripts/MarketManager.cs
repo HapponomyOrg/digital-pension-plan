@@ -352,6 +352,22 @@ namespace Version1.Market.Scripts
                 return;
             }
 
+            foreach (var bidHistory in listing.BidHistories)
+            {
+                if (bidHistory.Key == originalBidder)
+                    continue;
+
+                if (bidHistory.Key != PlayerData.PlayerData.Instance.PlayerId)
+                    continue;
+
+                var bid = bidHistory.Value.LastActiveBid().Item2;
+                
+                if (bid.Bidder != PlayerData.PlayerData.Instance.PlayerId)
+                    continue;
+                
+                PlayerData.PlayerData.Instance.Balance += bid.OfferedPrice;
+            }
+
             if (PlayerData.PlayerData.Instance.PlayerId == originalBidder)
                 PlayerData.PlayerData.Instance.AddCards(listing.Cards);
 
