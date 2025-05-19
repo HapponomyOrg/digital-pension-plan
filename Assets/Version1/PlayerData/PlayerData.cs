@@ -23,7 +23,7 @@ namespace Version1.PlayerData
                 return _instance;
             }
         }
-
+        
         // Serialized fields for Inspector visibility
         [SerializeField] private string playerName = "Player";
         [SerializeField] private int age = 0;
@@ -33,15 +33,15 @@ namespace Version1.PlayerData
         [SerializeField] private int interestRemainder = 0;
         [SerializeField] private List<int> cards = new List<int>();
         [SerializeField] private List<int> allPoints = new List<int>();
+
+        [SerializeField] public bool isBank = false;
         
         [SerializeField] private MoneySystems currentMoneySystem = 0;
         
-
         // Private fields for balance, points, lobby ID
         [SerializeField] private int balance = 0;
         [SerializeField] private int points = 0;
         [SerializeField] private int lobbyID = 0;
-
         
         // Events
         public event EventHandler<int> OnBalanceChange;

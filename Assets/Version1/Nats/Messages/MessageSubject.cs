@@ -20,6 +20,7 @@ namespace Version1.Nats.Messages
             RejectBidding = "RejectBidding",
             RespondBidding = "RespondBidding",
             AcceptCounterBidding = "AcceptCounterBidding",
+            Continue = "Continue",
             // Client Misc.
             JoinRequest = "JoinRequest",
             // Host Hosting

@@ -27,6 +27,7 @@ namespace Version1.Nats
         public event EventHandler<CardHandInMessage> OnCardHandIn;
         public event EventHandler<HeartBeatMessage> OnHeartBeat;
         public event EventHandler<JoinRequestMessage> OnJoinrequest;
+        public event EventHandler<ContinueMessage> OnContinue;
         public event EventHandler<string> MessageLog;
 
         protected override void Subscribe()
@@ -74,7 +75,10 @@ namespace Version1.Nats
                     break;
                 case MessageSubject.JoinRequest:
                     OnJoinrequest?.Invoke(null, (JoinRequestMessage)message);
-                    break;                
+                    break;       
+                case MessageSubject.Continue:
+                    OnContinue?.Invoke(null, (ContinueMessage)message);
+                    break;
                 default:
                     Debug.Log($"{message.Subject} is not a known subject");
                     break;
