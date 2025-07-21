@@ -166,7 +166,13 @@ namespace Version1.Host.Scripts
             Nats.NatsHost.C.OnJoinrequest += OnOnJoinrequest;
             Nats.NatsHost.C.MessageLog += OnMessageLog;
             Nats.NatsHost.C.OnCardHandIn += OnCardHandIn;
-           
+            Nats.NatsHost.C.OnContinue += OnOnContinue ;
+
+        }
+
+        private void OnOnContinue(object sender, ContinueMessage e)
+        {
+         // TODO check round number and check for every player to be ready, maybe 80% and then continue.
         }
 
         private void EndGameOnClick()

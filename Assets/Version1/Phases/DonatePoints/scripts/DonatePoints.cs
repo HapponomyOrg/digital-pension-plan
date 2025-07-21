@@ -30,6 +30,9 @@ namespace Version1.Phases.DonatePoints.scripts
         [SerializeField] private Transform playerListPrefab;
         [SerializeField] private Transform playerScrollView;
 
+        [SerializeField] private GameObject ToasterPrefab;
+        [SerializeField] private Transform ToasterList;
+
         private int _ownPoints;
 
         private int OwnPoints
@@ -96,7 +99,14 @@ namespace Version1.Phases.DonatePoints.scripts
 
         private void OnOnDonatePoints(object sender, DonatePointsMessage e)
         {
-            OwnPoints = PlayerData.PlayerData.Instance.Points;
+            if (PlayerData.PlayerData.Instance.PlayerId != e.Receiver && e.PlayerID == PlayerData.PlayerData.Instance.PlayerId ) return; 
+            
+            OwnPoints += e.Amount;
+
+            var toaster = Instantiate(ToasterPrefab, ToasterList);
+            toaster.GetComponent<ToasterScript>().toasterText.text =
+                $"Congratulations you received {e.Amount} points from {e.PlayerName}";
+
         }
 
         private void OnDonate()
@@ -107,7 +117,7 @@ namespace Version1.Phases.DonatePoints.scripts
 
             NetworkManager.Instance.Publish(PlayerData.PlayerData.Instance.LobbyID.ToString(),
                 new DonatePointsMessage(DateTime.Now.ToString("o"), PlayerData.PlayerData.Instance.LobbyID,
-                    PlayerData.PlayerData.Instance.PlayerId, _otherPlayer.PlayerId, _pointsToDonate));
+                    PlayerData.PlayerData.Instance.PlayerId, PlayerData.PlayerData.Instance.PlayerName,_otherPlayer.PlayerId, _pointsToDonate));
 
             if (OwnPoints == 0)
             {

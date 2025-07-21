@@ -131,6 +131,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 398828378}
     m_Modifications:
+    - target: {fileID: 116086481197728626, guid: ef002ba8055727040be19c60726400d3, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 116086481197728626, guid: ef002ba8055727040be19c60726400d3, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 116086481197728626, guid: ef002ba8055727040be19c60726400d3, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 116086481197728626, guid: ef002ba8055727040be19c60726400d3, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 116086481197728626, guid: ef002ba8055727040be19c60726400d3, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 952144759260177154, guid: ef002ba8055727040be19c60726400d3, type: 3}
       propertyPath: m_Name
       value: PointDonationOverlay
@@ -215,14 +235,28 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8639645823494548240, guid: ef002ba8055727040be19c60726400d3, type: 3}
+      propertyPath: ToasterList
+      value: 
+      objectReference: {fileID: 281413090}
+    - target: {fileID: 8639645823494548240, guid: ef002ba8055727040be19c60726400d3, type: 3}
+      propertyPath: ToasterPrefab
+      value: 
+      objectReference: {fileID: 6582798710711096504, guid: e4c5eacc5a9376246a527899f93cc42e, type: 3}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 5746666133159435074, guid: ef002ba8055727040be19c60726400d3, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ef002ba8055727040be19c60726400d3, type: 3}
 --- !u!224 &281413088 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7280637128180389536, guid: ef002ba8055727040be19c60726400d3, type: 3}
+  m_PrefabInstance: {fileID: 281413087}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &281413090 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4641596118653389850, guid: ef002ba8055727040be19c60726400d3, type: 3}
   m_PrefabInstance: {fileID: 281413087}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &398828374
