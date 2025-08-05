@@ -150,6 +150,9 @@ namespace Version1.Market.Scripts.UI
             GenerateMarketListings();
             GenerateMarketBidListings();
             GeneratePersonalListings();
+
+            ClearPersonalListingDetails();
+            ClearMarketListingDetails();
         }
         
         private void GenerateMarketListings()
@@ -276,7 +279,10 @@ namespace Version1.Market.Scripts.UI
 
         private void ClearPersonalListingDetails()
         {
-            // TODO clear the personal listing details and received bids when the selected listing is sold/canceled
+            foreach (Transform child in receivedBids)
+                Destroy(child.gameObject);
+
+            personalListingDetailsDisplay.Clear();
         }
 
         private void ClearMarketListingDetails()

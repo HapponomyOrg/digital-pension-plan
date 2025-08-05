@@ -49,10 +49,21 @@ namespace Version1.Market.Scripts.UI.Displays
         }
 
         public GameObject GameObject() => gameObject;
-        
+
         public void UpdateDisplay()
         {
             
+        }
+
+        public void Clear()
+        {
+            price.text = "";
+            bids.text = "";
+
+            foreach (Transform card in cardList)
+                Destroy(card.gameObject);
+
+            cancel.onClick.RemoveAllListeners();
         }
     }
 }

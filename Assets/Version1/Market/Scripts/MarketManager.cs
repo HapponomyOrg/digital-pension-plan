@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using Version1.Host.Scripts;
 using Version1.Nats.Messages.Client;
@@ -94,7 +95,17 @@ namespace Version1.Market.Scripts
         public void HandleCancelListingMessage(CancelListingMessage message)
         {
             var guid = Guid.Parse(message.AuctionID);
-            
+
+            if (listings[guid].BidHistories.TryGetValue(PlayerData.PlayerData.Instance.PlayerId, out var bidHistory)) {
+                var lastBid = bidHistory.LastActiveBid();
+
+                if (lastBid != null && lastBid.Item2.Bidder == PlayerData.PlayerData.Instance.PlayerId)
+                {
+                    PlayerData.PlayerData.Instance.Balance += lastBid.Item2.OfferedPrice;
+                }
+                    
+            }
+
             RemoveListing(guid);
         }
         
