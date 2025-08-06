@@ -1,55 +1,91 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Version1.Market
 {
     public class BidRepository : IBidRepository
     {
-        private Dictionary<int, LinkedList<Bid>> bids;
+        private readonly Dictionary<int, LinkedList<Bid>> bids = new();
 
         public bool AddBid(int playerId, Bid bid)
         {
-            throw new NotImplementedException();
-        }
+            var hasBidHistory = bids.ContainsKey(playerId);
 
-        public bool AddCounterBid(int playerId, Bid bid)
-        {
-            throw new NotImplementedException();
+            if (!hasBidHistory)
+                bids[playerId] = new LinkedList<Bid>();
+
+            bids[playerId].AddLast(bid);
+
+            return true;
         }
 
         public Dictionary<int, LinkedList<Bid>> GetAllBids()
         {
-            throw new NotImplementedException();
+            return new Dictionary<int, LinkedList<Bid>>(bids);
         }
 
-        public LinkedList<Bid> GetBidsOfPlayer(int playerId)
+        public Bid GetBidBetweenPlayer(int playerId, Guid bidId)
         {
-            throw new NotImplementedException();
+            var playerExists = bids.TryGetValue(playerId, out var playerBids);
+
+            if (!playerExists)
+                return null;
+
+            var bid = playerBids.FirstOrDefault(b => b.BidId == bidId);
+
+            return bid;
         }
 
-        public Bid GetLastBidOfPlayer(int playerId)
+        public LinkedList<Bid> GetBidsBetweenPlayer(int playerId)
         {
-            throw new NotImplementedException();
+            if (!bids.ContainsKey(playerId))
+                return new LinkedList<Bid>();
+
+            return bids[playerId];
+        }
+
+        public Bid GetLastBidBetweenPlayer(int playerId)
+        {
+            if (!bids.ContainsKey(playerId))
+                return null;
+            
+            return bids[playerId].Last.Value;
         }
 
         public Dictionary<int, Bid> GetLastBids()
         {
-            throw new NotImplementedException();
+            var lastBids = new Dictionary<int, Bid>();
+
+            foreach (var playerBids in bids)
+                lastBids.Add(playerBids.Key, playerBids.Value.Last.Value);
+            
+            return lastBids;
         }
 
-        public bool RemoveBidOfPlayer(int playerId, Guid bidId)
+        public void RemoveBidBetweenPlayer(int playerId, Guid bidId)
         {
-            throw new NotImplementedException();
+            var playerExists = bids.TryGetValue(playerId, out var playerBids);
+
+            if (!playerExists)
+                return;
+            
+            var bid = GetBidBetweenPlayer(playerId, bidId);
+            if (bid == null)
+                return;
+
+            playerBids.Remove(bid);
         }
 
-        public bool RemoveLastBidOfPlayer(int playerId)
+        public void RemoveLastBidBetweenPlayer(int playerId)
         {
-            throw new NotImplementedException();
-        }
+            var playerExists = bids.TryGetValue(playerId, out var playerBids);
 
-        public int UpdateBid(int playerId, Bid bid)
-        {
-            throw new NotImplementedException();
+            if (!playerExists)
+                return;
+
+            if (playerBids.Count > 0)
+                playerBids.RemoveLast();
         }
     }
 }

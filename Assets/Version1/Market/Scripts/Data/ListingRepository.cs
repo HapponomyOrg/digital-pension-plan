@@ -1,51 +1,88 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Version1.Market
 {
     public class ListingRepository : IListingRepository
     {
-        private Dictionary<Guid, Listing> listings;
-        private Dictionary<int, HashSet<Guid>> playerListingIds;
-
+        private readonly Dictionary<Guid, Listing> listings = new();
+        private readonly Dictionary<int, HashSet<Guid>> playerListingIds = new();
 
         public bool AddListing(Listing listing)
         {
-            throw new NotImplementedException();
+            var success = listings.TryAdd(listing.ListingId, listing);
+
+            if (!success)
+                return false;
+
+            if (playerListingIds.TryGetValue(listing.Lister, out var guids))
+                guids.Add(listing.ListingId);
+            else
+                playerListingIds.Add(listing.Lister, new HashSet<Guid>() { listing.ListingId });
+
+            return success;
         }
 
         public Listing GetListing(Guid listingId)
         {
-            throw new NotImplementedException();
+            if (listings.TryGetValue(listingId, out var result))
+                return result;
+
+            return null;
         }
 
         public Listing[] GetListings()
         {
-            throw new NotImplementedException();
+            return listings.Values.ToArray();
         }
 
         public Listing[] GetPeerListings(int playerId)
         {
-            throw new NotImplementedException();
+            if (!playerListingIds.ContainsKey(playerId))
+                return GetListings();
+
+            var listingIds = new HashSet<Guid>(listings.Keys);
+            listingIds.ExceptWith(playerListingIds[playerId]);
+
+            var peerListings = listingIds.Select(id => listings[id]).ToArray();
+
+            return peerListings;
         }
 
         public Listing[] GetPersonalListings(int playerId)
         {
-            throw new NotImplementedException();
+            if (!playerListingIds.ContainsKey(playerId))
+                return Array.Empty<Listing>();
+
+            var listingIds = playerListingIds[playerId];
+
+            var personalListings = listingIds.Select(id => listings[id]).ToArray();
+
+            return personalListings;
         }
 
-        public bool RemoveListing(Guid listingId)
+        public void RemoveListing(Listing listing)
         {
-            throw new NotImplementedException();
+            listings.Remove(listing.ListingId);
+
+            if (playerListingIds.TryGetValue(listing.Lister, out var playerListings))
+                playerListings.Remove(listing.ListingId);
         }
 
         public bool UpdateListing(Listing listing)
         {
-            throw new NotImplementedException();
+            if (!listings.ContainsKey(listing.ListingId))
+                return false;
+
+            listings[listing.ListingId] = listing;
+            return true;
         }
+
         public void Clear()
         {
-            throw new NotImplementedException();
+            listings.Clear();
+            playerListingIds.Clear();
         }
     }
 }
