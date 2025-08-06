@@ -2,12 +2,12 @@ using System;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Version1.Market;
 using Version1.Nats.Messages.Host;
 using Version1.Phases;
 using Version1.Phases.BalanceModification;
 using Version1.Phases.Interest;
 using Version1.Phases.Trading;
-using MarketManager = Version1.Market.Scripts.MarketManager;
 using NatsHost = Version1.Nats.NatsHost;
 
 
@@ -23,8 +23,7 @@ namespace Version1.Utilities
 
         public Cards.Scripts.CardLibrary CardLibrary { get; }
         
-        public MarketManager MarketManager { get; }
-
+        public IListingRepository ListingRepository { get; }
 
         private readonly Phase[] debtBasedPhases =
         {
@@ -80,7 +79,7 @@ namespace Version1.Utilities
             CardLibrary.FillCardList();
             phases = testPhases;
 
-            MarketManager = new MarketManager();
+            ListingRepository = new ListingRepository();
             
         }
         

@@ -12,5 +12,6 @@ namespace Version1.Market
         public bool RemoveListing(Guid listingId);
         public bool AddListing(Listing listing);
         public bool UpdateListing(Listing listing);
+        public void Clear();
     }
 }
