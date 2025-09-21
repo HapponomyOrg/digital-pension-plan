@@ -3,15 +3,18 @@ namespace Version1.Nats.Messages.Client
     public class RejectBiddingMessage : BaseMessage
     {
         public string AuctionID;
+        public string BidID;
+        public int BidderID;
+        public int OriginalBidderID;
         public string PlayerName;
 
-        public int BidderID;
-
-        public RejectBiddingMessage(string dateTimeStamp, int lobbyID, int playerID, string auctionID, string playername, int bidderID) : base(dateTimeStamp, MessageSubject.RejectBidding, lobbyID, playerID)
+        public RejectBiddingMessage(string dateTimeStamp, int lobbyID, int playerID, string auctionID, string bidID, int bidderID, int originalBidder, string playerName) : base(dateTimeStamp, MessageSubject.RejectBidding, lobbyID, playerID)
         {
             AuctionID = auctionID;
-            PlayerName = playername;
+            BidID = bidID;
             BidderID = bidderID;
+            OriginalBidderID = originalBidder;
+            PlayerName = playerName;
         }
 
         public override string ToString()

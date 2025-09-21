@@ -25,6 +25,8 @@ namespace Version1.Utilities
         
         public IListingRepository ListingRepository { get; }
 
+        public MarketServices MarketServices { get; }
+
         private readonly Phase[] debtBasedPhases =
         {
             // Trading

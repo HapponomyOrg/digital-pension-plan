@@ -59,5 +59,7 @@ namespace Version1.Market
         /// <param name="bid">The bid to add.</param>
         /// <returns>True if the bid was successfully added.</returns>
         public bool AddBid(int playerId, Bid bid);
+
+        public void UpdateBidStatus(int playerId, Guid bidId, EBidStatus bidStatus);
     }
 }

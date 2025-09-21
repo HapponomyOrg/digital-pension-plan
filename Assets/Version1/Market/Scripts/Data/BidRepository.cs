@@ -6,6 +6,7 @@ namespace Version1.Market
 {
     public class BidRepository : IBidRepository
     {
+
         private readonly Dictionary<int, LinkedList<Bid>> bids = new();
 
         public bool AddBid(int playerId, Bid bid)
@@ -61,6 +62,20 @@ namespace Version1.Market
                 lastBids.Add(playerBids.Key, playerBids.Value.Last.Value);
             
             return lastBids;
+        }
+
+        public void UpdateBidStatus(int playerId, Guid bidId, EBidStatus bidStatus)
+        {
+            var playerExists = bids.TryGetValue(playerId, out var playerBids);
+
+            if (!playerExists)
+                return;
+
+            var bid = GetBidBetweenPlayer(playerId, bidId);
+            if (bid == null)
+                return;
+
+            bid.BidStatus = bidStatus;
         }
 
         public void RemoveBidBetweenPlayer(int playerId, Guid bidId)
