@@ -176,8 +176,7 @@ public class HostSession : MonoBehaviour
     }
 
 
-    /*// TODO() make a resume and stop round message and implementation
-    public void EndGame()
+    /*public void EndGame()
     {
         EndGameMessage endGameMessage =
             new EndGameMessage(DateTime.Now.ToString("o"), NatsHost.C.LobbyID, -1);
