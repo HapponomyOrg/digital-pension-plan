@@ -9,7 +9,7 @@ namespace Version1.Market.Scripts.UI.Displays
         public void Init(Listing l, Dictionary<ListingDisplayAction, Action> displayActions);
 
         public GameObject GameObject();
-        
+
         public void UpdateDisplay();
     }
 }

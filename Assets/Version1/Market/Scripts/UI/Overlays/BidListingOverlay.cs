@@ -17,11 +17,11 @@ namespace Version1.Market.Scripts.UI.Overlays
         [SerializeField] private Slider offerSlider;
         [SerializeField] private int priceStep = 1000;
         private int offerAmount;
-        
+
         [SerializeField] private Transform cardList;
         [SerializeField] private DetailsCardDisplay cardDisplay;
-        
-        
+
+
         public override void Open(Listing listing)
         {
             gameObject.SetActive(true);
@@ -37,29 +37,29 @@ namespace Version1.Market.Scripts.UI.Overlays
             offerSlider.minValue = minOffer;
             offerSlider.maxValue = maxOffer;
             offerSlider.value = (int)(maxOffer / 2);
-            
+
             UpdateOfferAmount();
 
             GenerateCardDisplays(listing);
 
-            
+
             confirm.onClick.RemoveAllListeners();
             confirm.interactable = PlayerData.PlayerData.Instance.Balance >= minOffer * priceStep;
-            
+
             confirm.onClick.AddListener(() => Bid(listing));
         }
-        
+
         private void GenerateCardDisplays(Listing listing)
         {
             foreach (Transform child in cardList)
                 Destroy(child.gameObject);
-            
-            
+
+
             var cardAmounts = new Dictionary<int, int>();
             foreach (var cardId in listing.Cards)
             {
                 cardAmounts[cardId] = cardAmounts.TryGetValue(cardId, out var amount)
-                    ? amount + 1 
+                    ? amount + 1
                     : 1;
             }
 

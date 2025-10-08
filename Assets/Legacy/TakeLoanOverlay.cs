@@ -31,7 +31,7 @@ public class TakeLoanOverlay : MonoBehaviour
         {
             if (GameManager.Instance.Round == 4)
             {
-                GameManager.Instance.ChangeScene(GameManager.Instance.pointsDonateScene);   
+                GameManager.Instance.ChangeScene(GameManager.Instance.pointsDonateScene);
             }
         });
     }
@@ -52,7 +52,7 @@ public class TakeLoanOverlay : MonoBehaviour
             SendDonateMessage();
             if (GameManager.Instance.Round == 4)
             {
-                GameManager.Instance.ChangeScene(GameManager.Instance.pointsDonateScene);   
+                GameManager.Instance.ChangeScene(GameManager.Instance.pointsDonateScene);
             }
             gameObject.SetActive(false);
         });

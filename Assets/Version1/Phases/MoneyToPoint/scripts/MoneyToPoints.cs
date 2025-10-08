@@ -33,7 +33,7 @@ namespace Version1.Phases.MoneyToPoint.scripts
                 PointTMP.text = _points.ToString();
             }
         }
-        
+
         private void Start()
         {
             Balance = PlayerData.PlayerData.Instance.Balance;

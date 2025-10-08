@@ -5,12 +5,13 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace UI
-{[Obsolete]
+{
+    [Obsolete]
     public class RespondToBiddingOverlay : MonoBehaviour
     {
         [SerializeField] private TMP_Text responseMessageDisplay;
         [SerializeField] private TMP_Text priceDisplay;
-        
+
         [SerializeField] private Button confirmButton;
         [SerializeField] private Button cancelButton;
 
@@ -24,30 +25,30 @@ namespace UI
         {
             gameObject.SetActive(true);
 
-            
+
             // TODO remove increase and decrease when bid and price differs one step
             minPrice = bidding.OfferPrice + priceStep;
             maxPrice = MarketManager.Instance.GetListing(bidding.AuctionId).Price - priceStep;
-            
+
             currentPrice = 0;
-            
+
             UpdatePriceDisplay();
-            
+
             cancelButton.onClick.RemoveAllListeners();
             cancelButton.onClick.AddListener(() => { gameObject.SetActive(false); });
 
             confirmButton.onClick.RemoveAllListeners();
             confirmButton.onClick.AddListener(() =>
             {
-                
+
                 // TODO RETURN AN ERROR
                 if (currentPrice < minPrice)
                     return;
-                
-                MarketManager.Instance.RespondToBidding(biddingDisplay, 
-                    new Bidding(PlayerManager.Instance.PlayerId, 
-                    PlayerManager.Instance.PlayerName, 
-                    bidding.AuctionId, 
+
+                MarketManager.Instance.RespondToBidding(biddingDisplay,
+                    new Bidding(PlayerManager.Instance.PlayerId,
+                    PlayerManager.Instance.PlayerName,
+                    bidding.AuctionId,
                     currentPrice), bidding.SenderId);
                 gameObject.SetActive(false);
             });
@@ -65,7 +66,7 @@ namespace UI
             if (currentPrice > maxPrice)
                 currentPrice = maxPrice;
         }
-        
+
         public void DecreasePrice()
         {
             currentPrice -= priceStep;

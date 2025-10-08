@@ -12,7 +12,7 @@ namespace NATS
         public string Subject;
         public int LobbyID;
         public int PlayerID;
-        
+
         protected BaseMessage(string dateTimeStamp, string subjectString, int lobbyID, int playerID)
         {
             DateTimeStamp = dateTimeStamp;

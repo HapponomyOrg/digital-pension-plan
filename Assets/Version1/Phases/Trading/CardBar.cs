@@ -13,11 +13,11 @@ namespace Version1.Phases.Trading
 
 
         private bool generateDisplays;
-        
+
         public void Init()
         {
             GenerateCardDisplays();
-            
+
             PlayerData.PlayerData.Instance.OnCardsChange += (sender, ints) =>
             {
                 generateDisplays = true;
@@ -34,29 +34,29 @@ namespace Version1.Phases.Trading
                 GenerateCardDisplays();
             }
         }
-        
+
         private void GenerateCardDisplays()
         {
             //TODO here it goes wrong for the hand in.
             if (cardList == null)
                 throw new NullReferenceException("cardlist is not here");
-            
+
             foreach (Transform child in cardList)
                 Destroy(child.gameObject);
-            
+
 
             // for (var i = cardList.childCount - 1; i >= 0; i--)
             // {
             //     Destroy(cardList.GetChild(i).gameObject);
             // }
-            
-            
-            
+
+
+
             var cardAmounts = new Dictionary<int, int>();
             foreach (var cardId in PlayerData.PlayerData.Instance.Cards)
             {
                 cardAmounts[cardId] = cardAmounts.TryGetValue(cardId, out var amount)
-                    ? amount + 1 
+                    ? amount + 1
                     : 1;
             }
 

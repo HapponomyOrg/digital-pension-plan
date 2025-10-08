@@ -56,7 +56,7 @@ namespace Version1.Host.Scripts
                 LobbyCode = Random.Range(100000000, 999999999);
                 HostName = "";
             }
-            
+
             CurrentMoneySystem = MoneySystems.Sustainable;
             InbalanceMode = false;
             Seed = 0;

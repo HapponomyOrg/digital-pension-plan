@@ -14,18 +14,18 @@ namespace Version1.Phases.Trading
         [SerializeField] private TopBar topBar;
 
         private bool started;
-        
+
         private void Start()
         {
             var gm = Utilities.GameManager.Instance;
-            
+
             NetworkManager.Instance.WebSocketClient.OnStopRound += StopPhase;
-            
+
             timer.Init(300);
             market.Init();
             cardBar.Init();
             topBar.Init();
-            
+
             StartPhase();
         }
 

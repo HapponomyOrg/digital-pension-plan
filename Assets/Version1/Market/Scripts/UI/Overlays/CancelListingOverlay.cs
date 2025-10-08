@@ -7,19 +7,19 @@ namespace Version1.Market.Scripts.UI.Overlays
 {
     public class CancelListingOverlay : MarketOverlay
     {
-        
+
         [SerializeField] private Button confirm;
 
         [SerializeField] private Transform cardList;
         [SerializeField] private DetailsCardDisplay cardDisplay;
-        
+
         public override void Open(Listing listing)
         {
             gameObject.SetActive(true);
 
             confirm.onClick.RemoveAllListeners();
             confirm.onClick.AddListener(() => CancelListing(listing));
-            
+
             GenerateCardDisplays(listing);
         }
 
@@ -27,13 +27,13 @@ namespace Version1.Market.Scripts.UI.Overlays
         {
             foreach (Transform child in cardList)
                 Destroy(child.gameObject);
-            
-            
+
+
             var cardAmounts = new Dictionary<int, int>();
             foreach (var cardId in listing.Cards)
             {
                 cardAmounts[cardId] = cardAmounts.TryGetValue(cardId, out var amount)
-                    ? amount + 1 
+                    ? amount + 1
                     : 1;
             }
 
@@ -49,7 +49,7 @@ namespace Version1.Market.Scripts.UI.Overlays
             Utilities.GameManager.Instance.MarketManager.CancelListing(listing);
             Close();
         }
-        
+
         public override void Close()
         {
             gameObject.SetActive(false);

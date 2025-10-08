@@ -11,9 +11,9 @@ namespace Version1.Nats
     {
         public WebsocketClient WebSocketClient;
         private static NatsHost _instance;
-        public static NatsHost C 
-        { 
-            get 
+        public static NatsHost C
+        {
+            get
             {
                 if (_instance == null)
                     _instance = new NatsHost();

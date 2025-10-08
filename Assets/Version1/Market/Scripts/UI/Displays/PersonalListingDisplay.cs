@@ -10,7 +10,7 @@ namespace Version1.Market.Scripts.UI.Displays
     {
         [SerializeField] private TMP_Text price;
         [SerializeField] private TMP_Text bids;
-        
+
         [SerializeField] private Transform cardList;
         [SerializeField] private ListingCardDisplay cardDisplay;
 
@@ -30,16 +30,16 @@ namespace Version1.Market.Scripts.UI.Displays
         }
 
         public GameObject GameObject() => gameObject;
-        
+
         private void GenerateCardDisplays(Listing listing)
         {
-            
-            
+
+
             var cardAmounts = new Dictionary<int, int>();
             foreach (var cardId in listing.Cards)
             {
                 cardAmounts[cardId] = cardAmounts.TryGetValue(cardId, out var amount)
-                    ? amount + 1 
+                    ? amount + 1
                     : 1;
             }
 
@@ -49,7 +49,7 @@ namespace Version1.Market.Scripts.UI.Displays
                 obj.Init(cardAmount.Key, cardAmount.Value);
             }
         }
-        
+
         public void UpdateDisplay()
         {
             throw new NotImplementedException();

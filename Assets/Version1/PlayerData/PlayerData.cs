@@ -23,7 +23,7 @@ namespace Version1.PlayerData
                 return _instance;
             }
         }
-        
+
         // Serialized fields for Inspector visibility
         [SerializeField] private string playerName = "Player";
         [SerializeField] private int age = 0;
@@ -35,14 +35,14 @@ namespace Version1.PlayerData
         [SerializeField] private List<int> allPoints = new List<int>();
 
         [SerializeField] public bool isBank = false;
-        
+
         [SerializeField] private MoneySystems currentMoneySystem = 0;
-        
+
         // Private fields for balance, points, lobby ID
         [SerializeField] private int balance = 0;
         [SerializeField] private int points = 0;
         [SerializeField] private int lobbyID = 0;
-        
+
         // Events
         public event EventHandler<int> OnBalanceChange;
         public event EventHandler<int> OnPointsChange;
@@ -62,7 +62,7 @@ namespace Version1.PlayerData
         }
 
         #region Public Properties
-        
+
         public string RequestID = "";
         public string PlayerName
         {
@@ -93,7 +93,7 @@ namespace Version1.PlayerData
             get => debt;
             set => debt = value;
         }
-        
+
         public int InterestRemainder
         {
             get => interestRemainder;
@@ -137,18 +137,18 @@ namespace Version1.PlayerData
             Debug.Log("Cards received");
             Debug.Log(string.Join(", ", msg.Cards));
 
-            
+
             // TODO check i think this is not needed
             playerId = msg.OtherPlayerID;
-            
+
             AddToBalance(msg.Balance);
-            
+
             foreach (var card in msg.Cards)
             {
                 AddCard(card);
             }
         }
-        
+
         public void ConfirmHandIn(ConfirmHandInMessage msg)
         {
             if (msg.Receiver != playerId) return;
@@ -160,16 +160,16 @@ namespace Version1.PlayerData
         }
 
         #endregion
-        
+
         #region Public Methods
         public void AddCard(int card)
         {
-                cards.Add(card);
-                cards.Sort();
+            cards.Add(card);
+            cards.Sort();
 
-                OnCardsChange?.Invoke(this, new List<int>(cards));
+            OnCardsChange?.Invoke(this, new List<int>(cards));
         }
-        
+
         public void AddCards(int[] c)
         {
             foreach (var card in c)
@@ -177,7 +177,7 @@ namespace Version1.PlayerData
                 cards.Add(card);
             }
             cards.Sort();
-            
+
             OnCardsChange?.Invoke(this, new List<int>(cards));
         }
 
@@ -202,10 +202,10 @@ namespace Version1.PlayerData
                 cards.Remove(card);
             }
             cards.Sort();
-            
+
             OnCardsChange?.Invoke(this, new List<int>(cards));
         }
-        
+
         public void AddPoints(int points)
         {
             this.points += points;

@@ -5,8 +5,8 @@ namespace Version1.Nats.Messages.Host
         public int RoundNumber;
         public int Duration;
         public string RoundName;
-        
-        public StartRoundMessage(string dateTime, int lobbyID, int playerID, int roundNumber, string roundName,int duration) : base(dateTime, MessageSubject.StartRound, lobbyID, playerID)
+
+        public StartRoundMessage(string dateTime, int lobbyID, int playerID, int roundNumber, string roundName, int duration) : base(dateTime, MessageSubject.StartRound, lobbyID, playerID)
         {
             RoundNumber = roundNumber;
             Duration = duration;

@@ -33,7 +33,7 @@ public class PlayerManager : MonoBehaviour
             MarketManager.Instance.UpdateBalance();
         }
     }
-    
+
     private int points = 0;
 
     public int Points
@@ -72,7 +72,7 @@ public class PlayerManager : MonoBehaviour
 
     public event EventHandler OnBalanceChange;
     public event EventHandler OnPointsChange;
-    
+
 
     private void Awake()
     {
@@ -135,7 +135,7 @@ public class PlayerManager : MonoBehaviour
             OnPointsChange?.Invoke(null, null);
         };
 
-        NatsClient.Instance.OnStartRound += (sender,msg) =>
+        NatsClient.Instance.OnStartRound += (sender, msg) =>
         {
             CheckForSet();
         };
@@ -144,7 +144,7 @@ public class PlayerManager : MonoBehaviour
         {
             if (msg.Receiver == PlayerManager.Instance.PlayerId)
             {
-                AddCards(msg.Cards);   
+                AddCards(msg.Cards);
             }
         };
 
@@ -233,7 +233,7 @@ public class PlayerManager : MonoBehaviour
             .Where(g => g.Count() == 4)
             .Select(g => (int?)g.Key)
             .FirstOrDefault() ?? null;
-        
+
         if (result == null)
             return;
         cardHandInOverlay.Open(CardLibrary.CardData((byte)result));

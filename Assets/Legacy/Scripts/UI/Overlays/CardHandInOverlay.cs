@@ -6,7 +6,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI
-{[Obsolete]
+{
+    [Obsolete]
     public class CardHandInOverlay : MonoBehaviour
     {
         [SerializeField] private Image cardDisplayPrefab;

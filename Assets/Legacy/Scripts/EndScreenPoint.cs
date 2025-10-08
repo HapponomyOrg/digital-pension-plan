@@ -20,7 +20,7 @@ public class EndScreenPoint : MonoBehaviour
     public void SetDisplay(PlayerDataEnd player)
     {
         playerName.text = player.Name;
-        for(int i = 0; i < player.Points.Length; i++)
+        for (int i = 0; i < player.Points.Length; i++)
         {
             var _points = Instantiate(playerPoints, this.gameObject.transform);
             _points.text = player.Points[i].ToString();

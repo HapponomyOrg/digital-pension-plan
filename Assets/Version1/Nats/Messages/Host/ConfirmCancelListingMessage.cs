@@ -3,7 +3,7 @@ namespace Version1.Nats.Messages.Host
     public class ConfirmCancelListingMessage : BaseMessage
     {
         public string AuctionID;
-        
+
         public ConfirmCancelListingMessage(string dateTime, int lobbyID, int playerID, string auctionID) : base(dateTime, MessageSubject.CancelListing, lobbyID, playerID)
         {
             AuctionID = auctionID;

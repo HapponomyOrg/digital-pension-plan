@@ -17,13 +17,13 @@ namespace Version1.Utilities
     public class GameManager
     {
         public const string LOADING = "Loading";
-        
+
         private static GameManager instance;
-        
+
         public static GameManager Instance => instance ??= new GameManager();
 
         public Cards.Scripts.CardLibrary CardLibrary { get; }
-        
+
         public MarketManager MarketManager { get; }
 
 
@@ -32,18 +32,18 @@ namespace Version1.Utilities
             "MarketScene", // Trading
             "",// Debt payment
             "",// Take out loan
-            "Loading",  
+            "Loading",
             "MarketScene",// Trading
             "",// Debt payment
             "",// Take out loan
-            "Loading",            
+            "Loading",
             "MarketScene", // Trading
             "",// Debt payment
             "MoneyToPointScene",// Pension point buying
             "DonatePointsScene",// Pension point donation
             "EndScene" // Pension Calculation
         };
-        
+
         private readonly string[] sustainableMoneyPhases =
         {
             "MarketScene", // Trading
@@ -87,15 +87,15 @@ namespace Version1.Utilities
             phases = testPhases;
 
             MarketManager = new MarketManager();
-            
+
         }
-        
+
         public void StartGame()
         {
             LoadPhase(0, phases[0]);
         }
 
-        public void LoadPhase(int phase, string  name)
+        public void LoadPhase(int phase, string name)
         {
             if (phases[phase] != name)
             {
@@ -107,7 +107,7 @@ namespace Version1.Utilities
 
             SceneManager.LoadScene(phases[phase]);
         }
-        
+
         private void LoadNextPhase()
         {
             SceneManager.LoadScene(phases[++CurrentPhase]);

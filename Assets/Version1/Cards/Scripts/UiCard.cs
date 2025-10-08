@@ -24,13 +24,13 @@ namespace Version1.Cards.Scripts
 
         [HideInInspector] public PlayerHand currentBox;
         [HideInInspector] public PlayerHand oldBox;
-        
+
         public UiCard Initialize(CardData data)
         {
             cardData = data;
-            
+
             GetComponent<Image>().sprite = cardData.Art;
-    
+
             rectTransform = GetComponent<RectTransform>();
             _cardLayer = GameObject.FindWithTag("cardLayer");
             _possibleBoxes = GameObject.FindGameObjectsWithTag("listBox")
@@ -39,7 +39,7 @@ namespace Version1.Cards.Scripts
 
             return this;
         }
-        
+
         private void OnEnable()
         {
             GetComponent<Image>().sprite = cardData.Art;
@@ -130,7 +130,7 @@ namespace Version1.Cards.Scripts
                 parent.AddCard(this);
             }
         }
-        
+
         private static bool RectOverlaps(RectTransform rectTrans1, RectTransform rectTrans2)
         {
             Rect rect1 = GetWorldRect(rectTrans1);

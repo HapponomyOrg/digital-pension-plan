@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace UI
-{[Obsolete]
+{
+    [Obsolete]
     public class Notification
     {
         public string Title { get; }
         public string Message { get; }
         public Action Action { get; }
         public NotificationColor NotificationColor { get; }
-        
+
         public Notification(string title, string message, Action action, NotificationColor notificationColor)
         {
             Title = title;
@@ -18,9 +19,9 @@ namespace UI
             Action = action;
             NotificationColor = notificationColor;
         }
-        
+
     }
-    
+
     public enum NotificationColor
     {
         Red,
