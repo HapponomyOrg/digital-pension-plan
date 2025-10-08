@@ -236,9 +236,9 @@ namespace Version1.Host.Scripts
 
         private void Update()
         {
-            createSession.interactable = !(SessionData.Instance.HostName == "" || 
+            createSession.interactable = !(SessionData.Instance.HostName == "" ||
                                            SessionData.Instance.LobbyCode == 0 ||
-                                           gameCodeError.activeSelf || 
+                                           gameCodeError.activeSelf ||
                                            seedInputError.activeSelf);
 
             Nats.NatsHost.C.HandleMessages();

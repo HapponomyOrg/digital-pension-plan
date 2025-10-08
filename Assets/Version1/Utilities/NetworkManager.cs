@@ -45,8 +45,6 @@ namespace Version1.Utilities
         {
             try
             {
-                // TODO first unsubscribe
-
                 await WebSocketClient.Subscribe(sessionID);
             }
             catch (Exception ex)
@@ -178,7 +176,7 @@ namespace Version1.Utilities
 
         private void NatsClientOnOnMakeBidding(object sender, MakeBiddingMessage e)
         {
-            // TODO MARKET FUNCTION 
+            // TODO MARKET FUNCTION
         }
 
         private void NatsClientOnOnListCards(object sender, ListCardsmessage e)

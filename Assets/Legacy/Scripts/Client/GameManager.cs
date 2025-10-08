@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour
             NatsClient.Instance.StopHeartbeat();
             NatsClient.Instance.HeartbeatInterval = 300;
             NatsClient.Instance.StartHeartbeat();
-            // TODO here set to point removeal screen after dept
+
             ChangeScene(pointsDonateScene);
         };
 
