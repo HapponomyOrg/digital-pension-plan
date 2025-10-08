@@ -196,7 +196,6 @@ namespace Version1.Phases.MoneyCorrection.scripts
                     // At the beginning the host sets the debt of players at the same random interval as the balance
                     // After that it is just the interest at intervals with a close economy. TODO check this because the rules are not really descriptive
                     // Also the bank does not have a debt, other players carry this debt.
-                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

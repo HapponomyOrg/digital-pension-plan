@@ -35,16 +35,6 @@ namespace Version1.Host.Scripts
 
         private async void Start()
         {
-            // new Nats.NatsHost();
-
-            /*Nats.NatsHost.C.onError += (sender, s) =>
-            {
-                natsError.SetActive(true);
-                natsErrorTMP.text = s;
-            };*/
-
-            // Nats.NatsHost.C.Connect();
-
             await Nats.NatsHost.C.WebSocketClient.Connect();
 
             AddListeners();
@@ -77,7 +67,6 @@ namespace Version1.Host.Scripts
 
         private string FormatEnumForDisplay(string enumValue)
         {
-            // Insert space before each capital letter (except the first one)
             return System.Text.RegularExpressions.Regex.Replace(enumValue, "(?<!^)([A-Z])", " $1");
         }
 
@@ -203,6 +192,8 @@ namespace Version1.Host.Scripts
 
         private void Update()
         {
+            // TODO Bas Nierop check this because this doesnt work in the editor
+
             createSession.interactable = !(SessionData.Instance.HostName == "" || SessionData.Instance.LobbyCode == 0 ||
                                            gameCodeError.activeSelf || seedInputError.activeSelf);
 
