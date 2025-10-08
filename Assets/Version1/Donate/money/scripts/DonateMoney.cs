@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Version1.Nats.Messages.Client;
+using Version1.Utilities;
 
 namespace Version1.Donate.money.scripts
 {
@@ -72,7 +73,7 @@ namespace Version1.Donate.money.scripts
                 var msg = new DonateMoneyMessage(DateTime.Now.ToString("o"), sessionId, PlayerData.PlayerData.Instance.PlayerId,
                     currentDonation);
         
-                Nats.NatsClient.C.Publish(sessionId.ToString(), msg);
+                NetworkManager.Instance.Publish(sessionId.ToString(), msg);
             }
     }
 }

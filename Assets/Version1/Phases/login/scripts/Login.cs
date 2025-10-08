@@ -2,6 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Version1.Nats;
 using Version1.Nats.Messages.Client;
 using Version1.Nats.Messages.Host;
 using Version1.Utilities;
@@ -19,7 +20,6 @@ namespace Version1.Phases.login.scripts
         [SerializeField] private GameObject NameError;
         [SerializeField] private TMP_Text NameErrorText;
         [SerializeField] private TMP_Text NameErrorRefCode;
-
 
         private string playername = "";
         private int age = -1;
@@ -40,16 +40,13 @@ namespace Version1.Phases.login.scripts
         private void InstanceOnError(object sender, string e)
         {
             NatsError.SetActive(true);
-            // NatsError.GetComponentAtIndex<TMP_Text>(2).text = e;
         }
 
         private void InstanceOnOnRejected(object sender, RejectedMessage e)
         {
-            // TODO this is wrong select right text.
             if (e.TargetPlayer != PlayerData.PlayerData.Instance.PlayerName &&
                 e.RequestID != PlayerData.PlayerData.Instance.RequestID) return;
 
-            // TODO fix this whole component
             NameError.SetActive(true);
             NameErrorText.text = e.Message;
             NameErrorRefCode.text = e.ReferenceID;
@@ -63,11 +60,13 @@ namespace Version1.Phases.login.scripts
             PlayerData.PlayerData.Instance.LobbyID = gamecode;
 
             var uid = Guid.NewGuid().ToString();
-
             PlayerData.PlayerData.Instance.RequestID = uid;
 
             var msg = new JoinRequestMessage(DateTime.Now.ToString("o"), gamecode, 0, playername, age, gender, uid);
-            Nats.NatsClient.C.SubscribeToSubject(gamecode.ToString());
+            
+            
+            //Nats.NatsClient.C.SubscribeToSubject(gamecode.ToString());
+            NetworkManager.Instance.Subscribe(gamecode.ToString());
             NetworkManager.Instance.Publish(gamecode.ToString(), msg);
         }
 

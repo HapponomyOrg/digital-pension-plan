@@ -5,13 +5,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Version1.Nats.Messages.Host;
+using Version1.Websocket;
 using Random = UnityEngine.Random;
 
 namespace Version1.Host.Scripts
 {
     public class Create : MonoBehaviour
     {
-        
         [SerializeField] private GameObject natsError;
         [SerializeField] private TMP_Text natsErrorTMP;
 
@@ -32,18 +32,21 @@ namespace Version1.Host.Scripts
 
 
         private int oldCode;
-        private void Start()
+
+        private async void Start()
         {
-            new Nats.NatsHost();
-            
-            Nats.NatsHost.C.onError += (sender, s) =>
+            // new Nats.NatsHost();
+
+            /*Nats.NatsHost.C.onError += (sender, s) =>
             {
                 natsError.SetActive(true);
                 natsErrorTMP.text = s;
-            };
+            };*/
 
-            Nats.NatsHost.C.Connect();
-            
+            // Nats.NatsHost.C.Connect();
+
+            await Nats.NatsHost.C.WebSocketClient.Connect();
+
             AddListeners();
         }
 
@@ -55,12 +58,12 @@ namespace Version1.Host.Scripts
                 regenerateButton.gameObject.SetActive(true);
                 editGameCodeButton.gameObject.SetActive(false);
             }
-            
+
             SessionData.Instance.Reset(false);
-            
+
             hostInputField.text = SessionData.Instance.HostName;
             seedInputField.text = SessionData.Instance.Seed.ToString();
-            
+
             gameCodeInputField.text =
                 $"{SessionData.Instance.LobbyCode.ToString().Substring(0, 3)} {SessionData.Instance.LobbyCode.ToString().Substring(3, 3)} {SessionData.Instance.LobbyCode.ToString().Substring(6, 3)}";
 
@@ -71,6 +74,7 @@ namespace Version1.Host.Scripts
                 editGameCodeButton.gameObject.SetActive(true);
             }
         }
+
         private string FormatEnumForDisplay(string enumValue)
         {
             // Insert space before each capital letter (except the first one)
@@ -80,13 +84,16 @@ namespace Version1.Host.Scripts
         private void AddListeners()
         {
             gameModeDropDown.ClearOptions();
-            var options = (from MoneySystems system in Enum.GetValues(typeof(MoneySystems)) select FormatEnumForDisplay(system.ToString()) into displayName select new TMP_Dropdown.OptionData(displayName)).ToList();
+            var options = (from MoneySystems system in Enum.GetValues(typeof(MoneySystems))
+                select FormatEnumForDisplay(system.ToString())
+                into displayName
+                select new TMP_Dropdown.OptionData(displayName)).ToList();
 
             gameModeDropDown.options = options;
             gameModeDropDown.RefreshShownValue();
-            
+
             gameModeDropDown.onValueChanged.AddListener(OnValueChanged);
-            
+
             editButton.onClick.AddListener(EditButtonOnClick);
             editGameCodeButton.onClick.AddListener(EditGameCodeOnClick);
             regenerateButton.onClick.AddListener(RegenerateButtonOnClick);
@@ -131,7 +138,8 @@ namespace Version1.Host.Scripts
 
         private void EditGameCodeOnClick()
         {
-            editGameCodeButton.image.sprite = editGameCodeButton.image.sprite == penSprite ? checkMarkSprite : penSprite;
+            editGameCodeButton.image.sprite =
+                editGameCodeButton.image.sprite == penSprite ? checkMarkSprite : penSprite;
 
             gameCodeInputField.interactable = !gameCodeInputField.interactable;
         }
@@ -143,7 +151,7 @@ namespace Version1.Host.Scripts
                 case 0:
                     SessionData.Instance.CurrentMoneySystem = MoneySystems.Sustainable;
                     break;
-                case 1 :
+                case 1:
                     SessionData.Instance.CurrentMoneySystem = MoneySystems.DebtBased;
                     break;
                 case 2:
@@ -161,12 +169,13 @@ namespace Version1.Host.Scripts
                 DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode,
                 -1,
                 SessionData.Instance.LobbyCode));
-            Nats.NatsHost.C.SubscribeToSubject(SessionData.Instance.LobbyCode.ToString());
+
+            Nats.NatsHost.C.Subscribe(SessionData.Instance.LobbyCode.ToString());
 
             oldCode = SessionData.Instance.LobbyCode;
-            
+
             HostScene.SetActive(true);
-            
+
             gameObject.SetActive(false);
         }
 
@@ -185,7 +194,7 @@ namespace Version1.Host.Scripts
 
             seedInputField.interactable = !seedInputField.interactable;
         }
-        
+
         public void ToggleMoneyInbalance(bool inbalance)
         {
             Debug.Log($"inbalance mode  = {inbalance}");
@@ -194,9 +203,10 @@ namespace Version1.Host.Scripts
 
         private void Update()
         {
-            
             createSession.interactable = !(SessionData.Instance.HostName == "" || SessionData.Instance.LobbyCode == 0 ||
                                            gameCodeError.activeSelf || seedInputError.activeSelf);
+
+            Nats.NatsHost.C.HandleMessages();
         }
     }
 }

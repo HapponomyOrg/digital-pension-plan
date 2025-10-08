@@ -74,9 +74,9 @@ namespace Version1.Phases.DonatePoints.scripts
             playerListPrefab = Resources.Load<Transform>("Prefabs/Phases/DonatePoints/PlayerlistPrefab");
             playerScrollView = GameObject.Find("PlayerScrollView").transform;
             
-            Nats.NatsClient.C.OnDonatePoints += OnOnDonatePoints;
+            NetworkManager.Instance.WebSocketClient.OnDonatePoints += OnOnDonatePoints;
 
-            Nats.NatsClient.C.OnHeartBeat += OnOnHeartBeat;
+            NetworkManager.Instance.WebSocketClient.OnHeartBeat += OnOnHeartBeat;
             otherNameTMP.text = "";
             otherPointsTMP.text = "0";
 

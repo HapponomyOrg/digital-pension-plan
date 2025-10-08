@@ -2,6 +2,7 @@
 using UnityEngine;
 using Version1.Market.Scripts.UI;
 using Version1.Nats.Messages.Host;
+using Version1.Utilities;
 
 namespace Version1.Phases.Trading
 {
@@ -17,8 +18,8 @@ namespace Version1.Phases.Trading
         private void Start()
         {
             var gm = Utilities.GameManager.Instance;
-
-            Nats.NatsClient.C.OnStopRound += StopPhase;
+            
+            NetworkManager.Instance.WebSocketClient.OnStopRound += StopPhase;
             
             timer.Init(300);
             market.Init();

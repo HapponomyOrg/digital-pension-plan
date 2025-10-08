@@ -135,6 +135,7 @@ namespace Version1.PlayerData
         {
             //reset
             Debug.Log("Cards received");
+            Debug.Log(string.Join(", ", msg.Cards));
 
             
             // TODO check i think this is not needed

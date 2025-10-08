@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using Version1.Host.Scripts;
 using Version1.Nats.Messages.Client;
+using Version1.Utilities;
 
 namespace Version1.Market.Scripts
 {
@@ -76,7 +77,7 @@ namespace Version1.Market.Scripts
             var data = PlayerData.PlayerData.Instance;
             
             var message = new ListCardsmessage(DateTime.Now.ToString("o"), data.LobbyID, listerId, data.PlayerName, listingId.ToString(), cards, price);
-            Nats.NatsClient.C.Publish(data.LobbyID.ToString(), message);
+            NetworkManager.Instance.Publish(data.LobbyID.ToString(), message);
         }
         
         // Test method
@@ -111,7 +112,7 @@ namespace Version1.Market.Scripts
                 listing.ListingId.ToString()
                 );
             
-            Nats.NatsClient.C.Publish(PlayerData.PlayerData.Instance.LobbyID.ToString(), message);        
+            NetworkManager.Instance.Publish(PlayerData.PlayerData.Instance.LobbyID.ToString(), message);        
         }
         
         private void RemoveListing(Guid listingId)
@@ -189,7 +190,7 @@ namespace Version1.Market.Scripts
                 data.PlayerId,
                 listingId.ToString()
             );
-            Nats.NatsClient.C.Publish(data.LobbyID.ToString(), message);       
+            NetworkManager.Instance.Publish(data.LobbyID.ToString(), message);       
         }
 
         public void SellListing(Guid listingId)
