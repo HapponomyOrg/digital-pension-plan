@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 104a37334578440fa9eb52407cea2b3a, type: 3}
+  m_Name: Bus Company
+  m_EditorClassIdentifier: 
+  <ID>k__BackingField: 6
+  <Name>k__BackingField: Bus Company
+  <Value>k__BackingField: 2
+  <Art>k__BackingField: {fileID: 21300000, guid: 27c63936d5f217e428376617fc00fc28, type: 3}
+  <Icon>k__BackingField: {fileID: 21300000, guid: e3f344e90026a1f46a0fb31d901ccde5, type: 3}
+  <Amount>k__BackingField: 16
+  <Rarity>k__BackingField: 1

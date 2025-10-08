@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 104a37334578440fa9eb52407cea2b3a, type: 3}
+  m_Name: Warp Drive Facility
+  m_EditorClassIdentifier: 
+  <ID>k__BackingField: 14
+  <Name>k__BackingField: Warp Drive Facility
+  <Value>k__BackingField: 5
+  <Art>k__BackingField: {fileID: 21300000, guid: 49c5f67e1e0b8504691d5b5f20d202f6, type: 3}
+  <Icon>k__BackingField: {fileID: 21300000, guid: 390b4e6526f65e443945d738fa9665b6, type: 3}
+  <Amount>k__BackingField: 8
+  <Rarity>k__BackingField: 3
