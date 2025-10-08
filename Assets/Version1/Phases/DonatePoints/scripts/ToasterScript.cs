@@ -8,7 +8,7 @@ namespace Version1.Phases.DonatePoints.scripts
     {
         [SerializeField] private Button _closeButton;
         [SerializeField] public TMP_Text toasterText;
-        
+
         public void CloseToaster()
         {
             Destroy(this.gameObject);

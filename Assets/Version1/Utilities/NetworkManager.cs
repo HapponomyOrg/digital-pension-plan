@@ -24,13 +24,13 @@ namespace Version1.Utilities
             if (Instance != null) return;
             Instance = this;
         }
-        
+
         public WebsocketClient WebSocketClient;
-        
+
 
         public async void Publish(string sessionID, BaseMessage baseMessage, bool flushImmediately = true)
         {
-            try 
+            try
             {
                 await WebSocketClient.Publish(sessionID, baseMessage);
             }
@@ -43,10 +43,10 @@ namespace Version1.Utilities
 
         public async void Subscribe(string sessionID)
         {
-            try 
+            try
             {
                 // TODO first unsubscribe
-                
+
                 await WebSocketClient.Subscribe(sessionID);
             }
             catch (Exception ex)
@@ -62,8 +62,8 @@ namespace Version1.Utilities
 
             // Initialize NatsClient first (this creates the singleton)
             WebSocketClient = new WebsocketClient("ws://192.168.2.9:8080/ws");
-            
-            try 
+
+            try
             {
                 await WebSocketClient.Connect();
             }
@@ -72,7 +72,7 @@ namespace Version1.Utilities
                 Debug.LogError($"Failed to connect: {ex.Message}");
                 OnError?.Invoke(this, "");
             }
-            
+
             // Subscribe to NatsClient events
             WebSocketClient.OnRejected += NatsClientOnOnRejected;
             WebSocketClient.OnAcceptBidding += NatsClientOnOnAcceptBidding;
@@ -125,7 +125,7 @@ namespace Version1.Utilities
         void Update()
         {
             WebSocketClient?.DispatchMessageQueue();
-            
+
         }
 
         private void NatsClientOnOnEndOfRounds(object sender, EndOfRoundsMessage e)
@@ -185,7 +185,7 @@ namespace Version1.Utilities
         {
             if (e.PlayerID == PlayerData.PlayerData.Instance.PlayerId)
                 return;
-            
+
             Utilities.GameManager.Instance.MarketManager.HandleAddListingMessage(e);
         }
 
@@ -219,7 +219,7 @@ namespace Version1.Utilities
         {
             if (e.PlayerID == PlayerData.PlayerData.Instance.PlayerId)
                 return;
-            
+
             Utilities.GameManager.Instance.MarketManager.HandleCancelListingMessage(e);
         }
 

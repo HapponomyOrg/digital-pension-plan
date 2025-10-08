@@ -25,7 +25,7 @@ namespace Version1.Market.Scripts
         public void CancelBid(Guid bidId)
         {
             var lastBid = LastActiveBid();
-            
+
             if (lastBid == null || lastBid.Value.BidId != bidId)
                 return;
 

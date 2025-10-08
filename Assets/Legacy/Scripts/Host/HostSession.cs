@@ -183,8 +183,8 @@ public class HostSession : MonoBehaviour
             new EndGameMessage(DateTime.Now.ToString("o"), NatsHost.C.LobbyID, -1);
         NatsHost.C.Publish(NatsHost.C.LobbyID.ToString(), endGameMessage);
     }*/
-    
-    
+
+
     public void EndOfRounds()
     {
         EndOfRoundsMessage endOfRoundsMessage = new EndOfRoundsMessage(DateTime.Now.ToString("o"), NatsHost.C.LobbyID, -1);

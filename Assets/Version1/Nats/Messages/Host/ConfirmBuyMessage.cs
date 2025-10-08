@@ -6,7 +6,7 @@ namespace Version1.Nats.Messages.Host
         public int Seller;
         public int Buyer;
         public int Amount;
-        
+
         public ConfirmBuyMessage(string dateTime, int lobbyID, int playerID, string auctionID, int seller, int buyer, int amount) : base(dateTime, MessageSubject.ConfirmBuy, lobbyID, playerID)
         {
             AuctionID = auctionID;

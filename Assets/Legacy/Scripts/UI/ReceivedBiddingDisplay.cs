@@ -17,19 +17,19 @@ public class ReceivedBiddingDisplay : MonoBehaviour
 
     public int BidderId { get; private set; }
     public int Bid { get; private set; }
-    
-    public void SetDisplay(Listing listing,Bidding bidding)
+
+    public void SetDisplay(Listing listing, Bidding bidding)
     {
         nameDisplay.text = bidding.Sender;
         priceDisplay.text = bidding.OfferPrice.ToString();
-        
+
         Bid = bidding.OfferPrice;
         BidderId = bidding.SenderId;
 
         // TODO THIS IS A MAGIC NUMBER AND CAN BE CHANGED TO THE STEPSIZE
         if ((listing.Price - 1000) == bidding.OfferPrice)
             respond.interactable = false;
-        
+
         accept.onClick.AddListener(() => { MarketManager.Instance.BiddingAccepted(bidding); });
         respond.onClick.AddListener(() => { MarketManager.Instance.OpenRespondToBiddingOverlay(this, bidding); });
         reject.onClick.AddListener(() => { MarketManager.Instance.BiddingRejected(this, bidding); });

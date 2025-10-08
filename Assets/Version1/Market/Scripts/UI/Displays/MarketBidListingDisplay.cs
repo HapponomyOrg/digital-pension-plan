@@ -10,7 +10,7 @@ namespace Version1.Market.Scripts.UI.Displays
     public class MarketBidListingDisplay : MonoBehaviour, IListingDisplay
     {
         private Listing listing;
-        
+
         [SerializeField] private TMP_Text sellerName;
         [SerializeField] private TMP_Text state;
         [SerializeField] private TMP_Text offer;
@@ -19,7 +19,7 @@ namespace Version1.Market.Scripts.UI.Displays
 
         [SerializeField] private Transform cardList;
         [SerializeField] private ListingCardDisplay cardDisplay;
-        
+
         public void Init(Listing l, Dictionary<ListingDisplayAction, Action> displayActions)
         {
             listing = l;
@@ -29,14 +29,14 @@ namespace Version1.Market.Scripts.UI.Displays
 
             if (lastBid == null)
                 return;
-            
+
             sellerName.text = listing.Lister.ToString();
             state.text = lastBid.Value.BidStatus.ToString();
-            
+
             offer.text = lastBid.Value.OfferedPrice.ToString();
 
             GenerateCardDisplays();
-            
+
             cancel.onClick.AddListener(displayActions[ListingDisplayAction.Cancel].Invoke);
             selectButton.onClick.AddListener(displayActions[ListingDisplayAction.Select].Invoke);
         }
@@ -47,7 +47,7 @@ namespace Version1.Market.Scripts.UI.Displays
             foreach (var cardId in listing.Cards)
             {
                 cardAmounts[cardId] = cardAmounts.TryGetValue(cardId, out var amount)
-                    ? amount + 1 
+                    ? amount + 1
                     : 1;
             }
 
@@ -57,12 +57,12 @@ namespace Version1.Market.Scripts.UI.Displays
                 obj.Init(cardAmount.Key, cardAmount.Value);
             }
         }
-        
+
         public GameObject GameObject() => gameObject;
 
         public void UpdateDisplay()
         {
-            
+
         }
     }
 }

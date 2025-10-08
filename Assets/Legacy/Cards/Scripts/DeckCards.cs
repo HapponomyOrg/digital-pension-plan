@@ -6,6 +6,6 @@ using UnityEngine;
 [Serializable]
 public class DeckCards
 {
-    [field: SerializeField] public Card card{get; private set;}
-    [field: SerializeField] public int amount { get; private set;}
+    [field: SerializeField] public Card card { get; private set; }
+    [field: SerializeField] public int amount { get; private set; }
 }

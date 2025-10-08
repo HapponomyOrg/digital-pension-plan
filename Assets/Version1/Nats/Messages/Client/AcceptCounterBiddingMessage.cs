@@ -5,7 +5,7 @@ namespace Version1.Nats.Messages.Client
         public string AuctionID;
         public int OfferAmount;
         public int CounterBidderID;
-        
+
 
         public AcceptCounterBiddingMessage(string dateTimeStamp, int lobbyID, int playerID, string auctionID, int offerAmount, int counterBidderID) : base(dateTimeStamp, MessageSubject.AcceptCounterBidding, lobbyID, playerID)
         {

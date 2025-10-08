@@ -8,7 +8,8 @@ using NATS;
 using TMPro;
 
 namespace Client
-{[Obsolete]
+{
+    [Obsolete]
     public class CreatePlayer : MonoBehaviour
     {
         public string playerName = "", ageString = "", codeString = "";
@@ -25,12 +26,12 @@ namespace Client
 
         private void Start()
         {
-            NatsClient.Instance.OnRejected += (sender,msg) =>
+            NatsClient.Instance.OnRejected += (sender, msg) =>
             {
                 if (PlayerManager.Instance.PlayerName == msg.TargetPlayer && PlayerManager.Instance.PlayerId == 456)
                 {
                     errorObject.SetActive(true);
-                    errorText.text = msg.Message;   
+                    errorText.text = msg.Message;
                 }
             };
         }
@@ -39,7 +40,7 @@ namespace Client
         {
             if (_name == "")
                 return;
-            
+
             if (_name.Length > 20)
             {
                 errorObject.SetActive(true);
@@ -56,7 +57,7 @@ namespace Client
         {
             if (_age == "")
                 return;
-            
+
             ageString = _age;
 
             bool isValidAge = int.TryParse(_age, out var ageValidation);

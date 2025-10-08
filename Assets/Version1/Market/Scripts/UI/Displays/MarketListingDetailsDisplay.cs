@@ -10,7 +10,7 @@ namespace Version1.Market.Scripts.UI.Displays
     {
         [SerializeField] private TMP_Text sellerName;
         [SerializeField] private TMP_Text price;
-        
+
         [SerializeField] private Button buy;
         [SerializeField] private Button bid;
 
@@ -23,25 +23,25 @@ namespace Version1.Market.Scripts.UI.Displays
             price.text = l.Price.ToString();
 
             GenerateCardDisplays(l);
-            
+
             buy.onClick.RemoveAllListeners();
             bid.onClick.RemoveAllListeners();
 
             buy.onClick.AddListener(displayActions[ListingDisplayAction.Buy].Invoke);
             bid.onClick.AddListener(displayActions[ListingDisplayAction.Bid].Invoke);
         }
-        
+
         private void GenerateCardDisplays(Listing listing)
         {
             foreach (Transform child in cardList)
                 Destroy(child.gameObject);
-            
-            
+
+
             var cardAmounts = new Dictionary<int, int>();
             foreach (var cardId in listing.Cards)
             {
                 cardAmounts[cardId] = cardAmounts.TryGetValue(cardId, out var amount)
-                    ? amount + 1 
+                    ? amount + 1
                     : 1;
             }
 
@@ -53,10 +53,10 @@ namespace Version1.Market.Scripts.UI.Displays
         }
 
         public GameObject GameObject() => gameObject;
-        
+
         public void UpdateDisplay()
         {
-            
+
         }
     }
 }

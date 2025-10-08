@@ -12,7 +12,7 @@ public class PayDeptOverlay : MonoBehaviour
     [SerializeField] private TMP_Text displayText;
     [SerializeField] private TMP_Text PayAmountDisplay;
     [SerializeField] private GameObject takeLoanObj;
-    
+
     private int payOffAmount;
 
     private int minDept;
@@ -28,12 +28,12 @@ public class PayDeptOverlay : MonoBehaviour
     {
         if (GameManager.Instance.GameMode == 1)
         {
-            if(PlayerManager.Instance.Dept <= 0)
+            if (PlayerManager.Instance.Dept <= 0)
             {
                 takeLoanObj.SetActive(true);
                 gameObject.SetActive(false);
             }
-            
+
             gameObject.SetActive(true);
             minDept = 0;
             maxDept = PlayerManager.Instance.Balance;
@@ -62,9 +62,9 @@ public class PayDeptOverlay : MonoBehaviour
     public void IncreaseDept()
     {
         payOffAmount += priceStep;
-        if(payOffAmount > PlayerManager.Instance.Balance)
+        if (payOffAmount > PlayerManager.Instance.Balance)
             payOffAmount = PlayerManager.Instance.Balance;
-        else if(payOffAmount > PlayerManager.Instance.Dept)
+        else if (payOffAmount > PlayerManager.Instance.Dept)
             payOffAmount = PlayerManager.Instance.Dept;
     }
 

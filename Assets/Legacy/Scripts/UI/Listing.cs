@@ -27,7 +27,7 @@ public class Listing
         {
             if (!biddings[i])
                 continue;
-            
+
             biddings[i].Remove(accepted);
             biddings.RemoveAt(i);
         }

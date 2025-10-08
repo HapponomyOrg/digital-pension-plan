@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Obsolete]
-[CreateAssetMenu(fileName = "CardList", menuName ="Cards/CardList")]
+[CreateAssetMenu(fileName = "CardList", menuName = "Cards/CardList")]
 public class CardLibrary : ScriptableObject
 {
     public Card[] cards;
@@ -15,7 +15,7 @@ public class CardLibrary : ScriptableObject
         cardList = new Dictionary<byte, Card>();
         foreach (var card in cards)
         {
-            cardList.Add(card.ID,card);
+            cardList.Add(card.ID, card);
         }
     }
 

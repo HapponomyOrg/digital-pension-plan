@@ -5,7 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI.Overlays
-{[Obsolete]
+{
+    [Obsolete]
     public class CounterOfferOverlay : MonoBehaviour
     {
         [SerializeField] private Image cardDisplayPrefab;
@@ -14,11 +15,11 @@ namespace UI.Overlays
         [SerializeField] private TMP_Text counterMessageDisplay;
         [SerializeField] private TMP_Text oldPriceDisplay;
         [SerializeField] private TMP_Text newPriceDisplay;
-        
+
         [SerializeField] private Button acceptButton;
         [SerializeField] private Button rejectButton;
 
-        
+
         public void Open(Bidding bidding, int originalOffer)
         {
             gameObject.SetActive(true);
@@ -31,16 +32,16 @@ namespace UI.Overlays
             counterMessageDisplay.text = $"{bidding.Sender} has countered your offer";
             oldPriceDisplay.text = originalOffer.ToString();
             newPriceDisplay.text = bidding.OfferPrice.ToString();
-            
+
             acceptButton.interactable = PlayerManager.Instance.Balance >= remainingCost;
-            
+
             acceptButton.onClick.RemoveAllListeners();
             acceptButton.onClick.AddListener(() =>
             {
                 MarketManager.Instance.AcceptCounterBidding(bidding, remainingCost);
                 gameObject.SetActive(false);
             });
-            
+
             rejectButton.onClick.RemoveAllListeners();
             rejectButton.onClick.AddListener(() =>
             {
@@ -53,7 +54,7 @@ namespace UI.Overlays
                     bidding.SenderId
                 );
                 NatsClient.Instance.Publish(PlayerManager.Instance.LobbyID.ToString(), msg);
-                
+
                 l.RemoveAllBiddings(false);
                 gameObject.SetActive(false);
             });

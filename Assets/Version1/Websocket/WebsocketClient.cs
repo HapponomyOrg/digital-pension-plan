@@ -111,7 +111,7 @@ namespace Version1.Websocket
 
                     string dataJson = messageJson.Substring(openBrace, closeBrace - openBrace + 1);
                     Debug.LogWarning("Extracted data: " + dataJson);
-                    
+
                     var innerData = JsonUtility.FromJson<BaseMessage>(dataJson);
 
                     if (innerData != null && !string.IsNullOrEmpty(innerData.Subject))
@@ -132,7 +132,7 @@ namespace Version1.Websocket
             Debug.LogWarning($"DispatchMessage called with subject: {subject}");
             Debug.LogWarning($"JSON data being parsed: [{jsonData}]");
             Debug.LogWarning($"JSON length: {jsonData.Length}");
-            
+
             try
             {
                 switch (subject)

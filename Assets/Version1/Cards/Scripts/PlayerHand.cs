@@ -30,13 +30,13 @@ namespace Version1.Cards.Scripts
         private void PlayerDataOnOnCardsChange(object sender, List<int> updatedCards)
         {
             Debug.Log("PlayerDataChanged");
-            
+
             var updatedCardCounts = updatedCards.GroupBy(id => id)
                 .ToDictionary(group => group.Key, group => group.Count());
-            
+
             var currentCardCounts = cardList.GroupBy(card => card.cardData.ID)
                 .ToDictionary(group => group.Key, group => group.Count());
-            
+
             foreach (var cardId in updatedCardCounts.Keys)
             {
                 int currentCount = currentCardCounts.ContainsKey(cardId) ? currentCardCounts[cardId] : 0;
@@ -48,7 +48,7 @@ namespace Version1.Cards.Scripts
                     currentCount++;
                 }
             }
-            
+
             foreach (var cardId in currentCardCounts.Keys)
             {
                 int currentCount = currentCardCounts[cardId];
@@ -79,7 +79,7 @@ namespace Version1.Cards.Scripts
 
             var newCard = Instantiate(cardPrefab, this.transform);
             newCard.name = cardInfo.name;
-            
+
             newCard.Initialize(cardInfo);
 
             AddCard(newCard);

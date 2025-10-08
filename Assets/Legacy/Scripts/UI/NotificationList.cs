@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace UI
-{[Obsolete]
+{
+    [Obsolete]
     public class NotificationList : MonoBehaviour
     {
         [SerializeField] private NotificationDisplay NotificationDisplayPrefab;
-        
+
         public static NotificationList Instance { get; private set; }
 
         private readonly Queue<NotificationDisplay> notifications = new Queue<NotificationDisplay>();
@@ -16,7 +17,7 @@ namespace UI
         [SerializeField] private Transform notificationStack;
         [SerializeField] private Transform nextNotification;
         [SerializeField] private Transform displayedNotification;
-        
+
         private void Awake()
         {
             if (Instance != null)
@@ -27,7 +28,7 @@ namespace UI
 
             Instance = this;
         }
-        
+
         private void Start()
         {
             AddNotification(new Notification("test", "bas", () => print("test action"), NotificationColor.Yellow));
@@ -63,7 +64,7 @@ namespace UI
         private void MoveNotifications()
         {
             var notifs = notifications.ToArray();
-            
+
             for (var i = 0; i < notifs.Length; i++)
             {
                 var pos = i switch

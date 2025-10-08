@@ -11,7 +11,7 @@ public class DonateMoneyOverlay : MonoBehaviour
     [SerializeField] private Button confirmButton;
     [SerializeField] private TMP_Text displayText;
     [SerializeField] private TMP_Text donationAmountDisplay;
-    
+
     private int currentDonation = 1000;
 
     private int minDonation;
@@ -46,14 +46,14 @@ public class DonateMoneyOverlay : MonoBehaviour
         donationAmountDisplay.text = currentDonation.ToString();
         displayText.text = $"Are you sure you want to donate {currentDonation}?";
     }
-        
+
     public void IncreaseDonation()
     {
         currentDonation += priceStep;
         if (currentDonation > maxDonation)
             currentDonation = maxDonation;
     }
-        
+
     public void DecreaseDonation()
     {
         currentDonation -= priceStep;

@@ -9,7 +9,7 @@ namespace Version1.Market.Scripts.UI.Displays
     public class MarketListingDisplay : MonoBehaviour, IListingDisplay
     {
         private Listing listing;
-        
+
         [SerializeField] private TMP_Text sellerName;
         [SerializeField] private TMP_Text price;
         [SerializeField] private Button buy;
@@ -18,11 +18,11 @@ namespace Version1.Market.Scripts.UI.Displays
 
         [SerializeField] private Transform cardList;
         [SerializeField] private ListingCardDisplay cardDisplay;
-        
+
         public void Init(Listing l, Dictionary<ListingDisplayAction, Action> displayActions)
         {
             listing = l;
-            
+
             sellerName.text = listing.Lister.ToString();
             price.text = listing.Price.ToString();
 
@@ -43,7 +43,7 @@ namespace Version1.Market.Scripts.UI.Displays
             foreach (var cardId in listing.Cards)
             {
                 cardAmounts[cardId] = cardAmounts.TryGetValue(cardId, out var amount)
-                    ? amount + 1 
+                    ? amount + 1
                     : 1;
             }
 

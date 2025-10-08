@@ -17,7 +17,7 @@ public class DeptMoneyOverlay : MonoBehaviour
         gameObject.SetActive(true);
         deptAmount.text = dept.ToString();
     }
-    
+
     public void PayLoanOverlay()
     {
         gameObject.SetActive(false);

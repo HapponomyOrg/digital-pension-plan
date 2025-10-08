@@ -15,12 +15,12 @@ namespace Version1.Phases.Trading
         private const string tradingScene = "TradingScene";
         public override event EventHandler<EventArgs> InitFinished;
         public override bool InitComplete { get; protected set; }
-        
-        
+
+
         private Timer timer;
         private MarketUIManager market;
-        
-        
+
+
         public override void Init()
         {
             SceneManager.LoadScene(tradingScene);
@@ -28,12 +28,12 @@ namespace Version1.Phases.Trading
             {
                 // market = Object.FindObjectOfType<MarketUiManager>();
                 timer = Object.FindObjectOfType<Timer>();
-                
+
                 timer.Init(300);
 
                 market = Object.FindObjectOfType<MarketUIManager>();
 
-                
+
                 InitComplete = true;
                 InitFinished?.Invoke(this, EventArgs.Empty);
                 InitFinished = null;

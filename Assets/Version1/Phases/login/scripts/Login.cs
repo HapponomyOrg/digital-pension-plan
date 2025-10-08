@@ -63,8 +63,8 @@ namespace Version1.Phases.login.scripts
             PlayerData.PlayerData.Instance.RequestID = uid;
 
             var msg = new JoinRequestMessage(DateTime.Now.ToString("o"), gamecode, 0, playername, age, gender, uid);
-            
-            
+
+
             //Nats.NatsClient.C.SubscribeToSubject(gamecode.ToString());
             NetworkManager.Instance.Subscribe(gamecode.ToString());
             NetworkManager.Instance.Publish(gamecode.ToString(), msg);

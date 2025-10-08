@@ -5,11 +5,12 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI
-{[Obsolete]
+{
+    [Obsolete]
     public class NotificationDisplay : MonoBehaviour
     {
         [SerializeField] private Image background;
-    
+
         [SerializeField] private Button closeButton;
         [SerializeField] private Button actionButton;
 
@@ -28,8 +29,8 @@ namespace UI
         public void SetDisplay(NotificationList notificationList, Notification notification)
         {
             var colors = GetColors(notification.NotificationColor);
-            
-            
+
+
             if (notification.Action == null)
                 actionButton.gameObject.SetActive(false);
             else
@@ -41,8 +42,8 @@ namespace UI
 
             closeButton.onClick.AddListener(notificationList.RemoveNotification);
             closeButton.targetGraphic.color = colors.Item2;
-            
-            
+
+
             background.color = colors.Item1;
 
             titleDisplay.text = notification.Title;

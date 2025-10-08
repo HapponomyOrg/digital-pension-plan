@@ -248,12 +248,12 @@ public class NatsClient : Connection
 
                 var msg = new HeartBeatMessage(
                     DateTime.UtcNow.ToString("o"),
-                    PlayerManager.Instance.LobbyID, 
+                    PlayerManager.Instance.LobbyID,
                     PlayerManager.Instance.PlayerId,
-                    PlayerManager.Instance.PlayerName, 
+                    PlayerManager.Instance.PlayerName,
                     PlayerManager.Instance.Balance,
-                    PlayerManager.Instance.Cards.ToArray(), 
-                    PlayerManager.Instance.Points, 
+                    PlayerManager.Instance.Cards.ToArray(),
+                    PlayerManager.Instance.Points,
                     PlayerManager.Instance.allPoints.ToArray()
                 );
 

@@ -15,7 +15,7 @@ namespace Version1.Host.Scripts
     public class CardManager : MonoBehaviour
     {
         [SerializeField] private Cards.Scripts.CardLibrary _cardLibrary;
-        
+
         // This is the deck the host has for the game
         private List<CardData> _cardDeck;
 
@@ -29,13 +29,13 @@ namespace Version1.Host.Scripts
             _cardLibrary = cardLibrary;
         }
 
-        public void StartGame(Dictionary<int,PlayerListPrefab> players)
+        public void StartGame(Dictionary<int, PlayerListPrefab> players)
         {
             _cardDeck = new List<CardData>();
 
             FillDeck(players.Count);
             ShuffleDeck();
-            
+
             var cardsPerPlayer = CalculateCardsPerPlayer(players.Count);
 
             foreach (var player in players)
@@ -63,7 +63,7 @@ namespace Version1.Host.Scripts
                 }
 
                 Debug.Log($"sent cards, msg: {msg}");
-                
+
                 Nats.NatsHost.C.Publish($"{SessionData.Instance.LobbyCode}", msg);
             }
         }
@@ -143,12 +143,12 @@ namespace Version1.Host.Scripts
             return takenCards;
         }
     }
-    
+
     internal class CardGame
     {
 
         public Cards.Scripts.CardLibrary cardLibrary;
-        
+
         private static readonly Dictionary<CardRarity, double> CardsPerPlayer = new()
         {
             { CardRarity.COMMON, 8 },
@@ -173,7 +173,7 @@ namespace Version1.Host.Scripts
             /*foreach (var card in cardLibrary.cards)
             {
             }*/
-            
+
             Dictionary<CardData, int> deck = InitializeDeck();
             int minCards = (int)Math.Floor(AvgCards * numPlayers);
             int minPoints = MinPointsPerPlayer * numPlayers;
@@ -216,7 +216,7 @@ namespace Version1.Host.Scripts
             Dictionary<CardData, int> deck = new Dictionary<CardData, int>();
             foreach (var card in cardLibrary.cards)
             {
-                    deck[card] = 0;
+                deck[card] = 0;
             }
 
             return deck;
@@ -234,7 +234,7 @@ namespace Version1.Host.Scripts
                     
                 }*/
             }
-            
+
             /*List<string> cards = CardCategories[rarity];*/
             int curIndex = curIndices[rarity];
 

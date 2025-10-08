@@ -5,7 +5,7 @@ using UnityEngine.UI;
 [Obsolete]
 public class TimerTestScript : MonoBehaviour
 {
-   [SerializeField] private Timer timer;
+    [SerializeField] private Timer timer;
     private void Start()
     {
         new NatsClient();
@@ -29,15 +29,15 @@ public class TimerTestScript : MonoBehaviour
         {
             Debug.Log("StartTimer");
             timer.StartTimer(15);
-        }        
+        }
         if (Input.GetKeyDown(KeyCode.T))
         {
             Debug.Log("StopTimer");
             timer.PauseTimer();
         }
-        
-        
-        
+
+
+
         NatsClient.Instance.HandleMessages();
     }
     private void OnDestroy()

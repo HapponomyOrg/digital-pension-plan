@@ -9,31 +9,31 @@ namespace Version1.Market.Scripts.UI.Overlays
 {
     public class CancelBidOverlay : MarketOverlay
     {
-        
+
         [SerializeField] private TMP_Text sellerName;
         [SerializeField] private TMP_Text price;
         [SerializeField] private TMP_Text offer;
-        
+
         [SerializeField] private Button confirm;
 
         [SerializeField] private Transform cardList;
         [SerializeField] private DetailsCardDisplay cardDisplay;
-        
-        
+
+
         public override void Open(Listing listing)
         {
             gameObject.SetActive(true);
             var playerId = PlayerData.PlayerData.Instance.PlayerId;
             var bid = listing.BidHistories[playerId].GetSortedBiddingHistory()
                 .Last(b => b.Bidder == playerId);
-            
-            
+
+
             sellerName.text = listing.Lister.ToString();
             price.text = listing.Price.ToString();
             offer.text = bid.OfferedPrice.ToString();
-            
+
             GenerateCardDisplays(listing);
-            
+
             confirm.onClick.RemoveAllListeners();
             confirm.onClick.AddListener(() => CancelBid(listing, bid));
         }
@@ -42,13 +42,13 @@ namespace Version1.Market.Scripts.UI.Overlays
         {
             foreach (Transform child in cardList)
                 Destroy(child.gameObject);
-            
-            
+
+
             var cardAmounts = new Dictionary<int, int>();
             foreach (var cardId in listing.Cards)
             {
                 cardAmounts[cardId] = cardAmounts.TryGetValue(cardId, out var amount)
-                    ? amount + 1 
+                    ? amount + 1
                     : 1;
             }
 

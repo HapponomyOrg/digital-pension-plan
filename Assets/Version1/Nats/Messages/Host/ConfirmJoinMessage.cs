@@ -7,7 +7,7 @@ namespace Version1.Nats.Messages.Host
         public int Age;
         public int Gender;
         public string RequestID;
-        
+
         public ConfirmJoinMessage(string dateTime, int lobbyID, int playerID, int lobbyPlayerID, string playerName, int age, int gender, string requestID) : base(dateTime, MessageSubject.ConfirmJoin, lobbyID, playerID)
         {
             LobbyPlayerID = lobbyPlayerID;

@@ -85,9 +85,9 @@ namespace Version1.Host.Scripts
         {
             gameModeDropDown.ClearOptions();
             var options = (from MoneySystems system in Enum.GetValues(typeof(MoneySystems))
-                select FormatEnumForDisplay(system.ToString())
+                           select FormatEnumForDisplay(system.ToString())
                 into displayName
-                select new TMP_Dropdown.OptionData(displayName)).ToList();
+                           select new TMP_Dropdown.OptionData(displayName)).ToList();
 
             gameModeDropDown.options = options;
             gameModeDropDown.RefreshShownValue();

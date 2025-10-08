@@ -9,7 +9,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [SerializeField]
-    public GameObject gameScene, lobbyScene, logginScene, intrestScene,payDeptOrTakeLoan, pointsDonateScene, endGameScene;
+    public GameObject gameScene, lobbyScene, logginScene, intrestScene, payDeptOrTakeLoan, pointsDonateScene, endGameScene;
 
     [SerializeField] private Timer timer;
 
@@ -68,7 +68,7 @@ public class GameManager : MonoBehaviour
             // TODO here set to point removeal screen after dept
             ChangeScene(pointsDonateScene);
         };
-        
+
         NatsClient.Instance.OnEndGame += (sender, msg) =>
         {
             PlayerManager.Instance.allPoints.Add(PlayerManager.Instance.Points);
