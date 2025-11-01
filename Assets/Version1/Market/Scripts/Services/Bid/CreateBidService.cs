@@ -7,6 +7,11 @@ namespace Version1.Market
     {
         public event EventHandler<BidEventArgs> CreateBid;
 
+        //public CreateBidService()
+        //{
+        //    Nats.NatsClient.C.OnMakeBidding += CreateBidHandler;
+        //}
+
         public void CreateBidLocally(Guid listingId, Bid bid)
         {
             var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
@@ -24,7 +29,7 @@ namespace Version1.Market
             CreateBid?.Invoke(this, new BidEventArgs(listing, bid));
 
 
-            var message = new MakeBiddingMessage(
+            var message = new CreateBidMessage(
                 DateTime.Now.ToString("o"),
                 PlayerData.PlayerData.Instance.LobbyID,
                 PlayerData.PlayerData.Instance.PlayerId,
@@ -39,7 +44,7 @@ namespace Version1.Market
             Nats.NatsClient.C.Publish(message.LobbyID.ToString(), message);
         }
 
-        public void CreateBidHandler(MakeBiddingMessage message)
+        public void CreateBidHandler(object sender, CreateBidMessage message)
         {
             var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(Guid.Parse(message.AuctionID));
 

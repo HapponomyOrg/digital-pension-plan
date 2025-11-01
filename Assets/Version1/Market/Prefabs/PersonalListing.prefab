@@ -1202,15 +1202,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 8327157911286953465}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e926f9f8d3f523d419a85ab3b797dfe8, type: 3}
+  m_Script: {fileID: 11500000, guid: 2c244b06c5e40a34fac184fb9ecd1ab0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  price: {fileID: 4115620162186576855}
-  bids: {fileID: 0}
+  priceDisplay: {fileID: 4115620162186576855}
+  bidCountDisplay: {fileID: 3979313782268202504}
   cardList: {fileID: 9019215804966928246}
-  cardDisplay: {fileID: -8222426205000192782, guid: 7dfe49bc7665d2c4180e9331ff23187b, type: 3}
-  cancel: {fileID: 6763809916522896857}
-  select: {fileID: 8179896063940809603}
+  cardIconPrefab: {fileID: -8222426205000192782, guid: 7dfe49bc7665d2c4180e9331ff23187b, type: 3}
+  selectButton: {fileID: 8179896063940809603}
+  cancelButton: {fileID: 6763809916522896857}
 --- !u!1 &8601148411218913907
 GameObject:
   m_ObjectHideFlags: 0

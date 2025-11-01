@@ -17,6 +17,7 @@ namespace Version1.Utilities
         public event EventHandler<RejectedMessage> OnRejected;
         public event EventHandler<string> OnError;
 
+        private bool initialized = false;
 
         public NetworkManager()
         {
@@ -33,6 +34,9 @@ namespace Version1.Utilities
 
         private void Awake()
         {
+            if (initialized) 
+                return;
+
             DontDestroyOnLoad(gameObject);
 
             _natsClient = Nats.NatsClient.C ?? // Use existing instance
@@ -70,6 +74,8 @@ namespace Version1.Utilities
             _natsClient.OnConfirmHandIn += NatsClientOnOnConfirmHandIn;
             _natsClient.OnEndOfRounds += NatsClientOnOnEndOfRounds;
             //_natsClient.OnConnect += NatsClientOnOnConnect;
+
+            initialized = true;
         }
 
         private IEnumerator HeartbeatRoutine()
@@ -153,20 +159,21 @@ namespace Version1.Utilities
             PlayerData.PlayerData.Instance.StartGame(e);
         }
 
-        private void NatsClientOnOnRespondBidding(object sender, RespondBiddingMessage e)
+        private void NatsClientOnOnRespondBidding(object sender, CounterBidMessage e)
         {
             // TODO MARKET FUNCTION
             //throw new NotImplementedException();
         }
 
-        private void NatsClientOnOnRejectBidding(object sender, RejectBiddingMessage e)
+        private void NatsClientOnOnRejectBidding(object sender, RejectBidMessage e)
         {
             // TODO MARKET FUNCTION
             //throw new NotImplementedException();
         }
 
-        private void NatsClientOnOnMakeBidding(object sender, MakeBiddingMessage e)
+        private void NatsClientOnOnMakeBidding(object sender, CreateBidMessage e)
         {
+            GameManager.Instance.MarketServices.CreateBidService.CreateBidHandler(sender, e);
             // TODO MARKET FUNCTION 
             //throw new NotImplementedException();
         }
@@ -232,7 +239,7 @@ namespace Version1.Utilities
             
         }
 
-        private void NatsClientOnOnCancelBidding(object sender, CancelBiddingMessage e)
+        private void NatsClientOnOnCancelBidding(object sender, CancelBidMessage e)
         {
             // TODO MARKET FUNCTION
             //throw new NotImplementedException();
@@ -246,7 +253,7 @@ namespace Version1.Utilities
 
         }
 
-        private void NatsClientOnOnAcceptBidding(object sender, AcceptBiddingMessage e)
+        private void NatsClientOnOnAcceptBidding(object sender, AcceptBidMessage e)
         {
             // TODO MARKET FUNCTION
             //throw new NotImplementedException();

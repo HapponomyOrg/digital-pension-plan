@@ -1,3 +1,4 @@
+using Legacy;
 using NATS;
 using System;
 using System.Collections;

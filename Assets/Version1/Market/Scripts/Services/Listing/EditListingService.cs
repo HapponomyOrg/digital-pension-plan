@@ -5,7 +5,7 @@ namespace Version1.Market
 {
     public class EditListingService
     {
-        public event EventHandler<ListingEventArgs> CreateListing;
+        public event EventHandler<ListingEventArgs> EditListing;
 
         public void EditListingLocally(Listing listing)
         {

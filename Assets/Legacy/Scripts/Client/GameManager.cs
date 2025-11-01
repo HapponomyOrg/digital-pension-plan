@@ -6,7 +6,7 @@ using UI;
 using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 
-public namespace Legacy
+namespace Legacy
 {
     [Obsolete]
     public class GameManager : MonoBehaviour

@@ -27,7 +27,7 @@ namespace Version1.Market
             CancelBid?.Invoke(this, new BidEventArgs(listing, bid));
 
 
-            var message = new CancelBiddingMessage(
+            var message = new CancelBidMessage(
                 DateTime.Now.ToString("o"),
                 PlayerData.PlayerData.Instance.LobbyID,
                 PlayerData.PlayerData.Instance.PlayerId,
@@ -41,11 +41,11 @@ namespace Version1.Market
             Utilities.GameManager.Instance.ListingRepository.RemoveListing(listing);
         }
 
-        public void CancelBidHandler(CancelBiddingMessage message)
+        public void CancelBidHandler(CancelBidMessage message)
         {
             var listingId = Guid.Parse(message.AuctionID);
             var bidId = Guid.Parse(message.BidID);
-            var originalBidder = message.OriginalBidderID;
+            var originalBidder = message.OriginalBidder;
 
             ReceivedCancelBid(listingId, bidId, originalBidder);
         }

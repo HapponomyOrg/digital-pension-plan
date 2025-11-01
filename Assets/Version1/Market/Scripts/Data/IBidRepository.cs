@@ -61,5 +61,10 @@ namespace Version1.Market
         public bool AddBid(int playerId, Bid bid);
 
         public void UpdateBidStatus(int playerId, Guid bidId, EBidStatus bidStatus);
+
+        public int GetUniqueBidderCount();
+        public int[] GetUniqueBidders();
+
+        public int GetBidOwner(Guid bidId);
     }
 }

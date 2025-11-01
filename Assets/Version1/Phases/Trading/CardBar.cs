@@ -2,14 +2,14 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Version1.Market.Scripts.UI.Displays;
+using Version1.Market;
 
 namespace Version1.Phases.Trading
 {
     public class CardBar : MonoBehaviour
     {
         [SerializeField] private RectTransform cardList;
-        [SerializeField] private DetailsCardDisplay cardDisplay;
+        [SerializeField] private CardAmountDisplay cardDisplay;
 
 
         private bool generateDisplays;
@@ -63,7 +63,7 @@ namespace Version1.Phases.Trading
             foreach (var cardAmount in cardAmounts)
             {
                 var obj = Instantiate(cardDisplay, cardList);
-                obj.Init(cardAmount.Key, cardAmount.Value);
+                obj.SetDisplay(cardAmount.Key, cardAmount.Value);
 
                 if (cardAmount.Value >= 4)
                 {

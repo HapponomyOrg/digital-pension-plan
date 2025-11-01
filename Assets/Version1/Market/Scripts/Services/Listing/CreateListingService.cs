@@ -1,4 +1,5 @@
 using System;
+using Version1.Nats;
 using Version1.Nats.Messages.Client;
 
 namespace Version1.Market
@@ -6,6 +7,11 @@ namespace Version1.Market
     public class CreateListingService
     {
         public event EventHandler<ListingEventArgs> CreateListing;
+
+        public CreateListingService()
+        {
+            Nats.NatsClient.C.OnListCards += CreateListingHandler;
+        }
 
         public void CreateListingLocally(Listing listing)
         {
@@ -28,7 +34,7 @@ namespace Version1.Market
             Nats.NatsClient.C.Publish(message.LobbyID.ToString(), message);
         }
 
-        public void CreateListingHandler(ListCardsmessage message)
+        public void CreateListingHandler(object sender, ListCardsmessage message)
         {
             var listing = new Listing(
                 Guid.Parse(message.AuctionID), 

@@ -229,11 +229,11 @@ namespace Version1.Nats
         public event EventHandler<ConfirmBuyMessage> OnConfirmBuy;
         public event EventHandler<ConfirmHandInMessage> OnConfirmHandIn;
         public event EventHandler<ConfirmCancelListingMessage> OnConfirmCancelListing;
-        public event EventHandler<MakeBiddingMessage> OnMakeBidding;
-        public event EventHandler<AcceptBiddingMessage> OnAcceptBidding;
-        public event EventHandler<CancelBiddingMessage> OnCancelBidding;
-        public event EventHandler<RejectBiddingMessage> OnRejectBidding;
-        public event EventHandler<RespondBiddingMessage> OnRespondBidding;
+        public event EventHandler<CreateBidMessage> OnMakeBidding;
+        public event EventHandler<AcceptBidMessage> OnAcceptBidding;
+        public event EventHandler<CancelBidMessage> OnCancelBidding;
+        public event EventHandler<RejectBidMessage> OnRejectBidding;
+        public event EventHandler<CounterBidMessage> OnRespondBidding;
         public event EventHandler<AcceptCounterBiddingMessage> OnAcceptCounterBidding;
         public event EventHandler<AbortSessionMessage> OnAbortSession;
         public event EventHandler<SkipRoundMessage> OnSkipRound;
@@ -257,6 +257,8 @@ namespace Version1.Nats
             }
             
             DispatchMessage(message);
+            Debug.Log("messages processed");
+
         }
 
         private void DispatchMessage(BaseMessage message)
@@ -326,19 +328,19 @@ namespace Version1.Nats
                     OnConfirmCancelListing?.Invoke(this, (ConfirmCancelListingMessage)message);
                     break;
                 case MessageSubject.MakeBidding:
-                    OnMakeBidding?.Invoke(this, (MakeBiddingMessage)message);
+                    OnMakeBidding?.Invoke(this, (CreateBidMessage)message);
                     break;
                 case MessageSubject.AcceptBidding:
-                    OnAcceptBidding?.Invoke(this, (AcceptBiddingMessage)message);
+                    OnAcceptBidding?.Invoke(this, (AcceptBidMessage)message);
                     break;
                 case MessageSubject.CancelBidding:
-                    OnCancelBidding?.Invoke(this, (CancelBiddingMessage)message);
+                    OnCancelBidding?.Invoke(this, (CancelBidMessage)message);
                     break;
                 case MessageSubject.RejectBidding:
-                    OnRejectBidding?.Invoke(this, (RejectBiddingMessage)message);
+                    OnRejectBidding?.Invoke(this, (RejectBidMessage)message);
                     break;
                 case MessageSubject.RespondBidding:
-                    OnRespondBidding?.Invoke(this, (RespondBiddingMessage)message);
+                    OnRespondBidding?.Invoke(this, (CounterBidMessage)message);
                     break;
                 case MessageSubject.AcceptCounterBidding:
                     OnAcceptCounterBidding?.Invoke(this, (AcceptCounterBiddingMessage)message);

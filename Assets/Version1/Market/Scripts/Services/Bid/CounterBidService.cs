@@ -19,49 +19,62 @@ namespace Version1.Market
                 : PlayerData.PlayerData.Instance.PlayerId;
 
 
+            var lastBid = listing.BidRepository.GetLastBidBetweenPlayer(originalBidder);
+            lastBid.BidStatus = EBidStatus.Rejected;
+
             if (PlayerData.PlayerData.Instance.PlayerId == originalBidder)
-                PlayerData.PlayerData.Instance.AddToBalance(bid.BidOffer);
-
-            listing.BidRepository.RemoveBidBetweenPlayer(originalBidder, bid.BidId);
-
-            CancelBid?.Invoke(this, new BidEventArgs(listing, bid));
+                PlayerData.PlayerData.Instance.SubtractFromBalance(bid.BidOffer);
 
 
-            var message = new CancelBiddingMessage(
+            CounterBid?.Invoke(this, new BidEventArgs(listing, bid));
+
+
+            var message = new CounterBidMessage(
                 DateTime.Now.ToString("o"),
                 PlayerData.PlayerData.Instance.LobbyID,
                 PlayerData.PlayerData.Instance.PlayerId,
                 listing.ListingId.ToString(),
                 bid.BidId.ToString(),
-                originalBidder
+                originalBidder,
+                bid.BidderName,
+                bid.BidOffer,
+                bid.TimeStamp.ToString("o")
                 );
 
             Nats.NatsClient.C.Publish(message.LobbyID.ToString(), message);
 
-            Utilities.GameManager.Instance.ListingRepository.RemoveListing(listing);
+            listing.BidRepository.AddBid(PlayerData.PlayerData.Instance.PlayerId, bid);
         }
 
-        public void CounterBidHandler(RejectBiddingMessage message)
+        public void CounterBidHandler(CounterBidMessage message)
         {
-            var listingId = Guid.Parse(message.AuctionID);
-            var bidId = Guid.Parse(message.BidID);
-            var originalBidder = message.OriginalBidderID;
-
-            ReceivedCancelBid(listingId, bidId, originalBidder);
-        }
-
-        private void ReceivedCounterBid(Guid listingId, Guid bidId, int originalBidder)
-        {
-            var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
+            var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(Guid.Parse(message.AuctionID));
 
             if (listing == null)
                 return; // TODO Error handling
 
-            var bid = listing.BidRepository.GetBidBetweenPlayer(originalBidder, bidId);
+            var bid = new Bid(
+                Guid.Parse(message.BidID),
+                message.PlayerID,
+                message.PlayerName,
+                message.CounterOfferPrice,
+                DateTime.Parse(message.BidDateTimeStamp)
+                );
 
-            listing.BidRepository.RemoveBidBetweenPlayer(originalBidder, bid.BidId);
+            ReceivedCounterBid(listing, message.OriginalBidder, bid);
+        }
 
-            CancelBid?.Invoke(this, new BidEventArgs(listing, bid));
+
+        private void ReceivedCounterBid(Listing listing, int originalBidder, Bid bid)
+        {
+            var lastBid = listing.BidRepository.GetLastBidBetweenPlayer(originalBidder);
+            lastBid.BidStatus = EBidStatus.Rejected;
+
+            if (lastBid.Bidder == originalBidder)
+                PlayerData.PlayerData.Instance.AddToBalance(bid.BidOffer);
+
+            listing.BidRepository.AddBid(originalBidder, bid);
+            CounterBid?.Invoke(this, new BidEventArgs(listing, bid));
         }
     }
 }

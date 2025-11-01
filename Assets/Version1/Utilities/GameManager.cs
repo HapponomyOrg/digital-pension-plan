@@ -82,7 +82,7 @@ namespace Version1.Utilities
             phases = testPhases;
 
             ListingRepository = new ListingRepository();
-            
+            MarketServices = new MarketServices();
         }
         
         public void StartGame()

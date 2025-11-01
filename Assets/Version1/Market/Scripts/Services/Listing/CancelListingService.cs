@@ -7,6 +7,11 @@ namespace Version1.Market
     {
         public event EventHandler<ListingEventArgs> CancelListing;
 
+        public CancelListingService()
+        {
+            Nats.NatsClient.C.OnCancelListing += CancelListingHandler;
+        }
+
         public void CancelListingLocally(Listing listing)
         {
             PlayerData.PlayerData.Instance.AddCards(listing.Cards);
@@ -25,7 +30,7 @@ namespace Version1.Market
             Nats.NatsClient.C.Publish(message.LobbyID.ToString(), message);
         }
 
-        public void CancelListingHandler(CancelListingMessage message)
+        public void CancelListingHandler(object sender, CancelListingMessage message)
         {
             var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(Guid.Parse(message.AuctionID));
 

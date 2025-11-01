@@ -1,73 +1,33 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Version1.Market.Scripts.UI.Displays;
+using Version1.Utilities;
 
-namespace Version1.Market.Scripts.UI.Overlays
+namespace Version1.Market
 {
-    public class CancelBidOverlay : MarketOverlay
+    public class CancelBidOverlay : MonoBehaviour
     {
-        
-        [SerializeField] private TMP_Text sellerName;
-        [SerializeField] private TMP_Text price;
-        [SerializeField] private TMP_Text offer;
-        
-        [SerializeField] private Button confirm;
+        [SerializeField] private Button confirmButton;
 
-        [SerializeField] private Transform cardList;
-        [SerializeField] private DetailsCardDisplay cardDisplay;
-        
-        
-        public override void Open(Listing listing)
+        public void Open(Guid listingId, Bid bid)
         {
             gameObject.SetActive(true);
-            var playerId = PlayerData.PlayerData.Instance.PlayerId;
-            //var bid = listing.BidHistories[playerId].GetSortedBiddingHistory()
-                //.Last(b => b.Bidder == playerId);
-            
-            
-            sellerName.text = listing.Lister.ToString();
-            price.text = listing.Price.ToString();
-            //offer.text = bid.OfferedPrice.ToString();
-            
-            GenerateCardDisplays(listing);
-            
-            confirm.onClick.RemoveAllListeners();
-            //confirm.onClick.AddListener(() => CancelBid(listing, bid));
+
+            confirmButton.onClick.RemoveAllListeners();
+            confirmButton.onClick.AddListener(() => { Confirm(listingId, bid); });
         }
 
-        private void GenerateCardDisplays(Listing listing)
-        {
-            foreach (Transform child in cardList)
-                Destroy(child.gameObject);
-            
-            
-            var cardAmounts = new Dictionary<int, int>();
-            foreach (var cardId in listing.Cards)
-            {
-                cardAmounts[cardId] = cardAmounts.TryGetValue(cardId, out var amount)
-                    ? amount + 1 
-                    : 1;
-            }
-
-            foreach (var cardAmount in cardAmounts)
-            {
-                var obj = Instantiate(cardDisplay, cardList);
-                obj.Init(cardAmount.Key, cardAmount.Value);
-            }
-        }
-
-        private void CancelBid(Listing listing, Bid bid)
-        {
-            //Utilities.GameManager.Instance.MarketManager.RemoveBidFromListing(listing.ListingId, bid.BidId, PlayerData.PlayerData.Instance.PlayerId);
-            Close();
-        }
-
-        public override void Close()
+        public void Close()
         {
             gameObject.SetActive(false);
+        }
+
+        private void Confirm(Guid listingId, Bid bid)
+        {
+            GameManager.Instance.MarketServices.CancelBidService.CancelBidLocally(listingId, bid);
+            Close();
         }
     }
 }

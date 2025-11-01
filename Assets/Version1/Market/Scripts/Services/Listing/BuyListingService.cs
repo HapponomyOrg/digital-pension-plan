@@ -7,10 +7,16 @@ namespace Version1.Market
     {
         public event EventHandler<ListingEventArgs> BuyListing;
 
+        public BuyListingService()
+        {
+            Nats.NatsClient.C.OnBuyCards += BuyListingHandler;
+        }
+
         public void BuyListingLocally(Listing listing)
         {
             RemoveListing(listing);
             PlayerData.PlayerData.Instance.SubtractFromBalance(listing.Price);
+            PlayerData.PlayerData.Instance.AddCards(listing.Cards);
 
             BuyListing?.Invoke(this, new ListingEventArgs(listing));
 
@@ -30,7 +36,7 @@ namespace Version1.Market
             PlayerData.PlayerData.Instance.AddToBalance(listing.Price);
         }
 
-        public void BuyListingHandler(BuyCardsRequestMessage message)
+        public void BuyListingHandler(object sender, BuyCardsRequestMessage message)
         {
             var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(Guid.Parse(message.AuctionID));
 

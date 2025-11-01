@@ -19,13 +19,15 @@ namespace Version1.Market
                 ? bid.Bidder
                 : PlayerData.PlayerData.Instance.PlayerId;
 
-            if (PlayerData.PlayerData.Instance.PlayerId == listing.Lister)
+            if (PlayerData.PlayerData.Instance.PlayerId == originalBidder)
+                PlayerData.PlayerData.Instance.AddCards(listing.Cards);
+            else if (PlayerData.PlayerData.Instance.PlayerId == listing.Lister)
                 PlayerData.PlayerData.Instance.AddToBalance(bid.BidOffer);
 
             AcceptBid?.Invoke(this, new BidEventArgs(listing, bid));
 
 
-            var message = new AcceptBiddingMessage(
+            var message = new AcceptBidMessage(
                 DateTime.Now.ToString("o"),
                 PlayerData.PlayerData.Instance.LobbyID,
                 PlayerData.PlayerData.Instance.PlayerId,
@@ -39,11 +41,11 @@ namespace Version1.Market
             GameManager.Instance.ListingRepository.RemoveListing(listing);
         }
 
-        public void AcceptBidHandler(object o, AcceptBiddingMessage message)
+        public void AcceptBidHandler(object o, AcceptBidMessage message)
         {
             var listingId = Guid.Parse(message.AuctionID);
             var bidId = Guid.Parse(message.BidID);
-            var originalBidder = message.OriginalBidderID;
+            var originalBidder = message.OriginalBidder;
 
             ReceivedAcceptBid(listingId, bidId, originalBidder);
         }
@@ -59,6 +61,9 @@ namespace Version1.Market
 
             if (PlayerData.PlayerData.Instance.PlayerId == originalBidder)
                 PlayerData.PlayerData.Instance.AddCards(listing.Cards);
+            else if (PlayerData.PlayerData.Instance.PlayerId == listing.Lister)
+                PlayerData.PlayerData.Instance.AddToBalance(bid.BidOffer);
+
 
             GameManager.Instance.ListingRepository.RemoveListing(listing);
 

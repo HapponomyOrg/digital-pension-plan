@@ -24,7 +24,7 @@ namespace Version1.Market
             RejectBid?.Invoke(this, new BidEventArgs(listing, bid));
 
 
-            var message = new RejectBiddingMessage(
+            var message = new RejectBidMessage(
                 DateTime.Now.ToString("o"),
                 PlayerData.PlayerData.Instance.LobbyID,
                 PlayerData.PlayerData.Instance.PlayerId,
@@ -38,7 +38,7 @@ namespace Version1.Market
             Nats.NatsClient.C.Publish(message.LobbyID.ToString(), message);
         }
 
-        public void RejectBidHandler(RejectBiddingMessage message)
+        public void RejectBidHandler(RejectBidMessage message)
         {
             var listingId = Guid.Parse(message.AuctionID);
             var bidId = Guid.Parse(message.BidID);

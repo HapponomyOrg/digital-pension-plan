@@ -1367,7 +1367,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8327157911286953465}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
@@ -1413,16 +1413,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 8327157911286953465}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 921a2538f2611914fa4b7922eeb9c403, type: 3}
+  m_Script: {fileID: 11500000, guid: 8f97991f3bcbc8948a1155c77b85d607, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sellerName: {fileID: 7557313517630891050}
-  state: {fileID: 3979313782268202504}
-  offer: {fileID: 4928138756030659422}
-  cancel: {fileID: 6763809916522896857}
-  selectButton: {fileID: 8179896063940809603}
+  sellerDisplay: {fileID: 7557313517630891050}
+  offerDisplay: {fileID: 4928138756030659422}
+  cancelButton: {fileID: 6763809916522896857}
   cardList: {fileID: 9019215804966928246}
-  cardDisplay: {fileID: -8222426205000192782, guid: 7dfe49bc7665d2c4180e9331ff23187b, type: 3}
+  cardIconPrefab: {fileID: -8222426205000192782, guid: 7dfe49bc7665d2c4180e9331ff23187b, type: 3}
 --- !u!1 &8601148411218913907
 GameObject:
   m_ObjectHideFlags: 0

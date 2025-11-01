@@ -1247,16 +1247,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 8327157911286953465}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ad7f33d569b18a4aa9a8d41106d88a4, type: 3}
+  m_Script: {fileID: 11500000, guid: 68eccb821de0b26418f23dc3b2577835, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sellerName: {fileID: 7557313517630891050}
-  price: {fileID: 4115620162186576855}
-  buy: {fileID: 8852460987027918344}
-  bid: {fileID: 6763809916522896857}
+  sellerDisplay: {fileID: 7557313517630891050}
+  priceDisplay: {fileID: 4115620162186576855}
+  buyButton: {fileID: 8852460987027918344}
+  bidButton: {fileID: 6763809916522896857}
   selectButton: {fileID: 8179896063940809603}
   cardList: {fileID: 9019215804966928246}
-  cardDisplay: {fileID: -8222426205000192782, guid: 7dfe49bc7665d2c4180e9331ff23187b, type: 3}
+  cardIconPrefab: {fileID: -8222426205000192782, guid: 7dfe49bc7665d2c4180e9331ff23187b, type: 3}
 --- !u!1 &8601148411218913907
 GameObject:
   m_ObjectHideFlags: 0

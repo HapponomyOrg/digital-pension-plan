@@ -228,11 +228,11 @@ namespace Version1.Nats
             { MessageSubject.ConfirmCancelListing, typeof(ConfirmCancelListingMessage) },
             { MessageSubject.ConfirmHandIn, typeof(ConfirmHandInMessage) },
             { MessageSubject.ListCards, typeof(ListCardsmessage) },
-            { MessageSubject.MakeBidding, typeof(MakeBiddingMessage) },
-            { MessageSubject.AcceptBidding, typeof(AcceptBiddingMessage) },
-            { MessageSubject.CancelBidding, typeof(CancelBiddingMessage) },
-            { MessageSubject.RejectBidding, typeof(RejectBiddingMessage) },
-            { MessageSubject.RespondBidding, typeof(RespondBiddingMessage) },
+            { MessageSubject.MakeBidding, typeof(CreateBidMessage) },
+            { MessageSubject.AcceptBidding, typeof(AcceptBidMessage) },
+            { MessageSubject.CancelBidding, typeof(CancelBidMessage) },
+            { MessageSubject.RejectBidding, typeof(RejectBidMessage) },
+            { MessageSubject.RespondBidding, typeof(CounterBidMessage) },
             { MessageSubject.AcceptCounterBidding, typeof(AcceptCounterBiddingMessage) },
             { MessageSubject.AbortSession, typeof(AbortSessionMessage) }
         };
@@ -352,19 +352,19 @@ namespace Version1.Nats
                      msg = JsonUtility.FromJson<ListCardsmessage>(stringReceived);
                      break;
                  case MessageSubject.MakeBidding:
-                     msg = JsonUtility.FromJson<MakeBiddingMessage>(stringReceived);
+                     msg = JsonUtility.FromJson<CreateBidMessage>(stringReceived);
                      break;
                  case MessageSubject.AcceptBidding:
-                     msg = JsonUtility.FromJson<AcceptBiddingMessage>(stringReceived);
+                     msg = JsonUtility.FromJson<AcceptBidMessage>(stringReceived);
                      break;
                  case MessageSubject.CancelBidding:
-                     msg = JsonUtility.FromJson<CancelBiddingMessage>(stringReceived);
+                     msg = JsonUtility.FromJson<CancelBidMessage>(stringReceived);
                      break;
                  case MessageSubject.RejectBidding:
-                     msg = JsonUtility.FromJson<RejectBiddingMessage>(stringReceived);
+                     msg = JsonUtility.FromJson<RejectBidMessage>(stringReceived);
                      break;
                  case MessageSubject.RespondBidding:
-                     msg = JsonUtility.FromJson<RespondBiddingMessage>(stringReceived);
+                     msg = JsonUtility.FromJson<CounterBidMessage>(stringReceived);
                      break;
                  case MessageSubject.AcceptCounterBidding:
                      msg = JsonUtility.FromJson<AcceptCounterBiddingMessage>(stringReceived);

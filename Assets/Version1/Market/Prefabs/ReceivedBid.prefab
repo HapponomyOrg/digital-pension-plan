@@ -433,7 +433,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 7307144655939309880}
   m_OnClick:
     m_PersistentCalls:
@@ -812,14 +812,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 9105663586008925488}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6cdd62597754aa4b39831227d95755d, type: 3}
+  m_Script: {fileID: 11500000, guid: 9321f82fc244bf048bd7386d0cea0ac9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bidderName: {fileID: 3662220135060231339}
-  bidOffer: {fileID: 6268340591339877711}
-  accept: {fileID: 7509199676768086085}
-  counter: {fileID: 7798957645660017773}
-  decline: {fileID: 7150406353200282585}
+  bidderNameDisplay: {fileID: 3662220135060231339}
+  offerDisplay: {fileID: 6268340591339877711}
+  acceptButton: {fileID: 7509199676768086085}
+  counterButton: {fileID: 7798957645660017773}
+  rejectButton: {fileID: 7150406353200282585}
 --- !u!1 &9107932693071472082
 GameObject:
   m_ObjectHideFlags: 0

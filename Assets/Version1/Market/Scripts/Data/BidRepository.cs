@@ -9,6 +9,8 @@ namespace Version1.Market
 
         private readonly Dictionary<int, LinkedList<Bid>> bids = new();
 
+        private readonly Dictionary<Guid, int> bidOwners = new();
+
         public bool AddBid(int playerId, Bid bid)
         {
             var hasBidHistory = bids.ContainsKey(playerId);
@@ -17,6 +19,7 @@ namespace Version1.Market
                 bids[playerId] = new LinkedList<Bid>();
 
             bids[playerId].AddLast(bid);
+            bidOwners.Add(bid.BidId, bid.Bidder);
 
             return true;
         }
@@ -89,6 +92,7 @@ namespace Version1.Market
             if (bid == null)
                 return;
 
+            bidOwners.Remove(bid.BidId);
             playerBids.Remove(bid);
         }
 
@@ -99,8 +103,30 @@ namespace Version1.Market
             if (!playerExists)
                 return;
 
+
             if (playerBids.Count > 0)
+            {
+                bidOwners.Remove(playerBids.Last.Value.BidId);
                 playerBids.RemoveLast();
+            }
+        }
+
+        public int GetUniqueBidderCount()
+        {
+            return bids.Count;
+        }
+
+        public int[] GetUniqueBidders()
+        {
+            return bids.Keys.ToArray();
+        }
+
+        public int GetBidOwner(Guid bidId)
+        {
+            if (!bidOwners.ContainsKey(bidId))
+                return -1;
+
+            return bidOwners[bidId];
         }
     }
 }
