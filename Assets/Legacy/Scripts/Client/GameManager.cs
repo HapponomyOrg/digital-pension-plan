@@ -5,14 +5,11 @@ using System.Linq;
 using UI;
 using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
-
-namespace Legacy
+[Obsolete]
+public class GameManager : MonoBehaviour
 {
-    [Obsolete]
-    public class GameManager : MonoBehaviour
-    {
-        [SerializeField]
-        public GameObject gameScene, lobbyScene, logginScene, intrestScene, payDeptOrTakeLoan, pointsDonateScene, endGameScene;
+    [SerializeField]
+    public GameObject gameScene, lobbyScene, logginScene, intrestScene, payDeptOrTakeLoan, pointsDonateScene, endGameScene;
 
         [SerializeField] private Timer timer;
 
@@ -37,47 +34,47 @@ namespace Legacy
         {
             new NatsClient();
 
-            currentScene = logginScene;
-            NatsClient.Instance.OnConfirmJoin += (sender, msg) => { ChangeScene(lobbyScene); };
-            NatsClient.Instance.OnStartGame += (sender, msg) =>
-            {
-                numGames++;
-                PlayerManager.Instance.RoundIsActive = false;
-                gameMode = msg.IntrestMode;
-                print(msg);
-                ChangeScene(gameScene);
-                MarketManager.Instance.UpdateBalance();
-            };
-            NatsClient.Instance.OnStopRound += (sender, msg) =>
-            {
-                MarketManager.Instance.RemoveAllBiddings();
-                PlayerManager.Instance.RoundIsActive = false;
-                timer.StopTimer();
-                intrestScene.SetActive(true);
-            };
-            NatsClient.Instance.OnStartRound += (sender, msg) =>
-            {
-                PlayerManager.Instance.RoundIsActive = true;
-                intrestScene.SetActive(false);
-                StartCoroutine(timer.StartTimer(msg.Duration));
-                Round++;
-            };
-            NatsClient.Instance.OnEndOfRounds += (sender, msg) =>
-            {
-                PlayerManager.Instance.RoundIsActive = false;
-                NatsClient.Instance.StopHeartbeat();
-                NatsClient.Instance.HeartbeatInterval = 300;
-                NatsClient.Instance.StartHeartbeat();
-                // TODO here set to point removeal screen after dept
-                ChangeScene(pointsDonateScene);
-            };
+        currentScene = logginScene;
+        NatsClient.Instance.OnConfirmJoin += (sender, msg) => { ChangeScene(lobbyScene); };
+        NatsClient.Instance.OnStartGame += (sender, msg) =>
+        {
+            numGames++;
+            PlayerManager.Instance.RoundIsActive = false;
+            gameMode = msg.IntrestMode;
+            print(msg);
+            ChangeScene(gameScene);
+            MarketManager.Instance.UpdateBalance();
+        };
+        NatsClient.Instance.OnStopRound += (sender, msg) =>
+        {
+            MarketManager.Instance.RemoveAllBiddings();
+            PlayerManager.Instance.RoundIsActive = false;
+            timer.StopTimer();
+            intrestScene.SetActive(true);
+        };
+        NatsClient.Instance.OnStartRound += (sender, msg) =>
+        {
+            PlayerManager.Instance.RoundIsActive = true;
+            intrestScene.SetActive(false);
+            StartCoroutine(timer.StartTimer(msg.Duration));
+            Round++;
+        };
+        NatsClient.Instance.OnEndOfRounds += (sender, msg) =>
+        {
+            PlayerManager.Instance.RoundIsActive = false;
+            NatsClient.Instance.StopHeartbeat();
+            NatsClient.Instance.HeartbeatInterval = 300;
+            NatsClient.Instance.StartHeartbeat();
 
-            NatsClient.Instance.OnEndGame += (sender, msg) =>
-            {
-                PlayerManager.Instance.allPoints.Add(PlayerManager.Instance.Points);
-                ChangeScene(endGameScene);
-            };
-        }
+            ChangeScene(pointsDonateScene);
+        };
+
+        NatsClient.Instance.OnEndGame += (sender, msg) =>
+        {
+            PlayerManager.Instance.allPoints.Add(PlayerManager.Instance.Points);
+            ChangeScene(endGameScene);
+        };
+    }
 
         public void ChangeScene(GameObject newScene)
         {
@@ -91,9 +88,8 @@ namespace Legacy
             NatsClient.Instance.HandleMessages();
         }
 
-        public void OnDestroy()
-        {
-            NatsClient.Instance.StopHeartbeat();
-        }
+    public void OnDestroy()
+    {
+        NatsClient.Instance.StopHeartbeat();
     }
 }
