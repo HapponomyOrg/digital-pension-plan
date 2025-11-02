@@ -180,7 +180,7 @@ namespace Version1.Utilities
 
         private void NatsClientOnOnListCards(object sender, ListCardsmessage e)
         {
-            
+            GameManager.Instance.MarketServices.CreateListingService.CreateListingHandler(sender, e);
         }
 
         // Host Function
@@ -236,7 +236,7 @@ namespace Version1.Utilities
 
         private void NatsClientOnOnCancelListing(object sender, CancelListingMessage e)
         {
-            
+            GameManager.Instance.MarketServices.CancelListingService.CancelListingHandler(sender, e);
         }
 
         private void NatsClientOnOnCancelBidding(object sender, CancelBidMessage e)
@@ -250,7 +250,7 @@ namespace Version1.Utilities
             // TODO MARKET FUNCTION
             //throw new NotImplementedException();
             
-
+            GameManager.Instance.MarketServices.BuyListingService.BuyListingHandler(sender, e);
         }
 
         private void NatsClientOnOnAcceptBidding(object sender, AcceptBidMessage e)

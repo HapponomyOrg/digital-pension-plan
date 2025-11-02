@@ -7,11 +7,6 @@ namespace Version1.Market
     {
         public event EventHandler<BidEventArgs> CreateBid;
 
-        //public CreateBidService()
-        //{
-        //    Nats.NatsClient.C.OnMakeBidding += CreateBidHandler;
-        //}
-
         public void CreateBidLocally(Guid listingId, Bid bid)
         {
             var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);

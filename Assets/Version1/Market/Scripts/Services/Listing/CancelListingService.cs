@@ -7,11 +7,6 @@ namespace Version1.Market
     {
         public event EventHandler<ListingEventArgs> CancelListing;
 
-        public CancelListingService()
-        {
-            Nats.NatsClient.C.OnCancelListing += CancelListingHandler;
-        }
-
         public void CancelListingLocally(Listing listing)
         {
             PlayerData.PlayerData.Instance.AddCards(listing.Cards);

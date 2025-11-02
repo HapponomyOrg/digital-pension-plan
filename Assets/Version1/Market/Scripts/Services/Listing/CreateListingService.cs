@@ -8,11 +8,6 @@ namespace Version1.Market
     {
         public event EventHandler<ListingEventArgs> CreateListing;
 
-        public CreateListingService()
-        {
-            Nats.NatsClient.C.OnListCards += CreateListingHandler;
-        }
-
         public void CreateListingLocally(Listing listing)
         {
             PlayerData.PlayerData.Instance.RemoveCards(listing.Cards);

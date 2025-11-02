@@ -7,11 +7,6 @@ namespace Version1.Market
     {
         public event EventHandler<ListingEventArgs> BuyListing;
 
-        public BuyListingService()
-        {
-            Nats.NatsClient.C.OnBuyCards += BuyListingHandler;
-        }
-
         public void BuyListingLocally(Listing listing)
         {
             RemoveListing(listing);
