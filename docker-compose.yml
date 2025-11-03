@@ -13,15 +13,12 @@ services:
 
   nats:
     image: nats:latest
-    restart: always
+    container_name: pensionplan-nats
+    restart: unless-stopped
     ports:
       - "4222:4222"
-      - "8222:8222"
       - "6222:6222"
-      - "8080:8080"
-    volumes:
-      - ./nats.conf:/etc/nats/nats.conf
-    command: [ "-c", "/etc/nats/nats.conf" ]
+      - "8222:8222"
 
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -33,3 +30,16 @@ services:
       - "5050:80"
     depends_on:
       - postgres
+     
+  websocket-proxy:
+    image: alpine:latest
+    container_name: pensionplan-websocket
+    command: sh -c "echo 'Starting websocket-proxy...' && /app/websocket-proxy"
+    volumes:
+      - ./websocket-proxy:/app/websocket-proxy:ro
+    depends_on:
+      - nats
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+

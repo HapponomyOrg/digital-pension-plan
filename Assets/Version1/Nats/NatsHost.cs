@@ -11,6 +11,7 @@ namespace Version1.Nats
     {
         public WebsocketClient WebSocketClient;
         private static NatsHost _instance;
+
         public static NatsHost C
         {
             get
@@ -23,8 +24,15 @@ namespace Version1.Nats
 
         private NatsHost()
         {
-            // Initialize WebSocketClient here
-            WebSocketClient = new WebsocketClient("ws://192.168.2.9:8080/ws");
+        #if UNITY_WEBGL && !UNITY_EDITOR
+            string url = Application.absoluteURL;
+            System.Uri uri = new System.Uri(url);
+            string wsUrl = $"ws://{uri.Host}:8080/ws";
+            WebSocketClient = new WebsocketClient(wsUrl);
+        #else
+            // For testing in Unity Editor
+            WebSocketClient = new WebsocketClient("ws://localhost:8080/ws");
+        #endif
         }
 
         /*public event EventHandler<ListCardsmessage> OnListCards;
