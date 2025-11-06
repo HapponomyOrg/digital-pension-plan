@@ -63,8 +63,15 @@ namespace Version1.Utilities
         {
             DontDestroyOnLoad(gameObject);
 
-            // Initialize NatsClient first (this creates the singleton)
-            WebSocketClient = new WebsocketClient("ws://localhost:8080/ws");
+            #if UNITY_WEBGL && !UNITY_EDITOR
+                string url = Application.absoluteURL;
+                System.Uri uri = new System.Uri(url);
+                string wsUrl = $"ws://{uri.Host}:8080/ws";
+                WebSocketClient = new WebsocketClient(wsUrl);
+            #else
+                // For testing in Unity Editor
+                WebSocketClient = new WebsocketClient("ws://localhost:8080/ws");
+            #endif
 
             try
             {
@@ -128,7 +135,6 @@ namespace Version1.Utilities
         void Update()
         {
             WebSocketClient?.DispatchMessageQueue();
-
         }
 
         private void NatsClientOnOnEndOfRounds(object sender, EndOfRoundsMessage e)
