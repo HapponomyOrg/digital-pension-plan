@@ -14,7 +14,7 @@ namespace UI
         [SerializeField] private RectTransform displayTransform;
 
         protected List<UICard> cards;
-        
+
         private void Start()
         {
             PlayerManager.Instance.CardReleased += (sender, args) =>
@@ -23,7 +23,7 @@ namespace UI
                 LayoutRebuilder.ForceRebuildLayoutImmediate(displayTransform);
             };
         }
-        
+
         protected virtual void UpdateDisplay()
         {
             cards = CardsInBox();
@@ -31,7 +31,7 @@ namespace UI
             foreach (var c in cards)
                 c.transform.SetParent(displayTransform.transform);
         }
-        
+
         private List<UICard> CardsInBox()
         {
             var objs = PlayerManager.Instance.UiCards;

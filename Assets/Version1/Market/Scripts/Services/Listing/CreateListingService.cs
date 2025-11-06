@@ -1,6 +1,7 @@
 using System;
 using Version1.Nats;
 using Version1.Nats.Messages.Client;
+using Version1.Utilities;
 
 namespace Version1.Market
 {
@@ -26,7 +27,7 @@ namespace Version1.Market
                 listing.TimeStamp.ToString("o")
                 );
 
-            Nats.NatsClient.C.Publish(message.LobbyID.ToString(), message);
+            NetworkManager.Instance.Publish(message.LobbyID.ToString(), message);
         }
 
         public void CreateListingHandler(object sender, ListCardsmessage message)

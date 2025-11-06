@@ -64,7 +64,7 @@ namespace Version1.Utilities
             DontDestroyOnLoad(gameObject);
 
             // Initialize NatsClient first (this creates the singleton)
-            WebSocketClient = new WebsocketClient("ws://192.168.2.9:8080/ws");
+            WebSocketClient = new WebsocketClient("ws://localhost:8080/ws");
 
             try
             {

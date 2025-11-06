@@ -27,7 +27,7 @@ namespace Version1.Utilities
 
         public MarketServices MarketServices { get; }
 
-        private readonly Phase[] debtBasedPhases =
+        private readonly string[] debtBasedPhases =
         {
             // Trading
             // Debt payment
@@ -42,7 +42,7 @@ namespace Version1.Utilities
             // Pension Calculation
         };
         
-        private readonly Phase[] sustainableMoneyPhases =
+        private readonly string[] sustainableMoneyPhases =
         {
             // Trading
             // Money correction
@@ -73,7 +73,7 @@ namespace Version1.Utilities
 
         private string[] phases;
 
-        private int currentPhase;
+        public int CurrentPhase { get; private set; }
 
         private GameManager()
         {
@@ -105,7 +105,7 @@ namespace Version1.Utilities
         
         private void LoadNextPhase()
         {
-            SceneManager.LoadScene(phases[++currentPhase]);
+            SceneManager.LoadScene(phases[++CurrentPhase]);
         }
 
         // public void InitPhase(int p)

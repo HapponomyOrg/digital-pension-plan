@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI
-{[Obsolete]
+{
+    [Obsolete]
     public class BuyListingOverlay : MonoBehaviour
     {
         [SerializeField] private TMP_Text priceDisplay;
@@ -13,7 +14,7 @@ namespace UI
         [SerializeField] private Button cancelButton;
 
         public string Current;
-        
+
 
         public void Open(string auctionId)
         {
@@ -23,8 +24,8 @@ namespace UI
             // Get the data of the given auction
             var listingData = MarketManager.Instance.GetListing(auctionId);
 
-            messageDisplay.text = listingData.Price > PlayerManager.Instance.Balance 
-                ? "You don't have enough money to buy this listing" 
+            messageDisplay.text = listingData.Price > PlayerManager.Instance.Balance
+                ? "You don't have enough money to buy this listing"
                 : "Are you sure you want to buy this listing?";
 
             priceDisplay.text = $"{listingData.Price.ToString()}$";
@@ -35,23 +36,23 @@ namespace UI
 
             cancelButton.onClick.RemoveAllListeners();
             cancelButton.onClick.AddListener(() => { Current = ""; }
-        
+
         );
 
-        confirmButton.onClick.RemoveAllListeners();
-        confirmButton.onClick.AddListener(() =>
-            {
-                // Ensure player has enough money to buy the cards
-                if (PlayerManager.Instance.Balance < listingData.Price)
-                    return;
-                
-                // Handle the purchase of the cards
-                MarketManager.Instance.BuyListingRequest(auctionId);
+            confirmButton.onClick.RemoveAllListeners();
+            confirmButton.onClick.AddListener(() =>
+                {
+                    // Ensure player has enough money to buy the cards
+                    if (PlayerManager.Instance.Balance < listingData.Price)
+                        return;
 
-                // Turn of the buttons until a confirmation or denial is received
-                confirmButton.interactable = false;
-                cancelButton.interactable = false;
-            });
+                    // Handle the purchase of the cards
+                    MarketManager.Instance.BuyListingRequest(auctionId);
+
+                    // Turn of the buttons until a confirmation or denial is received
+                    confirmButton.interactable = false;
+                    cancelButton.interactable = false;
+                });
         }
     }
 }

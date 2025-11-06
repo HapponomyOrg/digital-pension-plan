@@ -24,7 +24,8 @@ namespace Version1.Host.Scripts
         }
 
         private int _points;
-        public int Points         {
+        public int Points
+        {
             get => _points;
             set
             {

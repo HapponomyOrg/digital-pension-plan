@@ -1,5 +1,6 @@
 using System;
 using Version1.Nats.Messages.Client;
+using Version1.Utilities;
 
 namespace Version1.Market
 {
@@ -35,7 +36,7 @@ namespace Version1.Market
                 bid.BidderName
                 );
 
-            Nats.NatsClient.C.Publish(message.LobbyID.ToString(), message);
+            NetworkManager.Instance.Publish(message.LobbyID.ToString(), message);
         }
 
         public void RejectBidHandler(RejectBidMessage message)

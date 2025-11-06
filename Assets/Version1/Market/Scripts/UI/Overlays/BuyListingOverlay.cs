@@ -26,7 +26,7 @@ namespace Version1.Market
 
         private void Confirm(Listing listing)
         {
-            GameManager.Instance.MarketServices.BuyListingService.BuyListingLocally(listing);
+            Utilities.GameManager.Instance.MarketServices.BuyListingService.BuyListingLocally(listing);
             Close();
         }
     }

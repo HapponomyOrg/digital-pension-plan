@@ -6,7 +6,8 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace UI
-{[Obsolete]
+{
+    [Obsolete]
     public class SellListingDisplay : MonoBehaviour
     {
         [SerializeField] private Button cancelButton;
@@ -54,7 +55,7 @@ namespace UI
         public void AddBidding(Listing listing, Bidding bidding)
         {
             var display = Instantiate(biddingPrefab, biddingList);
-            display.SetDisplay(listing,bidding);
+            display.SetDisplay(listing, bidding);
             receivedBiddings.Add(display);
         }
 
@@ -65,7 +66,7 @@ namespace UI
             {
                 if (!receivedBiddings[i])
                     return;
-                
+
                 Destroy(receivedBiddings[i].gameObject);
                 receivedBiddings.RemoveAt(i);
             }

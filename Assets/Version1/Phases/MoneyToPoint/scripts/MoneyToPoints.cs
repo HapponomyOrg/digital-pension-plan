@@ -1,8 +1,9 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-namespace Version1.MoneyToPoint.scripts
+namespace Version1.Phases.MoneyToPoint.scripts
 {
     public class MoneyToPoints : MonoBehaviour
     {
@@ -32,7 +33,7 @@ namespace Version1.MoneyToPoint.scripts
                 PointTMP.text = _points.ToString();
             }
         }
-        
+
         private void Start()
         {
             Balance = PlayerData.PlayerData.Instance.Balance;
@@ -63,6 +64,11 @@ namespace Version1.MoneyToPoint.scripts
             PlayerData.PlayerData.Instance.Balance = 0;
             PlayerData.PlayerData.Instance.Points = Points;
 
+        }
+
+        public void Continue()
+        {
+            SceneManager.LoadScene(Utilities.GameManager.LOADING);
         }
     }
 }

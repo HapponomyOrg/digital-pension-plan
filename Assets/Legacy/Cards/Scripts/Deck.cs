@@ -37,7 +37,7 @@ namespace Deck
                 {
                     handCards[j] = playerCards[j].ID;
                 }
-                
+
                 StartGameMessage msg;
                 if (inbalanceMode)
                 {

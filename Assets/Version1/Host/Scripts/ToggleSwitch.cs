@@ -9,27 +9,28 @@ namespace Version1.Host.Scripts
 {
     public class ToggleSwitch : MonoBehaviour, IPointerClickHandler
     {
-        [Header("Slider setup")] 
+        [Header("Slider setup")]
         [SerializeField, Range(0, 1f)]
         protected float sliderValue;
         public bool CurrentValue { get; private set; }
-        
+
         private bool _previousValue;
         private Slider _slider;
 
-        [Header("Animation")] 
+        [Header("Animation")]
         [SerializeField, Range(0, 1f)] private float animationDuration = 0.5f;
-        [SerializeField] private AnimationCurve slideEase =
+        [SerializeField]
+        private AnimationCurve slideEase =
             AnimationCurve.EaseInOut(0, 0, 1, 1);
 
         private Coroutine _animateSliderCoroutine;
 
-        [Header("Events")] 
+        [Header("Events")]
         [SerializeField] private UnityEvent onToggleOn;
         [SerializeField] private UnityEvent onToggleOff;
 
         protected Action transitionEffect;
-        
+
         protected virtual void OnValidate()
         {
             SetupToggleComponents();
@@ -72,13 +73,13 @@ namespace Version1.Host.Scripts
             Toggle();
         }
 
-        
+
         private void Toggle()
         {
-                SetStateAndStartAnimation(!CurrentValue);
+            SetStateAndStartAnimation(!CurrentValue);
         }
-        
-        
+
+
         private void SetStateAndStartAnimation(bool state)
         {
             _previousValue = CurrentValue;
@@ -115,7 +116,7 @@ namespace Version1.Host.Scripts
                     _slider.value = sliderValue = Mathf.Lerp(startValue, endValue, lerpFactor);
 
                     transitionEffect?.Invoke();
-                        
+
                     yield return null;
                 }
             }

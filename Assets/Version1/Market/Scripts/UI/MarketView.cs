@@ -14,7 +14,7 @@ namespace Version1.Market
 
         private void Start()
         {
-            var marketServices = GameManager.Instance.MarketServices;
+            var marketServices = Utilities.GameManager.Instance.MarketServices;
 
             marketServices.CreateListingService.CreateListing += CreateListing;
             marketServices.BuyListingService.BuyListing += BuyListing;
@@ -29,7 +29,7 @@ namespace Version1.Market
 
         private void OnDestroy()
         {
-            var marketServices = GameManager.Instance.MarketServices;
+            var marketServices = Utilities.GameManager.Instance.MarketServices;
 
             marketServices.CreateListingService.CreateListing -= CreateListing;
             marketServices.BuyListingService.BuyListing -= BuyListing;
@@ -47,9 +47,9 @@ namespace Version1.Market
         {
             var playerId = PlayerData.PlayerData.Instance.PlayerId;
 
-            var peerListings = GameManager.Instance.ListingRepository.GetPeerListings(playerId);
+            var peerListings = Utilities.GameManager.Instance.ListingRepository.GetPeerListings(playerId);
             var outgoingList = new List<(Guid listing, Guid bid)>();
-            var personalListings = GameManager.Instance.ListingRepository.GetPersonalListings(playerId);
+            var personalListings = Utilities.GameManager.Instance.ListingRepository.GetPersonalListings(playerId);
 
             foreach (var listing in peerListings) 
             { 

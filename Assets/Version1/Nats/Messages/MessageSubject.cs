@@ -20,6 +20,7 @@ namespace Version1.Nats.Messages
             RejectBidding = "RejectBidding",
             RespondBidding = "RespondBidding",
             AcceptCounterBidding = "AcceptCounterBidding",
+            Continue = "Continue",
             // Client Misc.
             JoinRequest = "JoinRequest",
             // Host Hosting
@@ -30,7 +31,7 @@ namespace Version1.Nats.Messages
             EndOfRounds = "EndOfRounds",
             EndGame = "EndGame",
             AbortSession = "AbortSession",
-            SkipRounds = "SkipRound", 
+            SkipRounds = "SkipRound",
             // Host Misc.
             ConfirmJoin = "ConfirmJoin",
             Rejected = "Rejected",

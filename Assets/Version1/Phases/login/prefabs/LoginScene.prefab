@@ -1413,6 +1413,9 @@ MonoBehaviour:
   GameCode: {fileID: 2302879016919944441}
   CreateButton: {fileID: 781719681185085072}
   NatsError: {fileID: 0}
+  NameError: {fileID: 0}
+  NameErrorText: {fileID: 0}
+  NameErrorRefCode: {fileID: 0}
 --- !u!1 &4769602808860791287
 GameObject:
   m_ObjectHideFlags: 0
@@ -1893,7 +1896,7 @@ MonoBehaviour:
   m_CharacterValidation: 0
   m_RegexValue: 
   m_GlobalPointSize: 40
-  m_CharacterLimit: 0
+  m_CharacterLimit: 14
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls: []
@@ -2426,7 +2429,7 @@ MonoBehaviour:
   m_CharacterValidation: 2
   m_RegexValue: 
   m_GlobalPointSize: 40
-  m_CharacterLimit: 0
+  m_CharacterLimit: 3
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls: []
@@ -3322,19 +3325,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1599655959232253993, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 200
+      value: 155.063
       objectReference: {fileID: 0}
     - target: {fileID: 1790404883963299488, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3726497887012483770, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -3.024
+      objectReference: {fileID: 0}
+    - target: {fileID: 3726497887012483770, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 50
+      value: 48.166
+      objectReference: {fileID: 0}
+    - target: {fileID: 3726497887012483770, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.16999817
       objectReference: {fileID: 0}
     - target: {fileID: 3726497887012483770, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 73.437
+      value: 72.52
       objectReference: {fileID: 0}
     - target: {fileID: 3889288521140464807, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
       propertyPath: m_SizeDelta.x
@@ -3395,6 +3406,10 @@ PrefabInstance:
     - target: {fileID: 5627263018344372514, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
       propertyPath: m_TextStyleHashCode
       value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 6265515094420647004, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
+      propertyPath: m_Vertical
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6265515094420647004, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
       propertyPath: m_MovementType
@@ -3490,7 +3505,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9141363067687706189, guid: addb32c2ae70d1c4395cad7b322214b6, type: 3}
       propertyPath: m_SizeDelta.x
-      value: -17
+      value: 0.000061035
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:

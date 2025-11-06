@@ -1,5 +1,6 @@
 using System;
 using Version1.Nats.Messages.Client;
+using Version1.Utilities;
 
 namespace Version1.Market
 { 
@@ -23,7 +24,7 @@ namespace Version1.Market
                 listing.ListingId.ToString()
                 );
 
-            Nats.NatsClient.C.Publish(message.LobbyID.ToString(), message);
+            NetworkManager.Instance.Publish(message.LobbyID.ToString(), message);
         }
 
         private void SellListing(Listing listing)

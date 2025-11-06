@@ -1,5 +1,6 @@
 using System;
 using Version1.Nats.Messages.Client;
+using Version1.Utilities;
 
 namespace Version1.Market
 {
@@ -36,7 +37,7 @@ namespace Version1.Market
                 bid.TimeStamp.ToString("o")
                 );
 
-            Nats.NatsClient.C.Publish(message.LobbyID.ToString(), message);
+            NetworkManager.Instance.Publish(message.LobbyID.ToString(), message);
         }
 
         public void CreateBidHandler(object sender, CreateBidMessage message)

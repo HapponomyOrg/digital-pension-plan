@@ -18,7 +18,7 @@ namespace Version1.Loading
             else
                 planet.transform.eulerAngles += Vector3.forward * (rotationSpeed * Time.deltaTime);
         }
-    
+
         public void SetLoadingMessage(string message)
         {
             loadingMessage.text = message;

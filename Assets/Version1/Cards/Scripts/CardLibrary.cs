@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Version1.Cards.Scripts
 {
-[CreateAssetMenu(fileName = "CardLibrary", menuName ="Version2/Cards/CardLibrary")]
+    [CreateAssetMenu(fileName = "CardLibrary", menuName = "Version2/Cards/CardLibrary")]
     public class CardLibrary : ScriptableObject
     {
         public CardData[] cards;
@@ -15,7 +15,7 @@ namespace Version1.Cards.Scripts
             // Safety to only fill once
             if (cardList.Count > 0)
                 return;
-            
+
             cardList = new Dictionary<int, CardData>();
             foreach (var card in cards)
             {

@@ -1,5 +1,4 @@
 using System;
-using Legacy;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,7 +15,7 @@ public class IntrestsFunctions : MonoBehaviour
     public TextMeshProUGUI changeInput, newBalanceInput;
 
     [SerializeField] private Button continueButton;
-    
+
     private void Start()
     {
         continueButton.onClick.RemoveAllListeners();
@@ -27,7 +26,7 @@ public class IntrestsFunctions : MonoBehaviour
                 if (GameManager.Instance.Round == 4)
                 {
                     GameManager.Instance.ChangeScene(GameManager.Instance.pointsDonateScene);
-                }   
+                }
             }
         });
     }
@@ -86,16 +85,16 @@ public class IntrestsFunctions : MonoBehaviour
         int debt = PlayerManager.Instance.Dept;
         int remainder = PlayerManager.Instance.IntrestRemainder;
         int balance = PlayerManager.Instance.Balance;
-        
-        
-        
+
+
+
         // TODO CHECK IF THIS IS THE WAY TO GO FOR THE LAST ROUND CALCULATION OF THE DEBT BASED SYSTEM
         if (GameManager.Instance.Round == 4)
         {
             int total = (int)(debt * 1.1f) + remainder;
             // rounded to thousands
             int toPay = ((int)(total / 1000)) * 1000;
-            
+
             if (balance > toPay)
             {
                 PlayerManager.Instance.RemoveBalance(toPay);
@@ -104,7 +103,7 @@ public class IntrestsFunctions : MonoBehaviour
             {
                 toPay -= balance;
                 PlayerManager.Instance.RemoveBalance(toPay);
-                
+
                 int result = (toPay / 1000);
 
                 PlayerManager.Instance.Points -= result;
@@ -125,7 +124,7 @@ public class IntrestsFunctions : MonoBehaviour
             {
                 PlayerManager.Instance.Dept += toPay;
             }
-            
+
             PlayerManager.Instance.IntrestRemainder = intrest - toPay;
             debtInput.text = debt.ToString();
             remainderInput.text = remainder.ToString();

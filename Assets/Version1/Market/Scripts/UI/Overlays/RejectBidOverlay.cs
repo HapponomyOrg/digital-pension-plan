@@ -26,7 +26,7 @@ namespace Version1.Market
 
         private void Confirm(Guid listingId, Bid bid)
         {
-            GameManager.Instance.MarketServices.RejectBidService.RejectBidLocally(listingId, bid);
+            Utilities.GameManager.Instance.MarketServices.RejectBidService.RejectBidLocally(listingId, bid);
             Close();
         }
     }

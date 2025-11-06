@@ -54,7 +54,7 @@ namespace Version1.Market
                 bidAmount,
                 DateTime.Now);
 
-            GameManager.Instance.MarketServices.CreateBidService.CreateBidLocally(listingId, bid);
+            Utilities.GameManager.Instance.MarketServices.CreateBidService.CreateBidLocally(listingId, bid);
             Close();
         }
 

@@ -26,7 +26,7 @@ namespace Version1.Market
 
         private void Confirm(Guid listingId, Bid bid)
         {
-            GameManager.Instance.MarketServices.CancelBidService.CancelBidLocally(listingId, bid);
+            Utilities.GameManager.Instance.MarketServices.CancelBidService.CancelBidLocally(listingId, bid);
             Close();
         }
     }

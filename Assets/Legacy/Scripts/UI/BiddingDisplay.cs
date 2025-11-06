@@ -19,18 +19,18 @@ namespace UI
         [SerializeField] private Button cancelBidding;
 
         private int biddingPrice;
-        
+
         public void SetDisplay(Bidding bidding)
         {
             var listing = MarketManager.Instance.GetListing(bidding.AuctionId);
             listing.AddBidding(this);
 
             biddingPrice = bidding.OfferPrice;
-            
+
             sellerDisplay.text = listing.Seller;
             priceDisplay.text = listing.Price.ToString();
             offerDisplay.text = bidding.OfferPrice.ToString();
-            
+
             cancelBidding.onClick.AddListener(() =>
             {
                 MarketManager.Instance.CancelBidding(bidding, gameObject);
@@ -39,7 +39,7 @@ namespace UI
             });
             AddCardsToDisplay(listing.Cards);
         }
-        
+
         private void AddCardsToDisplay(int[] cards)
         {
             // Remove all the old cards
@@ -47,7 +47,7 @@ namespace UI
                 Destroy(child.gameObject);
 
             Array.Sort(cards);
-            
+
             // Generate the new cards
             foreach (var card in cards)
             {

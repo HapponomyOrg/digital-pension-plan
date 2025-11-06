@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class Timer : MonoBehaviour
 {
     [SerializeField] public int TotalRoundTime = 240;
-    
+
     [SerializeField] private TMP_Text RoundTimerText;
     [SerializeField] private Image TimerImage;
 
@@ -56,7 +56,7 @@ public class Timer : MonoBehaviour
                     }
                     else
                     {
-                        RoundTimerText.color = Color.white;   
+                        RoundTimerText.color = Color.white;
                     }
 
                     RoundTimerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);

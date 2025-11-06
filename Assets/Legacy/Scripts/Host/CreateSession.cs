@@ -8,7 +8,8 @@ using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace Host
-{[Obsolete]
+{
+    [Obsolete]
     public class CreateSession : MonoBehaviour
     {
         [SerializeField] private Deck.Deck deck;
@@ -66,9 +67,9 @@ namespace Host
             var msg = new CreateSessionMessage(DateTime.Now.ToString("o"), Lobby,
                 playerNumber,
                 Lobby);
-            
-            NatsHost.C.Publish(Lobby.ToString(),msg);
-            
+
+            NatsHost.C.Publish(Lobby.ToString(), msg);
+
             NatsHost.C.OnJoinrequest += HandleJoinSession;
         }
 
@@ -136,8 +137,8 @@ namespace Host
                     RejectedMessage rejectedMessage = new RejectedMessage(DateTime.Now.ToString("o"), msg.LobbyID,
                         -1, msg.PlayerName, "PlayerNameAlreadyTaken",
                         $"{msg.PlayerName} is already taken in the session you are trying to join. \n Please fill in another name and try again.");
-                    
-                    NatsHost.C.Publish(msg.LobbyID.ToString(),rejectedMessage);
+
+                    NatsHost.C.Publish(msg.LobbyID.ToString(), rejectedMessage);
                     return;
                 }
             }

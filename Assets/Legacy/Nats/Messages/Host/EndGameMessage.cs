@@ -11,7 +11,7 @@ namespace NATS
     {
         public EndGameMessage(string dateTime, int lobbyID, int playerID) : base(dateTime, MessageSubject.EndGame, lobbyID, playerID)
         {
-            
+
         }
 
         public override string ToString()

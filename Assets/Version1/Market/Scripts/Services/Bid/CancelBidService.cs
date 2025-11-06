@@ -1,5 +1,6 @@
 using System;
 using Version1.Nats.Messages.Client;
+using Version1.Utilities;
 
 namespace Version1.Market
 {
@@ -36,8 +37,7 @@ namespace Version1.Market
                 originalBidder
                 );
 
-            Nats.NatsClient.C.Publish(message.LobbyID.ToString(), message);
-
+            NetworkManager.Instance.Publish(message.LobbyID.ToString(), message);
             Utilities.GameManager.Instance.ListingRepository.RemoveListing(listing);
         }
 

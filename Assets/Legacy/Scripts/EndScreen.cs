@@ -28,7 +28,7 @@ public class EndScreen : MonoBehaviour
         else
         {
             NatsClient.Instance.OnHeartBeat += HandleHeartbeat;
-           // GenerateColumnNames(GameManager.Instance.numGames);
+            // GenerateColumnNames(GameManager.Instance.numGames);
             var playerData = new PlayerDataEnd();
             playerData.Name = PlayerManager.Instance.PlayerName;
             playerData.Points = PlayerManager.Instance.allPoints.ToArray();
@@ -58,7 +58,7 @@ public class EndScreen : MonoBehaviour
 
         if (!players.ContainsKey(msg.PlayerID))
         {
-            players.Add(msg.PlayerID,playerData);
+            players.Add(msg.PlayerID, playerData);
             GenerateDisplays();
         }
         else

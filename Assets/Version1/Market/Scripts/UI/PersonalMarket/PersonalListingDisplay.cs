@@ -18,7 +18,7 @@ namespace Version1.Market
 
         public void SetDisplay(Guid listingId, Dictionary<EListingAction, Action> listingActions)
         {
-            var listing = GameManager.Instance.ListingRepository.GetListing(listingId);
+            var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
 
             if (listing == null)
                 return; // TODO Error handling

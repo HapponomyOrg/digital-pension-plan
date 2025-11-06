@@ -30,6 +30,9 @@ namespace Version1.Phases.DonatePoints.scripts
         [SerializeField] private Transform playerListPrefab;
         [SerializeField] private Transform playerScrollView;
 
+        [SerializeField] private GameObject ToasterPrefab;
+        [SerializeField] private Transform ToasterList;
+
         private int _ownPoints;
 
         private int OwnPoints
@@ -70,10 +73,10 @@ namespace Version1.Phases.DonatePoints.scripts
         {
             playerListPrefab = Resources.Load<Transform>("Prefabs/Phases/DonatePoints/PlayerlistPrefab");
             playerScrollView = GameObject.Find("PlayerScrollView").transform;
-            
-            Nats.NatsClient.C.OnDonatePoints += OnOnDonatePoints;
 
-            Nats.NatsClient.C.OnHeartBeat += OnOnHeartBeat;
+            NetworkManager.Instance.WebSocketClient.OnDonatePoints += OnOnDonatePoints;
+
+            NetworkManager.Instance.WebSocketClient.OnHeartBeat += OnOnHeartBeat;
             otherNameTMP.text = "";
             otherPointsTMP.text = "0";
 
@@ -81,7 +84,7 @@ namespace Version1.Phases.DonatePoints.scripts
 
             OwnPoints = PlayerData.PlayerData.Instance.Points;
 
-            descriptionText.text = OwnPoints ! >= 1
+            descriptionText.text = OwnPoints! >= 1
                 ? "Please click on another player if you want to donate your point?"
                 : "Please click on another player if you want to donate one of your points?";
 
@@ -96,7 +99,14 @@ namespace Version1.Phases.DonatePoints.scripts
 
         private void OnOnDonatePoints(object sender, DonatePointsMessage e)
         {
-            OwnPoints = PlayerData.PlayerData.Instance.Points;
+            if (PlayerData.PlayerData.Instance.PlayerId != e.Receiver && e.PlayerID == PlayerData.PlayerData.Instance.PlayerId) return;
+
+            OwnPoints += e.Amount;
+
+            var toaster = Instantiate(ToasterPrefab, ToasterList);
+            toaster.GetComponent<ToasterScript>().toasterText.text =
+                $"Congratulations you received {e.Amount} points from {e.PlayerName}";
+
         }
 
         private void OnDonate()
@@ -107,7 +117,7 @@ namespace Version1.Phases.DonatePoints.scripts
 
             NetworkManager.Instance.Publish(PlayerData.PlayerData.Instance.LobbyID.ToString(),
                 new DonatePointsMessage(DateTime.Now.ToString("o"), PlayerData.PlayerData.Instance.LobbyID,
-                    PlayerData.PlayerData.Instance.PlayerId, _otherPlayer.PlayerId, _pointsToDonate));
+                    PlayerData.PlayerData.Instance.PlayerId, PlayerData.PlayerData.Instance.PlayerName, _otherPlayer.PlayerId, _pointsToDonate));
 
             if (OwnPoints == 0)
             {
@@ -164,7 +174,7 @@ namespace Version1.Phases.DonatePoints.scripts
                 plistprefab.ID = e.PlayerID;
                 plistprefab.Name = e.PlayerName;
                 plistprefab.Points = e.Points;
-                
+
                 var button = player.GetComponent<Button>();
                 button.onClick.RemoveAllListeners();
                 button.onClick.AddListener(() => OnPlayerClick(plistprefab));
@@ -187,12 +197,12 @@ namespace Version1.Phases.DonatePoints.scripts
         {
             OtherPoints = player.Points + _pointsToDonate;
             OtherName = player.Name;
-            descriptionText.text = OwnPoints ! >= 1
+            descriptionText.text = OwnPoints! >= 1
                 ? $"Do you want to donate your point to {OtherName}?"
                 : $"Do you want to donate some of your points to {OtherName}?";
 
             _otherPlayer.PlayerId = player.ID;
-            
+
             increaseButton.interactable = true;
             decreaseButton.interactable = true;
         }

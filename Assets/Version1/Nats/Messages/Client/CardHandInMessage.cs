@@ -13,7 +13,7 @@ namespace Version1.Nats.Messages.Client
 
         public override string ToString()
         {
-            return $"{DateTimeStamp} , Lobby: {LobbyID} , Subject: {Subject} , Player: {PlayerID} , Cards: {CardID}, Points: {Points}";
+            return $"{DateTimeStamp} , Lobby: {LobbyID} , Subject: {Subject} , Player: {PlayerID} , CardID: {CardID}, Points: {Points}";
         }
     }
 }

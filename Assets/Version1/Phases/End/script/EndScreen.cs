@@ -20,26 +20,26 @@ namespace Version1.End.script
             switch (PlayerData.PlayerData.Instance.Points)
             {
                 case > 1:
-                {
-                    var msg =
-                        $"Good Job! You collected {PlayerData.PlayerData.Instance.Points} points , This means that you are:";
-                    yield return StartCoroutine(DisplayTextLetterByLetter(text, msg));
-                    break;
-                }
+                    {
+                        var msg =
+                            $"Good Job! You collected {PlayerData.PlayerData.Instance.Points} points , This means that you are:";
+                        yield return StartCoroutine(DisplayTextLetterByLetter(text, msg));
+                        break;
+                    }
                 case 0:
-                {
-                    var msg =
-                        $"That's unfortunate! You collected {PlayerData.PlayerData.Instance.Points} point, This means that you are:";
-                    yield return StartCoroutine(DisplayTextLetterByLetter(text, msg));
-                    break;
-                }
+                    {
+                        var msg =
+                            $"That's unfortunate! You collected {PlayerData.PlayerData.Instance.Points} point, This means that you are:";
+                        yield return StartCoroutine(DisplayTextLetterByLetter(text, msg));
+                        break;
+                    }
                 default:
-                {
-                    var msg =
-                        $"Good Job! You collected {PlayerData.PlayerData.Instance.Points} point , This means that you are:";
-                    yield return StartCoroutine(DisplayTextLetterByLetter(text, msg));
-                    break;
-                }
+                    {
+                        var msg =
+                            $"Good Job! You collected {PlayerData.PlayerData.Instance.Points} point , This means that you are:";
+                        yield return StartCoroutine(DisplayTextLetterByLetter(text, msg));
+                        break;
+                    }
             }
 
             var message = PlayerData.PlayerData.Instance.Points switch

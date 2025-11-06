@@ -65,7 +65,7 @@ namespace Version1.Market
 
         private void CancelAction(Guid listingId)
         {
-            var listing = GameManager.Instance.ListingRepository.GetListing(listingId);
+            var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
 
             cancelListingOverlay.Open(listing);
             Console.WriteLine("CancelAction");
@@ -80,7 +80,7 @@ namespace Version1.Market
 
             listingDetailsDisplayPrefab.SetDisplay(listingId, displayActions);
 
-            var listing = GameManager.Instance.ListingRepository.GetListing(listingId);
+            var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
 
             var uniqueBidders = listing.BidRepository.GetUniqueBidders();
             var uniqueBids = new List<Guid>();

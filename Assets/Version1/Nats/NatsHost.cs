@@ -3,22 +3,31 @@ using UnityEngine;
 using System;
 using Version1.Nats.Messages;
 using Version1.Nats.Messages.Client;
+using Version1.Websocket;
 
 namespace Version1.Nats
 {
-    public class NatsHost : Connection
+    public class NatsHost
     {
-
-        public static NatsHost C { get; private set; }
-        public NatsHost()
+        public WebsocketClient WebSocketClient;
+        private static NatsHost _instance;
+        public static NatsHost C
         {
-            if (C != null) return;
-
-            C = this;
-            EventsReceived = new Queue<BaseMessage>();
+            get
+            {
+                if (_instance == null)
+                    _instance = new NatsHost();
+                return _instance;
+            }
         }
-        
-        public event EventHandler<ListCardsmessage> OnListCards;
+
+        private NatsHost()
+        {
+            // Initialize WebSocketClient here
+            WebSocketClient = new WebsocketClient("ws://localhost:8080/ws");
+        }
+
+        /*public event EventHandler<ListCardsmessage> OnListCards;
         public event EventHandler<BuyCardsRequestMessage> OnBuyCards;
         public event EventHandler<CancelListingMessage> OnCancelListing;
         public event EventHandler<DonateMoneyMessage> OnDonateMoney;
@@ -27,57 +36,39 @@ namespace Version1.Nats
         public event EventHandler<CardHandInMessage> OnCardHandIn;
         public event EventHandler<HeartBeatMessage> OnHeartBeat;
         public event EventHandler<JoinRequestMessage> OnJoinrequest;
-        public event EventHandler<string> MessageLog;
+        public event EventHandler<ContinueMessage> OnContinue;
+        public event EventHandler<string> MessageLog;*/
 
-        protected override void Subscribe()
+        public async void Subscribe(string sessionID)
         {
+            try
+            {
+                await WebSocketClient.Subscribe(sessionID);
+                throw new NotImplementedException("Subscribed");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Nats: Error during subscribing: {ex.Message}");
+                //OnError?.Invoke(this, "");
+            }
         }
 
-        // TODO() maybe we want to move this handle messages void into the function above.
+        public async void Publish(string sessionID, BaseMessage baseMessage, bool flushImmediately = true)
+        {
+            try
+            {
+                await WebSocketClient.Publish(sessionID, baseMessage);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Nats: Error during publishing: {ex.Message}");
+                //OnError?.Invoke(this, "");
+            }
+        }
+
         public void HandleMessages()
         {
-            if (EventsReceived.Count < 1) return;
-            var message = EventsReceived.Dequeue();
-
-
-            if (message.Subject != MessageSubject.HeartBeat)
-            {
-                MessageLog?.Invoke(null,message.ToString());    
-            }
-            
-            switch (message.Subject)
-            {
-                case MessageSubject.ListCards:
-                    OnListCards?.Invoke(null, (ListCardsmessage)message);
-                    break;
-                case MessageSubject.BuyCards:
-                    OnBuyCards?.Invoke(null, (BuyCardsRequestMessage)message);
-                    break;
-                case MessageSubject.CancelListing:
-                    OnCancelListing?.Invoke(null, (CancelListingMessage)message);
-                    break;
-                case MessageSubject.DonateMoney:
-                    OnDonateMoney?.Invoke(null, (DonateMoneyMessage)message);
-                    break;
-                case MessageSubject.DonatePoints:
-                    OnDonatePoints?.Invoke(null, (DonatePointsMessage)message);
-                    break;
-                case MessageSubject.DeptUpdate:
-                    OnDeptUpdate?.Invoke(null, (DeptUpdateMessage)message);
-                    break;
-                case MessageSubject.CardHandIn:
-                    OnCardHandIn?.Invoke(null, (CardHandInMessage)message);
-                    break;
-                case MessageSubject.HeartBeat:
-                    OnHeartBeat?.Invoke(null, (HeartBeatMessage)message);
-                    break;
-                case MessageSubject.JoinRequest:
-                    OnJoinrequest?.Invoke(null, (JoinRequestMessage)message);
-                    break;                
-                default:
-                    Debug.Log($"{message.Subject} is not a known subject");
-                    break;
-            }
+            WebSocketClient.DispatchMessageQueue();
         }
     }
 }

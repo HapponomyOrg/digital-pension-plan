@@ -26,7 +26,7 @@ namespace Version1.Market
 
         private void Confirm(Listing listing)
         {
-            GameManager.Instance.MarketServices.CancelListingService.CancelListingLocally(listing);
+            Utilities.GameManager.Instance.MarketServices.CancelListingService.CancelListingLocally(listing);
             Close();
         }
     }

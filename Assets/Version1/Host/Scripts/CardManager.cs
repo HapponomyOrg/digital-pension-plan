@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Version1.Cards.Scripts;
 using Version1.Nats.Messages.Host;
@@ -14,20 +15,25 @@ namespace Version1.Host.Scripts
     public class CardManager : MonoBehaviour
     {
         [SerializeField] private Cards.Scripts.CardLibrary _cardLibrary;
-        
+
         // This is the deck the host has for the game
         private List<CardData> _cardDeck;
+
+        private void Start()
+        {
+            StartGame(new Dictionary<int, PlayerListPrefab>());
+        }
 
         public CardManager(Cards.Scripts.CardLibrary cardLibrary)
         {
             _cardLibrary = cardLibrary;
         }
 
-        public void StartGame(Dictionary<int,PlayerListPrefab> players)
+        public void StartGame(Dictionary<int, PlayerListPrefab> players)
         {
             _cardDeck = new List<CardData>();
 
-            FillDeck();
+            FillDeck(players.Count);
             ShuffleDeck();
 
             var cardsPerPlayer = CalculateCardsPerPlayer(players.Count);
@@ -46,31 +52,36 @@ namespace Version1.Host.Scripts
                 StartGameMessage msg;
                 if (SessionData.Instance.InbalanceMode)
                 {
-                    Debug.Log($"Players get something");
                     msg = new StartGameMessage(DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, -1, player.Key,
                         CalculateBalancePerPlayer(player.Key), handCards, (int)SessionData.Instance.CurrentMoneySystem);
                 }
                 else
                 {
-                    Debug.Log($"6000");
                     msg = new StartGameMessage(DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, -1, player.Key, 6000,
                         handCards,
                         (int)SessionData.Instance.CurrentMoneySystem);
                 }
 
                 Debug.Log($"sent cards, msg: {msg}");
-                
+
                 Nats.NatsHost.C.Publish($"{SessionData.Instance.LobbyCode}", msg);
             }
         }
 
-        private void FillDeck()
+        private void FillDeck(int count)
         {
-            foreach (var card in _cardLibrary.cards)
+            var cardGame = new CardGame
             {
-                for (var i = 0; i < card.Amount; i++)
+                cardLibrary = _cardLibrary
+            };
+
+            var deck = cardGame.CreateDeck(count);
+
+            foreach (var card in deck)
+            {
+                for (var i = 0; i < card.Value; i++)
                 {
-                    _cardDeck.Add(card);
+                    _cardDeck.Add(card.Key);
                 }
             }
         }
@@ -104,15 +115,16 @@ namespace Version1.Host.Scripts
         {
             return numberOfPlayers switch
             {
+                <= 3 => 12,
                 4 => 10,
                 5 => 9,
                 6 => 8,
                 7 => 7,
-                _ => 12
+                _ => 6
             };
         }
 
-        private List<CardData> TakeCards(int amount)
+        public List<CardData> TakeCards(int amount)
         {
             List<CardData> takenCards = new List<CardData>();
             for (var i = 0; i < amount; i++)
@@ -129,6 +141,113 @@ namespace Version1.Host.Scripts
             }
 
             return takenCards;
+        }
+    }
+
+    internal class CardGame
+    {
+
+        public Cards.Scripts.CardLibrary cardLibrary;
+
+        private static readonly Dictionary<CardRarity, double> CardsPerPlayer = new()
+        {
+            { CardRarity.COMMON, 8 },
+            { CardRarity.UNCOMMON, 5.34 },
+            { CardRarity.RARE, 2.4 },
+            { CardRarity.ULTRARARE, 0.54 }
+        };
+
+        private static readonly Dictionary<CardRarity, int> CardPoints = new()
+        {
+            { CardRarity.COMMON, 1 },
+            { CardRarity.UNCOMMON, 2 },
+            { CardRarity.RARE, 3 },
+            { CardRarity.ULTRARARE, 5 }
+        };
+
+        private const int MinPointsPerPlayer = 7;
+        private static readonly double AvgCards = 244.0 / 15;
+
+        public Dictionary<CardData, int> CreateDeck(int numPlayers)
+        {
+            /*foreach (var card in cardLibrary.cards)
+            {
+            }*/
+
+            Dictionary<CardData, int> deck = InitializeDeck();
+            int minCards = (int)Math.Floor(AvgCards * numPlayers);
+            int minPoints = MinPointsPerPlayer * numPlayers;
+            int totalCards = 0, totalPoints = 0;
+            Dictionary<CardRarity, int> curIndices = Enum.GetValues(typeof(CardRarity))
+                .Cast<CardRarity>()
+                .ToDictionary(type => type, _ => 0);
+
+            foreach (var rarity in Enum.GetValues(typeof(CardRarity)).Cast<CardRarity>())
+            {
+                int newSets = (int)Math.Floor(CardsPerPlayer[rarity] * numPlayers / 4);
+                totalPoints += AddCardSets(deck, rarity, curIndices, newSets);
+                totalCards += 4 * newSets;
+            }
+
+            int typeIndex = 0;
+            CardRarity[] rarities = Enum.GetValues(typeof(CardRarity)).Cast<CardRarity>().ToArray();
+
+            while (totalPoints < minPoints)
+            {
+                CardRarity rarity = rarities[typeIndex];
+                if (curIndices[rarity] < CardsPerPlayer[rarity] * numPlayers)
+                {
+                    totalPoints += AddCardSets(deck, rarity, curIndices, 1);
+                }
+
+                typeIndex = (typeIndex + 1) % rarities.Length;
+            }
+
+            if (totalCards < minCards)
+            {
+                AddCardSets(deck, CardRarity.COMMON, curIndices, (int)Math.Round((minCards - totalCards) / 4.0));
+            }
+
+            return deck;
+        }
+
+        private Dictionary<CardData, int> InitializeDeck()
+        {
+            Dictionary<CardData, int> deck = new Dictionary<CardData, int>();
+            foreach (var card in cardLibrary.cards)
+            {
+                deck[card] = 0;
+            }
+
+            return deck;
+        }
+
+        private int AddCardSets(Dictionary<CardData, int> deck, CardRarity rarity,
+            Dictionary<CardRarity, int> curIndices, int numSets)
+        {
+            int points = 0;
+
+            foreach (var card in cardLibrary.cards)
+            {
+                /*if (card.Value == )
+                {
+
+                }*/
+            }
+
+            /*List<string> cards = CardCategories[rarity];*/
+            int curIndex = curIndices[rarity];
+
+            for (int i = 0; i < numSets; i++)
+            {
+                if (curIndex >= cardLibrary.cards.Length) curIndex = 0;
+                deck[cardLibrary.cards[curIndex]] += 4;
+                points += CardPoints[rarity];
+                curIndex++;
+            }
+
+            curIndices[rarity] = curIndex;
+            return points;
         }
     }
 }

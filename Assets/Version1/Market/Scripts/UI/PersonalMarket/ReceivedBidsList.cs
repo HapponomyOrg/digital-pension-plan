@@ -77,7 +77,7 @@ namespace Version1.Market
         // TODO implementation
         private void AcceptAction(Guid listingId, Guid bidId)
         {
-            var listing = GameManager.Instance.ListingRepository.GetListing(listingId);
+            var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
 
             var bidOwner = listing.BidRepository.GetBidOwner(bidId);
             var bid = listing.BidRepository.GetBidBetweenPlayer(bidOwner, bidId);
@@ -90,7 +90,7 @@ namespace Version1.Market
         // TODO implementation
         private void CounterAction(Guid listingId, Guid bidId)
         {
-            var listing = GameManager.Instance.ListingRepository.GetListing(listingId);
+            var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
 
             var bidOwner = listing.BidRepository.GetBidOwner(bidId);
             var bid = listing.BidRepository.GetBidBetweenPlayer(bidOwner, bidId);
@@ -102,7 +102,7 @@ namespace Version1.Market
         // TODO implementation
         private void RejectAction(Guid listingId, Guid bidId)
         {
-            var listing = GameManager.Instance.ListingRepository.GetListing(listingId);
+            var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
 
             var bidOwner = listing.BidRepository.GetBidOwner(bidId);
             var bid = listing.BidRepository.GetBidBetweenPlayer(bidOwner, bidId);

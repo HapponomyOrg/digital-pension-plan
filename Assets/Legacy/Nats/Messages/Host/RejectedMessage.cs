@@ -8,7 +8,7 @@ namespace NATS
         public string TargetPlayer;
         public string ReferenceID;
         public string Message;
-        
+
         public RejectedMessage(string dateTime, int lobbyID, int playerID, string targetPlayer, string referenceID, string message) : base(dateTime,
             MessageSubject.Rejected, lobbyID, playerID)
         {

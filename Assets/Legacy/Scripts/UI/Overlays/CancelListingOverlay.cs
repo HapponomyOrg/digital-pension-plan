@@ -4,13 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI
-{[Obsolete]
+{
+    [Obsolete]
     public class CancelListingOverlay : MonoBehaviour
     {
         [SerializeField] private Button confirmButton;
         [SerializeField] private Button cancelButton;
 
-        
+
         public void Open(string auctionId)
         {
             gameObject.SetActive(true);

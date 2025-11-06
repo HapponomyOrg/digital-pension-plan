@@ -7,7 +7,7 @@ namespace NATS
     {
         public int Receiver;
         public int[] Cards;
-        
+
         public ConfirmHandInMessage(string dateTime, int lobbyID, int playerID, int receiver, int[] cards) : base(dateTime, MessageSubject.ConfirmHandIn, lobbyID, playerID)
         {
             Receiver = receiver;

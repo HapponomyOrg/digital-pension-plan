@@ -2,7 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 
-namespace Version1.TakeALoan.scripts
+namespace Version1.Phases.TakeALoan.scripts
 {
     public class TakeALoan : MonoBehaviour
     {
@@ -26,18 +26,18 @@ namespace Version1.TakeALoan.scripts
                     descriptionText.text = "Here you can take a loan against 10% of interest you have to pay back after every round.";
                     break;
                 case MoneySystems.ClosedEconomy:
-                    descriptionText.text =  "Here you can take a loan against 10% of interest you have to pay back after every round.";
+                    descriptionText.text = "Here you can take a loan against 10% of interest you have to pay back after every round.";
                     break;
                 case MoneySystems.RealisticDebtDistribution:
-                    descriptionText.text =  "Here you can take a loan against 10% of interest you have to pay back after every round.";
+                    descriptionText.text = "Here you can take a loan against 10% of interest you have to pay back after every round.";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
+
             amountText.text = "0";
         }
-        
+
         public void IncreaseAmount()
         {
             _currentAmount += PriceStep;
@@ -47,7 +47,7 @@ namespace Version1.TakeALoan.scripts
 
             UpdateOverlay();
         }
-                
+
         public void DecreaseAmount()
         {
             _currentAmount -= PriceStep;
@@ -56,12 +56,12 @@ namespace Version1.TakeALoan.scripts
 
             UpdateOverlay();
         }
-        
+
         private void UpdateOverlay()
         {
             amountText.text = _currentAmount.ToString("N0", new System.Globalization.CultureInfo("de-DE"));
         }
-        
+
         public void TakeALoanButton()
         {
             PlayerData.PlayerData.Instance.Balance -= _currentAmount;

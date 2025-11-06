@@ -10,7 +10,7 @@ namespace Version1.Market
 
         public void AcceptBidLocally(Guid listingId, Bid bid)
         {
-            var listing = GameManager.Instance.ListingRepository.GetListing(listingId);
+            var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
 
             if (listing == null)
                 return; // TODO Error handling
@@ -36,9 +36,10 @@ namespace Version1.Market
                 originalBidder
                 );
 
-            Nats.NatsClient.C.Publish(message.LobbyID.ToString(), message);
 
-            GameManager.Instance.ListingRepository.RemoveListing(listing);
+            NetworkManager.Instance.Publish(message.LobbyID.ToString(), message);
+
+            Utilities.GameManager.Instance.ListingRepository.RemoveListing(listing);
         }
 
         public void AcceptBidHandler(object o, AcceptBidMessage message)
@@ -52,7 +53,7 @@ namespace Version1.Market
 
         private void ReceivedAcceptBid(Guid listingId, Guid bidId, int originalBidder)
         {
-            var listing = GameManager.Instance.ListingRepository.GetListing(listingId);
+            var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
 
             if (listing == null)
                 return; // TODO Error handling
@@ -65,7 +66,7 @@ namespace Version1.Market
                 PlayerData.PlayerData.Instance.AddToBalance(bid.BidOffer);
 
 
-            GameManager.Instance.ListingRepository.RemoveListing(listing);
+            Utilities.GameManager.Instance.ListingRepository.RemoveListing(listing);
 
             AcceptBid?.Invoke(this, new BidEventArgs(listing, bid));
         }

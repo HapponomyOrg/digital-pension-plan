@@ -4,9 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NATS;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 [Obsolete]
 public class HostSession : MonoBehaviour
@@ -178,15 +176,14 @@ public class HostSession : MonoBehaviour
     }
 
 
-    /*// TODO() make a resume and stop round message and implementation
-    public void EndGame()
+    /*public void EndGame()
     {
         EndGameMessage endGameMessage =
             new EndGameMessage(DateTime.Now.ToString("o"), NatsHost.C.LobbyID, -1);
         NatsHost.C.Publish(NatsHost.C.LobbyID.ToString(), endGameMessage);
     }*/
-    
-    
+
+
     public void EndOfRounds()
     {
         EndOfRoundsMessage endOfRoundsMessage = new EndOfRoundsMessage(DateTime.Now.ToString("o"), NatsHost.C.LobbyID, -1);

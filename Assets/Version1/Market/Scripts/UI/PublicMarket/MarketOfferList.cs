@@ -71,14 +71,14 @@ namespace Version1.Market
 
         private void BuyAction(Guid listingId)
         {
-            var listing = GameManager.Instance.ListingRepository.GetListing(listingId);
+            var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
             buyListingOverlay.Open(listing);
             Console.WriteLine("buyAction");
         }
 
         private void BidAction(Guid listingId)
         {
-            var listing = GameManager.Instance.ListingRepository.GetListing(listingId);
+            var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
             createBidOverlay.Open(listing);
             Console.WriteLine("bidAction");
         }

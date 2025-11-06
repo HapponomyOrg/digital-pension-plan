@@ -65,7 +65,7 @@ namespace Version1.Market
         // TODO implementation
         private void CancelAction(Guid listingId, Guid bidId)
         {
-            var listing = GameManager.Instance.ListingRepository.GetListing(listingId);
+            var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
 
             var bid = listing.BidRepository.GetBidBetweenPlayer(PlayerData.PlayerData.Instance.PlayerId, bidId);
 

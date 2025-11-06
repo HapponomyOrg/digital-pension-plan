@@ -68,7 +68,7 @@ namespace Version1.Market
                 price, 
                 selectedCards.ToArray());
 
-            GameManager.Instance.MarketServices.CreateListingService.CreateListingLocally(listing);
+            Utilities.GameManager.Instance.MarketServices.CreateListingService.CreateListingLocally(listing);
             Close();
         }
 
