@@ -1,45 +1,12 @@
+version: "3.9"
+
 services:
-  postgres:
-    image: postgres:latest
-    restart: always
-    environment:
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
-      POSTGRES_DB: mydatabase
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./db/postgresql/data:/var/lib/postgresql/data  # Relative path
-
-  nats:
-    image: nats:latest
-    container_name: pensionplan-nats
-    restart: unless-stopped
-    ports:
-      - "4222:4222"
-      - "6222:6222"
-      - "8222:8222"
-
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: myemail@example.com
-      PGADMIN_DEFAULT_PASSWORD: mypassword
-    ports:
-      - "5050:80"
-    depends_on:
-      - postgres
-     
   websocket-proxy:
-    image: alpine:latest
+    build: .
     container_name: pensionplan-websocket
-    command: sh -c "echo 'Starting websocket-proxy...' && /app/websocket-proxy"
-    volumes:
-      - ./websocket-proxy:/app/websocket-proxy:ro
-    depends_on:
-      - nats
     restart: unless-stopped
     ports:
       - "8080:8080"
-
+      - "4222:4222"
+      - "6222:6222"
+      - "8222:8222"

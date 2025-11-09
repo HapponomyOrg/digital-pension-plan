@@ -256,6 +256,75 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3456299276812665766, guid: 74b8aad4d06971f4287d1f198c997f3c, type: 3}
   m_PrefabInstance: {fileID: 3126027745964367766}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &845211572 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8816356562000421366, guid: 74b8aad4d06971f4287d1f198c997f3c, type: 3}
+  m_PrefabInstance: {fileID: 3126027745964367766}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &1008057180
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1008057182}
+  - component: {fileID: 1008057181}
+  m_Layer: 0
+  m_Name: PlayerData
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1008057181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1008057180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dbc473dca684221b1b33ec63d5bd148, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerName: Host
+  age: 0
+  gender: 0
+  playerId: -1
+  debt: 0
+  interestRemainder: 0
+  cards: 
+  allPoints: 
+  isBank: 0
+  currentMoneySystem: 0
+  balance: 0
+  points: 0
+  lobbyID: 0
+  RequestID: 
+--- !u!4 &1008057182
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1008057180}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1079033297
 GameObject:
   m_ObjectHideFlags: 0
@@ -653,6 +722,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 449738644}
     - target: {fileID: 4572458904322300796, guid: 74b8aad4d06971f4287d1f198c997f3c, type: 3}
+      propertyPath: cardManager
+      value: 
+      objectReference: {fileID: 259826985}
+    - target: {fileID: 4572458904322300796, guid: 74b8aad4d06971f4287d1f198c997f3c, type: 3}
       propertyPath: _cardManager
       value: 
       objectReference: {fileID: 259826985}
@@ -660,6 +733,10 @@ PrefabInstance:
       propertyPath: natsErrorTMP
       value: 
       objectReference: {fileID: 6215496504276992790}
+    - target: {fileID: 4572458904322300796, guid: 74b8aad4d06971f4287d1f198c997f3c, type: 3}
+      propertyPath: currentPhaseTMP
+      value: 
+      objectReference: {fileID: 845211572}
     - target: {fileID: 4604813635011723707, guid: 74b8aad4d06971f4287d1f198c997f3c, type: 3}
       propertyPath: m_Name
       value: HostScene
@@ -899,3 +976,4 @@ SceneRoots:
   - {fileID: 2013094382}
   - {fileID: 37487015}
   - {fileID: 259826986}
+  - {fileID: 1008057182}

@@ -209,7 +209,11 @@ namespace Version1.Utilities
 
         private void NatsClientOnOnConfirmJoin(object sender, ConfirmJoinMessage e)
         {
+            Debug.Log(PlayerData.PlayerData.Instance.RequestID);
+
             if (e.RequestID != PlayerData.PlayerData.Instance.RequestID) return;
+
+            Debug.Log("Transfer to loading screen");
 
             PlayerData.PlayerData.Instance.PlayerId = e.LobbyPlayerID;
             NetworkManager.Instance.WebSocketClient.clientID = e.LobbyPlayerID;

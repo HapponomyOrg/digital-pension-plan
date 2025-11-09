@@ -73,7 +73,7 @@ namespace Version1.Websocket
             _webSocket.OnMessage += OnMessageReceived;
 
             // Connect to the server
-            await _webSocket.Connect();
+            _ = _webSocket.Connect();
         }
 
         private void OnMessageReceived(byte[] bytes)
@@ -86,7 +86,7 @@ namespace Version1.Websocket
             {
                 var wsMessage = JsonUtility.FromJson<WebSocketMessage>(messageJson);
 
-                Debug.LogWarning($"{wsMessage.action} , {wsMessage.subject}");
+                //Debug.LogWarning($"{wsMessage.action} , {wsMessage.subject}");
 
                 if (wsMessage.action == "message")
                 {
@@ -110,7 +110,7 @@ namespace Version1.Websocket
                     }
 
                     string dataJson = messageJson.Substring(openBrace, closeBrace - openBrace + 1);
-                    Debug.LogWarning("Extracted data: " + dataJson);
+                    //Debug.LogWarning("Extracted data: " + dataJson);
 
                     var innerData = JsonUtility.FromJson<BaseMessage>(dataJson);
 
@@ -133,11 +133,16 @@ namespace Version1.Websocket
             Debug.LogWarning($"JSON data being parsed: [{jsonData}]");
             Debug.LogWarning($"JSON length: {jsonData.Length}");
 
+            var msg = JsonUtility.FromJson<BaseMessage>(jsonData);
+            if (msg.PlayerID == PlayerData.PlayerData.Instance.PlayerId)
+                return;
+
             try
             {
                 switch (subject)
                 {
                     case MessageSubject.ConfirmJoin:
+                        Debug.Log("confrim join test");
                         OnConfirmJoin?.Invoke(this, JsonUtility.FromJson<ConfirmJoinMessage>(jsonData));
                         break;
                     case MessageSubject.DeptUpdate:
