@@ -52,7 +52,6 @@ namespace Version1.Nats
             try
             {
                 await WebSocketClient.Subscribe(sessionID);
-                throw new NotImplementedException("Subscribed");
             }
             catch (Exception ex)
             {
