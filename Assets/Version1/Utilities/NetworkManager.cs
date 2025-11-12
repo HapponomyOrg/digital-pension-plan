@@ -2,7 +2,6 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Version1.Nats;
 using Version1.Nats.Messages;
 using Version1.Nats.Messages.Client;
 using Version1.Nats.Messages.Host;
@@ -29,7 +28,6 @@ namespace Version1.Utilities
 
         public WebsocketClient WebSocketClient;
 
-
         public async void Publish(string sessionID, BaseMessage baseMessage, bool flushImmediately = true)
         {
             try
@@ -45,7 +43,7 @@ namespace Version1.Utilities
 
         public async void Subscribe(string sessionID)
         {
-            if (initialized) 
+            if (initialized)
                 return;
 
             try
@@ -63,15 +61,17 @@ namespace Version1.Utilities
         {
             DontDestroyOnLoad(gameObject);
 
-            #if UNITY_WEBGL && !UNITY_EDITOR
+#if UNITY_WEBGL && !UNITY_EDITOR
                 string url = Application.absoluteURL;
                 System.Uri uri = new System.Uri(url);
                 string wsUrl = $"ws://{uri.Host}:8080/ws";
                 WebSocketClient = new WebsocketClient(wsUrl);
-            #else
-                // For testing in Unity Editor
-                WebSocketClient = new WebsocketClient("ws://localhost:8080/ws");
-            #endif
+#else
+            WebSocketClient = new WebsocketClient("ws://localhost:8080/ws");
+#endif
+
+            // This one is needed to handle the error screen
+            WebSocketClient.OnError += WebSocketClientOnOnError;
 
             try
             {
@@ -104,6 +104,12 @@ namespace Version1.Utilities
             WebSocketClient.OnConfirmCancelListing += NatsClientOnOnConfirmCancelListing;
             WebSocketClient.OnConfirmHandIn += NatsClientOnOnConfirmHandIn;
             WebSocketClient.OnEndOfRounds += NatsClientOnOnEndOfRounds;
+        }
+
+        private void WebSocketClientOnOnError(object sender, string e)
+        {
+            Debug.LogError("HIERO");
+            OnError?.Invoke(sender, e);
         }
 
         private void OnDestroy()
@@ -188,7 +194,7 @@ namespace Version1.Utilities
         private void NatsClientOnOnMakeBidding(object sender, CreateBidMessage e)
         {
             GameManager.Instance.MarketServices.CreateBidService.CreateBidHandler(sender, e);
-            // TODO MARKET FUNCTION 
+            // TODO MARKET FUNCTION
             //throw new NotImplementedException();
         }
 
@@ -241,7 +247,7 @@ namespace Version1.Utilities
         {
             // TODO MARKET FUNCTION
             //throw new NotImplementedException();
-            
+
             GameManager.Instance.MarketServices.BuyListingService.BuyListingHandler(sender, e);
         }
 

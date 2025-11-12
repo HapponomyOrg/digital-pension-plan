@@ -14,16 +14,16 @@ namespace Version1.Host.Scripts
 {
     public class Host : MonoBehaviour
     {
-        private int _currentRound = 0;
+        private int currentRound = 0;
 
-        private readonly string[] _debtBasedPhases =
+        private readonly string[] debtBasedPhases =
         {
             "MarketScene", "PayDeptScene", "TakeALoanScene", "Loading",
             "MarketScene", "PayDeptScene", "TakeALoanScene", "Loading",
             "MarketScene", "MoneyCorrectionScene", "MoneyToPointScene", "DonatePointsScene", "EndScene"
         };
 
-        private readonly string[] _sustainableMoneyPhases =
+        private readonly string[] sustainableMoneyPhases =
         {
             "MarketScene", "MoneyCorrectionScene", "Loading",
             "MarketScene", "MoneyCorrectionScene", "Loading",
@@ -31,21 +31,21 @@ namespace Version1.Host.Scripts
             "MoneyToPointScene", "DonatePointsScene", "EndScene"
         };
 
-        private readonly string[] _interestAtIntervalsPhases =
+        private readonly string[] interestAtIntervalsPhases =
         {
             "MarketScene", "MoneyCorrectionScene", "PayDeptScene", "TakeALoanScene", "Loading",
             "MarketScene", "MoneyCorrectionScene", "PayDeptScene", "TakeALoanScene", "Loading",
             "MarketScene", "MoneyCorrectionScene", "MoneyToPointScene", "DonatePointsScene", "EndScene"
         };
 
-        private readonly string[] _closedEconomyPhases =
+        private readonly string[] closedEconomyPhases =
         {
             "MarketScene", "MoneyCorrectionScene", "PayDeptScene", "TakeALoanScene", "Loading",
             "MarketScene", "MoneyCorrectionScene", "PayDeptScene", "TakeALoanScene", "Loading",
             "MarketScene", "MoneyCorrectionScene", "MoneyToPointScene", "DonatePointsScene", "EndScene"
         };
 
-        private readonly string[] _testPhases =
+        private readonly string[] testPhases =
         {
             "MarketScene", "MoneyCorrectionScene", "Loading",
             "MarketScene", "MoneyCorrectionScene", "Loading",
@@ -53,15 +53,15 @@ namespace Version1.Host.Scripts
             "MoneyToPointScene", "DonatePointsScene", "EndScene"
         };
 
-        private string[] _currentPhases;
+        private string[] currentPhases;
 
         [SerializeField] private CardManager cardManager;
         [SerializeField] private GameObject natsError;
         [SerializeField] private TMP_Text natsErrorTMP;
 
-        private Stopwatch _sessionDuration;
-        private bool _sessionIsActive = false;
-        private float _timeLeft = 300f;
+        private Stopwatch sessionDuration;
+        private bool sessionIsActive = false;
+        private float timeLeft = 300f;
 
         // Scenes
         [SerializeField] private GameObject createScene;
@@ -74,18 +74,18 @@ namespace Version1.Host.Scripts
         [SerializeField] private Button endGame;
 
         // Player management
-        private int _playerId = 0;
-        private Dictionary<int, PlayerListPrefab> _players;
+        private int playerId = 0;
+        private Dictionary<int, PlayerListPrefab> players;
         [SerializeField] private Transform playerListPrefab;
         [SerializeField] private GameObject playerScrollView;
 
         // Progression cards
-        private Dictionary<int, ProgressionCard> _progressionCards;
+        private Dictionary<int, ProgressionCard> progressionCards;
         [SerializeField] private GameObject progressionPrefab;
         [SerializeField] private Transform progressionScrollView;
 
         // Activity log
-        private List<GameObject> _activities;
+        private List<GameObject> activities;
         [SerializeField] private GameObject activityPrefab;
         [SerializeField] private GameObject activityScrollView;
 
@@ -101,7 +101,7 @@ namespace Version1.Host.Scripts
         [SerializeField] private TMP_Text currentPhaseTMP;
         [SerializeField] private TMP_Text nextPhaseTMP;
 
-        private bool _roundStarted = false;
+        private bool roundStarted = false;
 
         private void Start()
         {
@@ -137,28 +137,28 @@ namespace Version1.Host.Scripts
 
         private void ResetSessionState()
         {
-            _roundStarted = false;
-            _sessionIsActive = false;
-            _currentRound = 0;
+            roundStarted = false;
+            sessionIsActive = false;
+            currentRound = 0;
 
             ClearLogs();
 
-            _currentPhases = SessionData.Instance.CurrentMoneySystem switch
+            currentPhases = SessionData.Instance.CurrentMoneySystem switch
             {
-                MoneySystems.Sustainable => _sustainableMoneyPhases,
-                MoneySystems.DebtBased => _debtBasedPhases,
-                MoneySystems.InterestAtIntervals => _interestAtIntervalsPhases,
-                MoneySystems.ClosedEconomy => _closedEconomyPhases,
+                MoneySystems.Sustainable => sustainableMoneyPhases,
+                MoneySystems.DebtBased => debtBasedPhases,
+                MoneySystems.InterestAtIntervals => interestAtIntervalsPhases,
+                MoneySystems.ClosedEconomy => closedEconomyPhases,
                 MoneySystems.RealisticDebtDistribution => throw new NotImplementedException(),
                 _ => throw new ArgumentOutOfRangeException()
             };
 
-            _activities = new List<GameObject>();
-            _sessionDuration = new Stopwatch();
-            _players ??= new Dictionary<int, PlayerListPrefab>();
+            activities = new List<GameObject>();
+            sessionDuration = new Stopwatch();
+            players ??= new Dictionary<int, PlayerListPrefab>();
 
             ClearProgressionCards();
-            _progressionCards = new Dictionary<int, ProgressionCard>();
+            progressionCards = new Dictionary<int, ProgressionCard>();
         }
 
         private void InitializeUI()
@@ -174,7 +174,7 @@ namespace Version1.Host.Scripts
             progressionPrefab = Resources.Load<GameObject>("Prefabs/Host/ProgressionCard");
 
             // Reset session info
-            _sessionDuration.Reset();
+            sessionDuration.Reset();
             sessionDurationTMP.text = "";
             timeLeftTMP.text = "-";
             hostNameTMP.text = SessionData.Instance.HostName;
@@ -184,11 +184,11 @@ namespace Version1.Host.Scripts
             roundDurationTMP.text = SessionData.Instance.RoundDuration.ToString();
             creationTime.text = DateTime.Now.ToString("HH:mm:ss");
 
-            _sessionIsActive = true;
+            sessionIsActive = true;
 
             // Set phase info
-            currentPhaseTMP.text = _currentPhases[_currentRound].Split("Scene")[0];
-            nextPhaseTMP.text = _currentPhases[_currentRound + 1].Split("Scene")[0];
+            currentPhaseTMP.text = currentPhases[currentRound].Split("Scene")[0];
+            nextPhaseTMP.text = currentPhases[currentRound + 1].Split("Scene")[0];
 
             // Create progression cards
             CreateProgressionCards();
@@ -196,15 +196,15 @@ namespace Version1.Host.Scripts
 
         private void CreateProgressionCards()
         {
-            for (int i = 0; i < _currentPhases.Length; i++)
+            for (var i = 0; i < currentPhases.Length; i++)
             {
-                var phaseName = _currentPhases[i].Split("Scene");
+                var phaseName = currentPhases[i].Split("Scene");
                 var prefab = Instantiate(progressionPrefab, progressionScrollView);
                 prefab.gameObject.SetActive(true);
                 var card = prefab.GetComponent<ProgressionCard>();
                 card.Name.text = phaseName[0];
                 card.Status.text = "Not Started";
-                _progressionCards.Add(i, card);
+                progressionCards.Add(i, card);
             }
         }
 
@@ -257,7 +257,7 @@ namespace Version1.Host.Scripts
         private void OnCardHandIn(object sender, CardHandInMessage msg)
         {
             var cards = cardManager.TakeCards(4);
-            int[] intArray = new int[4];
+            var intArray = new int[4];
 
             foreach (var card in cards)
             {
@@ -270,9 +270,10 @@ namespace Version1.Host.Scripts
 
         private void OnJoinRequest(object sender, JoinRequestMessage msg)
         {
-            Debug.Log($"Join request received - PlayerID in message: {msg.PlayerID}, Assigning ID: {_playerId}");
+            Debug.Log($"Join request received - PlayerID in message: {msg.PlayerID}, Assigning ID: {playerId}");
 
-            if (_players.Any(record => record.Value.Name == msg.PlayerName))
+            if (players.Any(record =>
+                    string.Equals(record.Value.Name, msg.PlayerName, StringComparison.CurrentCultureIgnoreCase)))
             {
                 RejectedMessage rejectedMessage = new RejectedMessage(
                     DateTime.Now.ToString("o"), msg.LobbyID, -1, msg.PlayerName,
@@ -287,11 +288,11 @@ namespace Version1.Host.Scripts
             // Publish confirmation
             Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(), new ConfirmJoinMessage(
                 DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, -1,
-                _playerId, msg.PlayerName, msg.Age, msg.Gender, msg.RequestID));
+                playerId, msg.PlayerName, msg.Age, msg.Gender, msg.RequestID));
 
             // Create player UI
-            CreatePlayerUI(msg, _playerId);
-            _playerId++;
+            CreatePlayerUI(msg, playerId);
+            playerId++;
         }
 
         private void CreatePlayerUI(JoinRequestMessage msg, int assignedPlayerId)
@@ -330,15 +331,15 @@ namespace Version1.Host.Scripts
             plistprefab.Points = 0;
 
             Debug.Log($"Adding player to dictionary - ID: {assignedPlayerId}, Name: {msg.PlayerName}");
-            _players.Add(assignedPlayerId, plistprefab);
-            Debug.Log($"Dictionary now contains {_players.Count} players");
+            players.Add(assignedPlayerId, plistprefab);
+            Debug.Log($"Dictionary now contains {players.Count} players");
         }
 
         private void OnHeartBeat(object sender, HeartBeatMessage e)
         {
             DateTime parsedDate = DateTime.Parse(e.DateTimeStamp);
 
-            if (!_players.ContainsKey(e.PlayerID))
+            if (!players.ContainsKey(e.PlayerID))
             {
                 var player = Instantiate(playerListPrefab, playerScrollView.transform);
                 player.gameObject.SetActive(true);
@@ -349,14 +350,14 @@ namespace Version1.Host.Scripts
                 plistprefab.Balance = e.Balance;
                 plistprefab.Points = e.Points;
 
-                _players.Add(e.PlayerID, plistprefab);
+                players.Add(e.PlayerID, plistprefab);
             }
             else
             {
-                _players[e.PlayerID].LastPing = parsedDate;
-                _players[e.PlayerID].Name = e.PlayerName;
-                _players[e.PlayerID].Balance = e.Balance;
-                _players[e.PlayerID].Points = e.Points;
+                players[e.PlayerID].LastPing = parsedDate;
+                players[e.PlayerID].Name = e.PlayerName;
+                players[e.PlayerID].Balance = e.Balance;
+                players[e.PlayerID].Points = e.Points;
             }
         }
 
@@ -373,49 +374,49 @@ namespace Version1.Host.Scripts
 
         private void StartSessionOnClick()
         {
-            Debug.Log($"Starting session with {_players.Count} players");
-            foreach (var player in _players)
+            Debug.Log($"Starting session with {players.Count} players");
+            foreach (var player in players)
             {
                 Debug.Log($"Player {player.Key}: {player.Value.Name}");
             }
 
-            cardManager.StartGame(_players);
+            cardManager.StartGame(players);
             startRound.interactable = true;
             startSession.interactable = false;
             abortSession.interactable = true;
-            _sessionDuration.Start();
+            sessionDuration.Start();
         }
 
         private void StopRoundOnClick()
         {
-            _progressionCards[_currentRound].Status.text = "Finished";
+            progressionCards[currentRound].Status.text = "Finished";
 
             Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(),
-                new StopRoundMessage(DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, -1, _currentRound));
+                new StopRoundMessage(DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, -1, currentRound));
 
-            _currentRound++;
-            _roundStarted = false;
+            currentRound++;
+            roundStarted = false;
         }
 
         private void StartRoundOnClick()
         {
-            _progressionCards[_currentRound].Status.text = "Current";
+            progressionCards[currentRound].Status.text = "Current";
 
-            currentPhaseTMP.text = _currentPhases[_currentRound].Split("Scene")[0];
-            nextPhaseTMP.text = _currentPhases.Length == _currentRound + 1
+            currentPhaseTMP.text = currentPhases[currentRound].Split("Scene")[0];
+            nextPhaseTMP.text = currentPhases.Length == currentRound + 1
                 ? ""
-                : _currentPhases[_currentRound + 1].Split("Scene")[0];
+                : currentPhases[currentRound + 1].Split("Scene")[0];
 
-            if (_currentPhases[_currentRound].Contains("Market"))
+            if (currentPhases[currentRound].Contains("Market"))
             {
-                _timeLeft = 300;
+                timeLeft = 300;
             }
 
             Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(), new StartRoundMessage(
                 DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, -1,
-                _currentRound, _currentPhases[_currentRound], 100));
+                currentRound, currentPhases[currentRound], 100));
 
-            _roundStarted = true;
+            roundStarted = true;
         }
 
         private void EndGameOnClick()
@@ -431,26 +432,26 @@ namespace Version1.Host.Scripts
         // Utility Methods
         public void ClearLogs()
         {
-            if (_activities != null)
+            if (activities != null)
             {
-                foreach (var activity in _activities)
+                foreach (var activity in activities)
                 {
                     Destroy(activity.gameObject);
                 }
 
-                _activities.Clear();
+                activities.Clear();
             }
         }
 
         private void ClearProgressionCards()
         {
-            if (_progressionCards == null) return;
-            foreach (var card in _progressionCards.Values)
+            if (progressionCards == null) return;
+            foreach (var card in progressionCards.Values)
             {
                 Destroy(card.gameObject);
             }
 
-            _progressionCards.Clear();
+            progressionCards.Clear();
         }
 
         private void OnMessageLog(object sender, string e)
@@ -458,12 +459,12 @@ namespace Version1.Host.Scripts
             var activity = Instantiate(activityPrefab, activityScrollView.transform);
             activity.GetComponentInChildren<TMP_Text>().text = e;
             activity.SetActive(true);
-            _activities.Add(activity);
+            activities.Add(activity);
 
-            if (_activities.Count > 20)
+            if (activities.Count > 20)
             {
-                Destroy(_activities[0]);
-                _activities.RemoveAt(0);
+                Destroy(activities[0]);
+                activities.RemoveAt(0);
             }
         }
 
@@ -475,36 +476,36 @@ namespace Version1.Host.Scripts
 
         private void UpdateTimerDisplay()
         {
-            int minutes = Mathf.FloorToInt(_timeLeft / 60);
-            int seconds = Mathf.FloorToInt(_timeLeft % 60);
+            int minutes = Mathf.FloorToInt(timeLeft / 60);
+            int seconds = Mathf.FloorToInt(timeLeft % 60);
             timeLeftTMP.text = $"{minutes:D2}:{seconds:D2}";
         }
 
         private void Update()
         {
             // Handle end game button visibility
-            if (_currentRound <= _currentPhases.Length)
+            if (currentRound <= currentPhases.Length)
             {
-                endGame.gameObject.SetActive(_currentRound == _currentPhases.Length);
-                if (_currentRound == _currentPhases.Length)
+                endGame.gameObject.SetActive(currentRound == currentPhases.Length);
+                if (currentRound == currentPhases.Length)
                 {
                     startRound.interactable = false;
                 }
             }
 
             // Handle round timer
-            if (_currentRound < _currentPhases.Length && _roundStarted)
+            if (currentRound < currentPhases.Length && roundStarted)
             {
-                if (_currentPhases[_currentRound].Contains("Market"))
+                if (currentPhases[currentRound].Contains("Market"))
                 {
-                    if (_timeLeft > 0)
+                    if (timeLeft > 0)
                     {
-                        _timeLeft -= Time.deltaTime;
+                        timeLeft -= Time.deltaTime;
                         UpdateTimerDisplay();
                     }
                     else
                     {
-                        _timeLeft = 0;
+                        timeLeft = 0;
                         StopRoundOnClick();
                     }
                 }

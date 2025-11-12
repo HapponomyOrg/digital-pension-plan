@@ -2,126 +2,137 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Version1.Nats;
 using Version1.Nats.Messages.Client;
 using Version1.Nats.Messages.Host;
 using Version1.Utilities;
 
-namespace Version1.Phases.login.scripts
+namespace Version1.Phases.Login.Scripts
 {
     public class Login : MonoBehaviour
     {
-        [SerializeField] private TMP_InputField PlayerName;
-        [SerializeField] private TMP_InputField Age;
-        [SerializeField] private TMP_Dropdown Gender;
-        [SerializeField] private TMP_InputField GameCode;
-        [SerializeField] private Button CreateButton;
-        [SerializeField] private GameObject NatsError;
-        [SerializeField] private GameObject NameError;
-        [SerializeField] private TMP_Text NameErrorText;
-        [SerializeField] private TMP_Text NameErrorRefCode;
+        [Header("UI References")] [SerializeField]
+        private TMP_InputField playerNameInput;
 
-        private string playername = "";
+        [SerializeField] private TMP_InputField ageInput;
+        [SerializeField] private TMP_Dropdown genderDropdown;
+        [SerializeField] private TMP_InputField gameCodeInput;
+        [SerializeField] private Button joinButton;
+
+        [Header("Error Indicators")] [SerializeField]
+        private GameObject natsError;
+
+        [SerializeField] private GameObject nameError;
+
+        private string playerName = string.Empty;
         private int age = -1;
         private int gender = -1;
-        private int gamecode = -1;
+        private int gameCode = -1;
 
-        private void Awake()
+        private static NetworkManager NetworkManager => NetworkManager.Instance;
+
+        private void OnEnable()
         {
-            PlayerName.onValueChanged.AddListener(PlayerNameChanged);
-            Age.onValueChanged.AddListener(AgeChanged);
-            Gender.onValueChanged.AddListener(GenderChanged);
-            GameCode.onValueChanged.AddListener(GameCodeChanged);
-            CreateButton.onClick.AddListener(JoinSession);
-            NetworkManager.Instance.OnRejected += InstanceOnOnRejected;
-            NetworkManager.Instance.OnError += InstanceOnError;
+            playerNameInput.onValueChanged.AddListener(OnPlayerNameChanged);
+            ageInput.onValueChanged.AddListener(OnAgeChanged);
+            genderDropdown.onValueChanged.AddListener(OnGenderChanged);
+            gameCodeInput.onValueChanged.AddListener(OnGameCodeChanged);
+            joinButton.onClick.AddListener(OnJoinButtonClicked);
+
+            if (NetworkManager == null) return;
+            NetworkManager.OnRejected += HandleRejected;
+            NetworkManager.OnError += HandleError;
         }
 
-        private void InstanceOnError(object sender, string e)
+        private void OnDisable()
         {
-            NatsError.SetActive(true);
+            playerNameInput.onValueChanged.RemoveListener(OnPlayerNameChanged);
+            ageInput.onValueChanged.RemoveListener(OnAgeChanged);
+            genderDropdown.onValueChanged.RemoveListener(OnGenderChanged);
+            gameCodeInput.onValueChanged.RemoveListener(OnGameCodeChanged);
+            joinButton.onClick.RemoveListener(OnJoinButtonClicked);
+
+            if (NetworkManager == null) return;
+
+            NetworkManager.OnRejected -= HandleRejected;
+            NetworkManager.OnError -= HandleError;
         }
 
-        private void InstanceOnOnRejected(object sender, RejectedMessage e)
+        private void OnPlayerNameChanged(string value)
         {
-            if (e.TargetPlayer != PlayerData.PlayerData.Instance.PlayerName &&
-                e.RequestID != PlayerData.PlayerData.Instance.RequestID) return;
+            if (playerName != value)
+                nameError.SetActive(false);
 
-            NameError.SetActive(true);
-            NameErrorText.text = e.Message;
-            NameErrorRefCode.text = e.ReferenceID;
+            playerName = value.Trim();
+            UpdateJoinButtonState();
         }
 
-        private void JoinSession()
+        private void OnAgeChanged(string value)
         {
-            PlayerData.PlayerData.Instance.PlayerName = playername;
-            PlayerData.PlayerData.Instance.Age = age;
-            PlayerData.PlayerData.Instance.Gender = gender;
-            PlayerData.PlayerData.Instance.LobbyID = gamecode;
-
-            var uid = Guid.NewGuid().ToString();
-            PlayerData.PlayerData.Instance.RequestID = uid;
-
-            var msg = new JoinRequestMessage(DateTime.Now.ToString("o"), gamecode, 0, playername, age, gender, uid);
-
-
-            //Nats.NatsClient.C.SubscribeToSubject(gamecode.ToString());
-            NetworkManager.Instance.Subscribe(gamecode.ToString());
-            NetworkManager.Instance.Publish(gamecode.ToString(), msg);
+            age = int.TryParse(value, out var parsedAge) ? parsedAge : -1;
+            UpdateJoinButtonState();
         }
 
-        private void GameCodeChanged(string arg)
+        private void OnGenderChanged(int value)
         {
-            string str = arg.Replace(" ", "");
-            bool success = int.TryParse(str, out int number);
+            gender = value;
+            UpdateJoinButtonState();
+        }
 
-            if (success)
+        private void OnGameCodeChanged(string value)
+        {
+            var sanitized = value.Replace(" ", string.Empty);
+            gameCode = int.TryParse(sanitized, out var parsedCode) ? parsedCode : -1;
+            UpdateJoinButtonState();
+        }
+
+        private void UpdateJoinButtonState()
+        {
+            joinButton.interactable =
+                !string.IsNullOrWhiteSpace(playerName) &&
+                age > 0 &&
+                gameCode > 0;
+        }
+
+        private void OnJoinButtonClicked()
+        {
+            if (NetworkManager == null)
             {
-                gamecode = number;
-                CheckButton();
+                Debug.LogError("NetworkManager not initialized!");
+                return;
             }
-            else
-            {
-                Console.WriteLine("Invalid integer.");
-            }
+
+            var playerData = PlayerData.PlayerData.Instance;
+            playerData.PlayerName = playerName;
+            playerData.Age = age;
+            playerData.Gender = gender;
+            playerData.LobbyID = gameCode;
+            playerData.RequestID = Guid.NewGuid().ToString();
+
+            var message = new JoinRequestMessage(
+                DateTime.Now.ToString("o"),
+                gameCode,
+                0,
+                playerName,
+                age,
+                gender,
+                playerData.RequestID
+            );
+
+            NetworkManager.Subscribe(gameCode.ToString());
+            NetworkManager.Publish(gameCode.ToString(), message);
         }
 
-        private void GenderChanged(int arg)
+        private void HandleError(object sender, string error)
         {
-            gender = arg;
-            CheckButton();
+            Debug.LogWarning($"NATS Error: {error}");
+            natsError.SetActive(true);
         }
 
-        private void AgeChanged(string arg)
+        private void HandleRejected(object sender, RejectedMessage message)
         {
-            if (int.TryParse(arg, out int val))
-            {
-                age = val;
-            }
-            else
-            {
-                age = 0;
-                Console.WriteLine("Invalid input. Please enter a valid number.");
-            }
-            CheckButton();
-        }
-
-        private void PlayerNameChanged(string arg)
-        {
-            playername = arg;
-            CheckButton();
-        }
-
-        private void CheckButton()
-        {
-            if (playername != "" && age != -1 && gamecode != -1)
-            {
-                CreateButton.interactable = true;
-            }
-            else
-            {
-                CreateButton.interactable = false;
-            }
+            var player = PlayerData.PlayerData.Instance;
+            if (message.TargetPlayer == player.PlayerName && message.RequestID == player.RequestID)
+                nameError.SetActive(true);
         }
     }
 }

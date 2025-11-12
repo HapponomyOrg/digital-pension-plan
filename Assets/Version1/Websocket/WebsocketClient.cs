@@ -47,6 +47,7 @@ namespace Version1.Websocket
         public event EventHandler<AbortSessionMessage> OnAbortSession;
         public event EventHandler<SkipRoundMessage> OnSkipRound;
         public event EventHandler<ContinueMessage> OnContinue;
+        public event EventHandler<string> OnError;
 
         private WebSocket _webSocket;
         private string _uri;
@@ -66,14 +67,18 @@ namespace Version1.Websocket
 
             _webSocket.OnOpen += () => { Debug.Log("WebSocket Connected!"); };
 
-            _webSocket.OnError += (e) => { Debug.LogError($"WebSocket Error: {e}"); };
+            _webSocket.OnError += (e) =>
+            {
+                OnError?.Invoke(this,e);
+                Debug.LogError($"WebSocket Error: {e}");
+            };
 
             _webSocket.OnClose += (e) => { Debug.Log($"WebSocket Closed: {e}"); };
 
             _webSocket.OnMessage += OnMessageReceived;
 
             // Connect to the server
-            _ = _webSocket.Connect();
+            await  _webSocket.Connect();
         }
 
         private void OnMessageReceived(byte[] bytes)
@@ -328,6 +333,7 @@ namespace Version1.Websocket
             if (_webSocket.State != WebSocketState.Open)
             {
                 Debug.LogError("WebSocket is not open. Cannot send message.");
+                OnError?.Invoke(this,"Websocket is not open");
                 return;
             }
 
@@ -338,6 +344,7 @@ namespace Version1.Websocket
             catch (Exception ex)
             {
                 Debug.LogError($"Error sending message: {ex.Message}");
+                OnError?.Invoke(this,"Could not send text");
                 throw;
             }
         }
