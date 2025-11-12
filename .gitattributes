@@ -1,0 +1,3 @@
+﻿* text=auto
+*.sh text eol=lf
+.husky/* text eol=lf
