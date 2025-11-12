@@ -10,5 +10,33 @@
         "network",
         "programming"
     ],
-    "category": "Network"
+    "category": "Network",
+    "main": "index.js",
+    "directories": {
+        "doc": "docs"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "commit": "cz"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/HapponomyOrg/digital-pension-plan.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "type": "commonjs",
+    "bugs": {
+        "url": "https://github.com/HapponomyOrg/digital-pension-plan/issues"
+    },
+    "homepage": "https://github.com/HapponomyOrg/digital-pension-plan#readme",
+    "devDependencies": {
+        "commitizen": "^4.3.1",
+        "cz-conventional-changelog": "^3.3.0"
+    },
+    "config": {
+        "commitizen": {
+            "path": "./node_modules/cz-conventional-changelog"
+        }
+    }
 }
