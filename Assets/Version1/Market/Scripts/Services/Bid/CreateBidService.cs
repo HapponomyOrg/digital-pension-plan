@@ -40,7 +40,7 @@ namespace Version1.Market
             NetworkManager.Instance.Publish(message.LobbyID.ToString(), message);
         }
 
-        public void CreateBidHandler(object sender, CreateBidMessage message)
+        public void CreateBidHandler(CreateBidMessage message)
         {
             var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(Guid.Parse(message.AuctionID));
 

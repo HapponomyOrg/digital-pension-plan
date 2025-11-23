@@ -94,6 +94,9 @@ namespace Version1.Market
 
             bidOwners.Remove(bid.BidId);
             playerBids.Remove(bid);
+
+            if (playerBids.Count == 0)
+                bids.Remove(playerId);
         }
 
         public void RemoveLastBidBetweenPlayer(int playerId)
@@ -109,6 +112,9 @@ namespace Version1.Market
                 bidOwners.Remove(playerBids.Last.Value.BidId);
                 playerBids.RemoveLast();
             }
+
+            if (playerBids.Count == 0)
+                bids.Remove(playerId);
         }
 
         public int GetUniqueBidderCount()

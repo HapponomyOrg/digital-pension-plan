@@ -32,7 +32,6 @@ namespace Version1.Market
         {
             gameObject.SetActive(true);
 
-
             bidAmountDisplay.text = minBidAmount.ToString(numberFormatter);
             bidAmount = minBidAmount;
             maxBidAmount = listing.Price - priceStep;

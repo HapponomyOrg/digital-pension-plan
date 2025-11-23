@@ -8,7 +8,7 @@ namespace Version1.Nats.Messages.Client
         public int OriginalBidderID;
         public string PlayerName;
 
-        public RejectBidMessage(string dateTimeStamp, int lobbyID, int playerID, string auctionID, string bidID, int bidderID, int originalBidder, string playerName) : base(dateTimeStamp, MessageSubject.RejectBidding, lobbyID, playerID)
+        public RejectBidMessage(string dateTimeStamp, int lobbyID, int playerID, string auctionID, string bidID, int bidderID, int originalBidder, string playerName) : base(dateTimeStamp, MessageSubject.RejectBid, lobbyID, playerID)
         {
             AuctionID = auctionID;
             BidID = bidID;

@@ -116,6 +116,9 @@ namespace Version1.Market
             if (e.Listing.Lister == PlayerData.PlayerData.Instance.PlayerId)
             { 
                 personalListingList.UpdateDisplay(e.Listing.ListingId);
+
+                if (personalListingList.ReceivedBidsList.ActiveListing == e.Listing.ListingId)
+                    personalListingList.ReceivedBidsList.CreateDisplay(e.Listing.ListingId, e.Bid.BidId);
             }
             else if (e.Bid.Bidder == PlayerData.PlayerData.Instance.PlayerId)
             {
@@ -155,6 +158,21 @@ namespace Version1.Market
             // Create market listing display
             // Update personal listing display
             // Update bid list if necessary
+
+            if (e.Bid.Bidder == PlayerData.PlayerData.Instance.PlayerId)
+            {
+                outgoingBidsList.RemoveDisplay(e.Listing.ListingId);
+                marketOfferList.CreateDisplay(e.Listing.ListingId);
+
+
+            }
+            else if (e.Listing.Lister == PlayerData.PlayerData.Instance.PlayerId)
+            {
+                personalListingList.UpdateDisplay(e.Listing.ListingId);
+
+                if (personalListingList.ReceivedBidsList.ActiveListing == e.Listing.ListingId)
+                    personalListingList.ReceivedBidsList.RemoveDisplay(e.Bid.BidId);
+            }
         }
 
 

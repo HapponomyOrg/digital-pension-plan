@@ -4,7 +4,7 @@ namespace Version1.Nats.Messages.Client
     {
         public string AuctionID;
 
-        public CancelBiddingMessage(string dateTimeStamp, int lobbyID, int playerID, string auctionID) : base(dateTimeStamp, MessageSubject.CancelBidding, lobbyID, playerID)
+        public CancelBiddingMessage(string dateTimeStamp, int lobbyID, int playerID, string auctionID) : base(dateTimeStamp, MessageSubject.CancelBid, lobbyID, playerID)
         {
             AuctionID = auctionID;
         }

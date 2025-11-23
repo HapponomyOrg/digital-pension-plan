@@ -4,7 +4,7 @@ namespace Version1.Nats.Messages.Client
     {
         public string AuctionID;
 
-        public BuyCardsRequestMessage(string dateTimeStamp, int lobbyID, int playerID, string auctionID) : base(dateTimeStamp, MessageSubject.BuyCards, lobbyID, playerID)
+        public BuyCardsRequestMessage(string dateTimeStamp, int lobbyID, int playerID, string auctionID) : base(dateTimeStamp, MessageSubject.BuyListing, lobbyID, playerID)
         {
             AuctionID = auctionID;
         }

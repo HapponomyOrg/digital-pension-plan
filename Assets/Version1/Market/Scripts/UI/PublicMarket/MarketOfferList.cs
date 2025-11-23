@@ -73,14 +73,12 @@ namespace Version1.Market
         {
             var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
             buyListingOverlay.Open(listing);
-            Console.WriteLine("buyAction");
         }
 
         private void BidAction(Guid listingId)
         {
             var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
             createBidOverlay.Open(listing);
-            Console.WriteLine("bidAction");
         }
 
         private void SelectAction(Guid listingId)
@@ -92,7 +90,6 @@ namespace Version1.Market
             };
 
             marketOfferDetailsDisplayPrefab.SetDisplay(listingId, displayActions);
-            Console.WriteLine("selectAction");
         }
     }
 }

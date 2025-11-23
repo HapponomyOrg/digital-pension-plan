@@ -26,7 +26,7 @@ namespace Version1.Market
             NetworkManager.Instance.Publish(message.LobbyID.ToString(), message);
         }
 
-        public void CancelListingHandler(object sender, CancelListingMessage message)
+        public void CancelListingHandler(CancelListingMessage message)
         {
             var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(Guid.Parse(message.AuctionID));
 

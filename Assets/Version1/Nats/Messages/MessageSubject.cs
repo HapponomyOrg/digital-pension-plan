@@ -2,41 +2,46 @@ namespace Version1.Nats.Messages
 {
     public class MessageSubject
     {
-        public const string
-            // Client Gameplay
-            None = "None",
-            Base = "Base",
-            ListCards = "ListCards",
-            BuyCards = "BuyCards",
-            CancelListing = "CancelListing",
-            DonateMoney = "DonateMoney",
-            DonatePoints = "DonatePoints",
-            DeptUpdate = "DeptUpdate",
-            CardHandIn = "CardHandIn",
-            HeartBeat = "HeartBeat",
-            MakeBidding = "MakeBidding",
-            AcceptBidding = "AcceptBidding",
-            CancelBidding = "CancelBidding",
-            RejectBidding = "RejectBidding",
-            RespondBidding = "RespondBidding",
-            AcceptCounterBidding = "AcceptCounterBidding",
-            Continue = "Continue",
-            // Client Misc.
-            JoinRequest = "JoinRequest",
-            // Host Hosting
-            CreateSession = "CreateSession",
-            StartGame = "StartGame",
-            StartRound = "StartRound",
-            StopRound = "StopRound",
-            EndOfRounds = "EndOfRounds",
-            EndGame = "EndGame",
-            AbortSession = "AbortSession",
-            SkipRounds = "SkipRound",
-            // Host Misc.
-            ConfirmJoin = "ConfirmJoin",
-            Rejected = "Rejected",
-            ConfirmBuy = "ConfirmBuy",
-            ConfirmHandIn = "ConfirmHandIn",
-            ConfirmCancelListing = "ConfirmCancelListing";
+        // Client Gameplay
+        public const string None = nameof(None);
+        public const string Base = nameof(Base);
+        public const string DonateMoney = nameof(DonateMoney);
+        public const string DonatePoints = nameof(DonatePoints);
+        public const string DeptUpdate = nameof(DeptUpdate);
+        public const string CardHandIn = nameof(CardHandIn);
+        public const string HeartBeat = nameof(HeartBeat);
+        public const string Continue = nameof(Continue);
+        // Listing
+        public const string CreateListing = nameof(CreateListing);
+        public const string CancelListing = nameof(CancelListing);
+        public const string BuyListing = nameof(BuyListing);
+        // Bid
+        public const string CreateBid = nameof(CreateBid);
+        public const string CancelBid = nameof(CancelBid);
+        public const string AcceptBid = nameof(AcceptBid);
+        public const string AcceptCounterBidding = nameof(AcceptCounterBidding);
+        public const string CounterBid = nameof(CounterBid);
+        public const string RejectBid = nameof(RejectBid);
+        public const string RejectCounterBidding = nameof(RejectCounterBidding);
+        // Client Misc.
+        public const string JoinRequest = nameof(JoinRequest);
+
+
+        // Host Hosting
+        public const string CreateSession = nameof(CreateSession);
+        public const string StartGame = nameof(StartGame);
+        public const string StartRound = nameof(StartRound);
+        public const string StopRound = nameof(StopRound);
+        public const string EndOfRounds = nameof(EndOfRounds);
+        public const string EndGame = nameof(EndGame);
+        public const string AbortSession = nameof(AbortSession);
+        public const string SkipRounds = nameof(SkipRounds);
+
+        // Host Misc.
+        public const string ConfirmJoin = nameof(ConfirmJoin);
+        public const string Rejected = nameof(Rejected);
+        public const string ConfirmBuy = nameof(ConfirmBuy);
+        public const string ConfirmHandIn = nameof(ConfirmHandIn);
+        public const string ConfirmCancelListing = nameof(ConfirmCancelListing);
     }
 }

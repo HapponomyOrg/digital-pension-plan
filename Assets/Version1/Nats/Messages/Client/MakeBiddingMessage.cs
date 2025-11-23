@@ -6,7 +6,7 @@ namespace Version1.Nats.Messages.Client
         public string PlayerName;
         public int OfferPrice;
 
-        public MakeBiddingMessage(string dateTimeStamp, int lobbyID, int playerID, string auctionID, string playername, int offerprice) : base(dateTimeStamp, MessageSubject.MakeBidding, lobbyID, playerID)
+        public MakeBiddingMessage(string dateTimeStamp, int lobbyID, int playerID, string auctionID, string playername, int offerprice) : base(dateTimeStamp, MessageSubject.CreateBid, lobbyID, playerID)
         {
             AuctionID = auctionID;
             PlayerName = playername;
