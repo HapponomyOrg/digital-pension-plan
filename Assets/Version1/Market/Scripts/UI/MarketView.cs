@@ -117,7 +117,7 @@ namespace Version1.Market
             { 
                 personalListingList.UpdateDisplay(e.Listing.ListingId);
             }
-            else
+            else if (e.Bid.Bidder == PlayerData.PlayerData.Instance.PlayerId)
             {
                 marketOfferList.RemoveDisplay(e.Listing.ListingId);
                 outgoingBidsList.CreateDisplay(e.Listing.ListingId, e.Bid.BidId);
