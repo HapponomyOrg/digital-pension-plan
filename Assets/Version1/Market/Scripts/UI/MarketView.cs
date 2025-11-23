@@ -143,6 +143,19 @@ namespace Version1.Market
             // Remove outgoing bid display
             // Add market listing display
             // Update personal listing display
+
+            if (e.Listing.Lister == PlayerData.PlayerData.Instance.PlayerId)
+            {
+                personalListingList.UpdateDisplay(e.Listing.ListingId);
+
+                if (personalListingList.ReceivedBidsList.ActiveListing == e.Listing.ListingId)
+                    personalListingList.ReceivedBidsList.RemoveDisplay(e.Bid.BidId);
+            }
+            else if (e.Bid.Bidder == PlayerData.PlayerData.Instance.PlayerId)
+            {
+                outgoingBidsList.RemoveDisplay(e.Listing.ListingId);
+                marketOfferList.CreateDisplay(e.Listing.ListingId);
+            }
         }
 
         private void AcceptBid(object sender, BidEventArgs e)

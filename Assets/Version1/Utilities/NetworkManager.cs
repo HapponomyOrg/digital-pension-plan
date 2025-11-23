@@ -263,9 +263,7 @@ namespace Version1.Utilities
         }
 
         private void RejectBid(object sender, RejectBidMessage e)
-        {
-            // TODO MARKET FUNCTION
-        }
+            => GameManager.Instance.MarketServices.RejectBidService.RejectBidHandler(e);
 
         private void RejectCounterBid(object sender, RejectCounterBidMessage e)
         {
