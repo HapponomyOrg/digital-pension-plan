@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -52,6 +53,14 @@ namespace Version1.Market
                 var obj = Instantiate(cardPrefab, cardList);
                 obj.SetDisplay(cardAmount.Key, cardAmount.Value);
             }
+        }
+
+        public void Clear()
+        {
+            priceDisplay.text = string.Empty;
+            bidCountDisplay.text = string.Empty;
+
+            cancelButton.onClick.RemoveAllListeners();
         }
     }
 }

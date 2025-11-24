@@ -246,9 +246,7 @@ namespace Version1.Utilities
             => GameManager.Instance.MarketServices.CancelBidService.CancelBidHandler(e);
 
         private void AcceptBid(object sender, AcceptBidMessage e)
-        {
-            // TODO MARKET FUNCTION
-        }
+            => GameManager.Instance.MarketServices.AcceptBidService.AcceptBidHandler(e);
 
         private void AcceptCounterBid(object sender, AcceptCounterBiddingMessage e)
         {

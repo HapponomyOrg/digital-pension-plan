@@ -70,7 +70,6 @@ namespace Version1.Market
             var bid = listing.BidRepository.GetBidBetweenPlayer(PlayerData.PlayerData.Instance.PlayerId, bidId);
 
             cancelBidOverlay.Open(listingId, bid);
-            Console.WriteLine("buyAction");
         }
     }
 }

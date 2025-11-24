@@ -11,7 +11,7 @@ namespace Version1.Market
         private readonly Dictionary<Guid, PersonalListingDisplay> listingDisplays = new();
         [SerializeField] private PersonalListingDisplay listingDisplayPrefab;
 
-        [SerializeField] private PersonalListingDetailsDisplay listingDetailsDisplayPrefab;
+        [field: SerializeField] public PersonalListingDetailsDisplay DetailsDisplay { get; private set; }
         [field: SerializeField] public ReceivedBidsList ReceivedBidsList { get; private set; }
 
         [Header("Overlays")]
@@ -78,7 +78,7 @@ namespace Version1.Market
                 { EListingAction.Cancel, () => { CancelAction(listingId); } }
             };
 
-            listingDetailsDisplayPrefab.SetDisplay(listingId, displayActions);
+            DetailsDisplay.SetDisplay(listingId, displayActions);
 
             var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
 

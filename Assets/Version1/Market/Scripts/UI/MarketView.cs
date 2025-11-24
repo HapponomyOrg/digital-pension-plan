@@ -79,6 +79,7 @@ namespace Version1.Market
             {
                 personalListingList.RemoveDisplay(e.Listing.ListingId);
 
+                personalListingList.DetailsDisplay.Clear();
                 if (personalListingList.ReceivedBidsList.ActiveListing == e.Listing.ListingId)
                     personalListingList.ReceivedBidsList.Clear();
             }
@@ -97,6 +98,7 @@ namespace Version1.Market
             {
                 personalListingList.RemoveDisplay(e.Listing.ListingId);
 
+                personalListingList.DetailsDisplay.Clear();
                 if (personalListingList.ReceivedBidsList.ActiveListing == e.Listing.ListingId)
                     personalListingList.ReceivedBidsList.Clear();
             }
@@ -163,6 +165,19 @@ namespace Version1.Market
             // Remove outgoing bid display
             // Remove personal listing display
             // Clear bid list if necessary
+
+            if (e.Listing.Lister == PlayerData.PlayerData.Instance.PlayerId)
+            {
+                personalListingList.RemoveDisplay(e.Listing.ListingId);
+
+                personalListingList.DetailsDisplay.Clear();
+                if (personalListingList.ReceivedBidsList.ActiveListing == e.Listing.ListingId)
+                    personalListingList.ReceivedBidsList.Clear();
+            }
+            else if (e.Bid.Bidder == PlayerData.PlayerData.Instance.PlayerId)
+            {
+                outgoingBidsList.RemoveDisplay(e.Listing.ListingId);
+            }
         }
 
         private void CancelBid(object sender, BidEventArgs e)
