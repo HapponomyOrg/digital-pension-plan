@@ -4,56 +4,26 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using Version1.Nats.Messages.Client;
 using Version1.Nats.Messages.Host;
+using Version1.Utilities.GameModes;
 using Debug = UnityEngine.Debug;
 
 namespace Version1.Host.Scripts
 {
     public class Host : MonoBehaviour
     {
-        private int currentRound = 0;
+        [Header("Mode Settings")]
+        public GameModeSo[] availableModes;
+        private GameModeSo currentMode;
 
-        private readonly string[] debtBasedPhases =
-        {
-            "MarketScene", "PayDeptScene", "TakeALoanScene", "Loading",
-            "MarketScene", "PayDeptScene", "TakeALoanScene", "Loading",
-            "MarketScene", "MoneyCorrectionScene", "MoneyToPointScene", "DonatePointsScene", "EndScene"
-        };
-
-        private readonly string[] sustainableMoneyPhases =
-        {
-            "MarketScene", "MoneyCorrectionScene", "Loading",
-            "MarketScene", "MoneyCorrectionScene", "Loading",
-            "MarketScene", "MoneyCorrectionScene", "Loading",
-            "MoneyToPointScene", "DonatePointsScene", "EndScene"
-        };
-
-        private readonly string[] interestAtIntervalsPhases =
-        {
-            "MarketScene", "MoneyCorrectionScene", "PayDeptScene", "TakeALoanScene", "Loading",
-            "MarketScene", "MoneyCorrectionScene", "PayDeptScene", "TakeALoanScene", "Loading",
-            "MarketScene", "MoneyCorrectionScene", "MoneyToPointScene", "DonatePointsScene", "EndScene"
-        };
-
-        private readonly string[] closedEconomyPhases =
-        {
-            "MarketScene", "MoneyCorrectionScene", "PayDeptScene", "TakeALoanScene", "Loading",
-            "MarketScene", "MoneyCorrectionScene", "PayDeptScene", "TakeALoanScene", "Loading",
-            "MarketScene", "MoneyCorrectionScene", "MoneyToPointScene", "DonatePointsScene", "EndScene"
-        };
-
-        private readonly string[] testPhases =
-        {
-            "MarketScene", "MoneyCorrectionScene", "Loading",
-            "MarketScene", "MoneyCorrectionScene", "Loading",
-            "MarketScene", "MoneyCorrectionScene", "Loading",
-            "MoneyToPointScene", "DonatePointsScene", "EndScene"
-        };
-
-        private string[] currentPhases;
+        [Header("Phase Tracking")]
+        private int currentPhaseIndex = 0;
+        private PhaseStatus currentPhaseStatus = PhaseStatus.NotStarted;
+        private Coroutine phaseTimerCoroutine;
 
         [SerializeField] private CardManager cardManager;
         [SerializeField] private GameObject natsError;
@@ -139,19 +109,11 @@ namespace Version1.Host.Scripts
         {
             roundStarted = false;
             sessionIsActive = false;
-            currentRound = 0;
+            currentMode = availableModes[(int)SessionData.Instance.CurrentMoneySystem];
+            currentPhaseIndex = 0;
+            currentPhaseStatus = PhaseStatus.NotStarted;
 
             ClearLogs();
-
-            currentPhases = SessionData.Instance.CurrentMoneySystem switch
-            {
-                MoneySystems.Sustainable => sustainableMoneyPhases,
-                MoneySystems.DebtBased => debtBasedPhases,
-                MoneySystems.InterestAtIntervals => interestAtIntervalsPhases,
-                MoneySystems.ClosedEconomy => closedEconomyPhases,
-                MoneySystems.RealisticDebtDistribution => throw new NotImplementedException(),
-                _ => throw new ArgumentOutOfRangeException()
-            };
 
             activities = new List<GameObject>();
             sessionDuration = new Stopwatch();
@@ -187,8 +149,8 @@ namespace Version1.Host.Scripts
             sessionIsActive = true;
 
             // Set phase info
-            currentPhaseTMP.text = currentPhases[currentRound].Split("Scene")[0];
-            nextPhaseTMP.text = currentPhases[currentRound + 1].Split("Scene")[0];
+            currentPhaseTMP.text = phases[0].phaseName;
+            nextPhaseTMP.text = phases[1].phaseName;
 
             // Create progression cards
             CreateProgressionCards();
@@ -196,14 +158,13 @@ namespace Version1.Host.Scripts
 
         private void CreateProgressionCards()
         {
-            for (var i = 0; i < currentPhases.Length; i++)
+            for (var i = 0; i < phases.Count; i++)
             {
-                var phaseName = currentPhases[i].Split("Scene");
                 var prefab = Instantiate(progressionPrefab, progressionScrollView);
                 prefab.gameObject.SetActive(true);
                 var card = prefab.GetComponent<ProgressionCard>();
-                card.Name.text = phaseName[0];
-                card.Status.text = "Not Started";
+                card.Name.text = phases[i].phaseName;
+                card.Status.text = phases[i].status.Description().ToString();
                 progressionCards.Add(i, card);
             }
         }
@@ -400,23 +361,41 @@ namespace Version1.Host.Scripts
 
         private void StartRoundOnClick()
         {
-            progressionCards[currentRound].Status.text = "Current";
-
-            currentPhaseTMP.text = currentPhases[currentRound].Split("Scene")[0];
-            nextPhaseTMP.text = currentPhases.Length == currentRound + 1
-                ? ""
-                : currentPhases[currentRound + 1].Split("Scene")[0];
-
-            if (currentPhases[currentRound].Contains("Market"))
+            if (currentPhaseStatus != PhaseStatus.NotStarted)
             {
-                timeLeft = 300;
+                Debug.LogWarning("Phase already started!");
+                return;
             }
 
-            Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(), new StartRoundMessage(
-                DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, -1,
-                currentRound, currentPhases[currentRound], 100));
+            currentPhaseStatus = PhaseStatus.Ongoing;
+            GamePhase phase = currentMode.GetPhase(currentPhaseIndex);
 
-            roundStarted = true;
+            Debug.Log($"Phase {currentPhaseIndex + 1} started: {phase.phaseName}");
+
+
+
+            // TODO set timer to duration
+            /*// Start timer if phase has duration
+            if (phase.duration > 0)
+            {
+                phaseTimerCoroutine = StartCoroutine(PhaseTimer(phase.duration));
+            }*/
+
+            progressionCards[currentPhaseIndex].SetStatus(PhaseStatus.Ongoing);
+
+            currentPhaseTMP.text = phase.phaseName;
+            // TODO Check for null???
+            nextPhaseTMP.text = currentMode.GetPhase(currentPhaseIndex).phaseName;
+
+            timeLeft = phase.duration;
+
+            // TODO rework nats start round messages
+            /*Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(), new StartRoundMessage(
+                DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, -1,
+                currentPhaseIndex, currentPhases[currentRound], 100));*/
+
+            // TODO i gues this has to do with the timer
+            /*roundStarted = true;*/
         }
 
         private void EndGameOnClick()

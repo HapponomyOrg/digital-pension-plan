@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a83a8b889f2e744b9c427d19a625d23, type: 3}
+  m_Name: InterestAtIntervals
+  m_EditorClassIdentifier: 
+  modeName: 2
+  moneyImbalance: 0
+  phases:
+  - phaseName: Trading Phase
+    duration: 300
+    sceneName: MarketScene
+  - phaseName: Money Correction
+    duration: -1
+    sceneName: MoneyCorrectionScene
+  - phaseName: Pay Dept
+    duration: -1
+    sceneName: PayDeptScene
+  - phaseName: Take a Loan
+    duration: -1
+    sceneName: TakeALoanScene
+  - phaseName: Trading Phase
+    duration: 300
+    sceneName: MarketScene
+  - phaseName: Money Correction
+    duration: -1
+    sceneName: MoneyCorrectionScene
+  - phaseName: Pay Dept
+    duration: -1
+    sceneName: PayDeptScene
+  - phaseName: Take a Loan
+    duration: -1
+    sceneName: TakeALoanScene
+  - phaseName: Trading Phase
+    duration: 300
+    sceneName: MarketScene
+  - phaseName: Money Correction
+    duration: -1
+    sceneName: MoneyCorrectionScene
+  - phaseName: Money to Points
+    duration: -1
+    sceneName: MoneyToPointScene
+  - phaseName: Donate Points
+    duration: -1
+    sceneName: DonatePointsScene
+  - phaseName: End Screen
+    duration: -1
+    sceneName: EndScene
+  description: 
