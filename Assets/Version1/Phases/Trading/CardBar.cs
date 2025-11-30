@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Version1.Host.Scripts;
 using Version1.Market;
+using Version1.Nats.Messages.Client;
+using Version1.Utilities;
 
 namespace Version1.Phases.Trading
 {
@@ -81,7 +84,16 @@ namespace Version1.Phases.Trading
             {
                 PlayerData.PlayerData.Instance.RemoveCard(card);
             }
-            PlayerData.PlayerData.Instance.AddPoints(Utilities.GameManager.Instance.CardLibrary.CardData(card).Value);
+
+            var cardValue = Utilities.GameManager.Instance.CardLibrary.CardData(card).Value;
+
+            PlayerData.PlayerData.Instance.AddPoints(cardValue);
+
+            var msg = new CardHandInMessage(DateTime.Now.ToString("o"), PlayerData.PlayerData.Instance.LobbyID,
+                PlayerData.PlayerData.Instance.PlayerId, card, cardValue);
+
+            NetworkManager.Instance.Publish(PlayerData.PlayerData.Instance.LobbyID.ToString(), msg);
+
         }
     }
 }
