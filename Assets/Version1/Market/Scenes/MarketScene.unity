@@ -5612,6 +5612,7 @@ MonoBehaviour:
   marketOfferList: {fileID: 102178261}
   outgoingBidsList: {fileID: 1494311771}
   personalListingList: {fileID: 940594825}
+  closeMarketOverlay: {fileID: 1171836334}
 --- !u!1 &639906049
 GameObject:
   m_ObjectHideFlags: 0
@@ -6388,7 +6389,6 @@ MonoBehaviour:
   timer: {fileID: 1961030224}
   cardBar: {fileID: 1818398202}
   topBar: {fileID: 1173528036}
-  overlay: {fileID: 1171836334}
   marketView: {fileID: 627438877}
 --- !u!1 &755597170
 GameObject:
