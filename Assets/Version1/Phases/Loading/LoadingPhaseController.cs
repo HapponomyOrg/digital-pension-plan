@@ -42,5 +42,10 @@ namespace Version1.Phases.Loading
         {
             loadingMessage.text = message;
         }
+
+        public void OnDestroy()
+        {
+            Utilities.GameManager.Instance.PhaseManager.CurrentPhaseController = null;
+        }
     }
 }

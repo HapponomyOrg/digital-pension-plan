@@ -16,14 +16,11 @@ namespace Version1.Market
         [SerializeField] private BuyListingOverlay buyListingOverlay;
         [SerializeField] private CreateBidOverlay createBidOverlay;
 
-        public void InitializeData(Guid[] listings)
+        public void Clear()
         {
             foreach (Transform child in transform)
                 Destroy(child.gameObject);
             marketOffers.Clear();
-
-            foreach (var offer in listings)
-                CreateDisplay(offer);
         }
 
         public void CreateDisplay(Guid listingId)

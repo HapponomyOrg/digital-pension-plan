@@ -247,5 +247,10 @@ namespace Version1.Phases.DonatePoints
         {
             SceneManager.LoadScene(Utilities.GameManager.LOADING);
         }
+
+        public void OnDestroy()
+        {
+            Utilities.GameManager.Instance.PhaseManager.CurrentPhaseController = null;
+        }
     }
 }
