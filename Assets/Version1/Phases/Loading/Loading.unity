@@ -191,6 +191,54 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &452812302
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 452812303}
+  - component: {fileID: 452812304}
+  m_Layer: 0
+  m_Name: PhaseController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &452812303
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 452812302}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &452812304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 452812302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88fb2d4e80c76d34898a4ed33df91322, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planet: {fileID: 527695645}
+  loadingMessage: {fileID: 501877300}
+  rotationSpeed: 25
+  rotateRight: 1
 --- !u!1 &501877298
 GameObject:
   m_ObjectHideFlags: 0
@@ -412,7 +460,6 @@ GameObject:
   - component: {fileID: 1001693433}
   - component: {fileID: 1001693432}
   - component: {fileID: 1001693431}
-  - component: {fileID: 1001693435}
   m_Layer: 5
   m_Name: LoadingScreen
   m_TagString: Untagged
@@ -506,22 +553,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1001693435
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1001693430}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da830c23d5c9894409684fd5433bbac6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  planet: {fileID: 527695645}
-  loadingMessage: {fileID: 501877300}
-  rotationSpeed: 25
-  rotateRight: 1
 --- !u!1 &1014326785
 GameObject:
   m_ObjectHideFlags: 0
@@ -978,3 +1009,4 @@ SceneRoots:
   - {fileID: 1562961950}
   - {fileID: 1001693434}
   - {fileID: 170590499}
+  - {fileID: 452812303}

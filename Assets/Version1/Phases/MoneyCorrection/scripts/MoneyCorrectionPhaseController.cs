@@ -1,16 +1,27 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using Assets.Version1.Phases;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Version1.Market;
+using Version1.Phases.Trading;
+using Version1.Utilities;
 
-namespace Version1.Phases.MoneyCorrection.scripts
+namespace Version1.Phases.MoneyCorrection
 {
-    public class MoneyCorrection : MonoBehaviour
+    public class MoneyCorrectionPhaseController : MonoBehaviour, IPhaseController
     {
         [SerializeField] private TMP_Text text;
+
         private void Start()
+        {
+            // Start the phase
+            Utilities.GameManager.Instance.PhaseManager.CurrentPhaseController = this;
+        }
+
+        public void StartPhase()
         {
             switch (PlayerData.PlayerData.Instance.CurrentMoneySystem)
             {
@@ -200,6 +211,12 @@ namespace Version1.Phases.MoneyCorrection.scripts
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+        }
+
+        public void StopPhase()
+        {
+            
         }
 
         private int RoundToThousand(float value)
@@ -227,23 +244,4 @@ namespace Version1.Phases.MoneyCorrection.scripts
             SceneManager.LoadScene(Utilities.GameManager.LOADING);
         }
     }
-
 }
-
-
-// TODO 
-//
-// end screen
-// use phase system for overlays I made
-// setup aws
-// 
-//
-
-// test take a loan en pay dept
-// fix same colors in all screens I made
-
-
-// DONE
-// fix scroll rect of player list and progression in host screen
-// card hand in overlay
-// check donate point screen

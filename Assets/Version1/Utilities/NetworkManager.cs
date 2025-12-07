@@ -164,19 +164,22 @@ namespace Version1.Utilities
 
         private void NatsClientOnOnStopRound(object sender, StopRoundMessage e)
         {
-            // TODO game phase system
+
+            var phaseController = GameManager.Instance.PhaseManager.CurrentPhaseController;
+            if (phaseController != null)
+                phaseController.StopPhase();
         }
 
         private void NatsClientOnOnStartRound(object sender, StartRoundMessage e)
         {
-            Utilities.GameManager.Instance.LoadPhase(e.RoundNumber, e.RoundName);
+            Utilities.GameManager.Instance.PhaseManager.LoadPhase(e.RoundNumber, e.RoundName);
         }
 
         private void NatsClientOnOnStartGame(object sender, StartGameMessage e)
         {
             if (e.OtherPlayerID != PlayerData.PlayerData.Instance.PlayerId) return;
 
-            Utilities.GameManager.Instance.StartGame();
+            Utilities.GameManager.Instance.PhaseManager.StartPhases();
             PlayerData.PlayerData.Instance.StartGame(e);
         }
 

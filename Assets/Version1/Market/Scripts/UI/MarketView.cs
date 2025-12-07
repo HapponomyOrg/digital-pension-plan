@@ -12,6 +12,8 @@ namespace Version1.Market
         [SerializeField] private OutgoingBidsList outgoingBidsList;
         [SerializeField] private PersonalListingList personalListingList;
 
+        [SerializeField] private GameObject closeMarketOverlay;
+
         private void Start()
         {
             var marketServices = Utilities.GameManager.Instance.MarketServices;
@@ -63,6 +65,16 @@ namespace Version1.Market
             marketOfferList.InitializeData(peerListings.Select(l => l.ListingId).ToArray());
             outgoingBidsList.InitializeData(outgoingList);
             personalListingList.InitializeData(personalListings.Select(l => l.ListingId).ToArray());
+        }
+
+        public void OpenMarket()
+        {
+            closeMarketOverlay.SetActive(false);
+        }
+
+        public void CloseMarket()
+        {
+            closeMarketOverlay.SetActive(true);
         }
 
         private void CreateListing(object sender, ListingEventArgs e)

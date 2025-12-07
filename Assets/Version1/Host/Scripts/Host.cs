@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Assets.Version1.Phases;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,39 +19,39 @@ namespace Version1.Host.Scripts
 
         private readonly string[] _debtBasedPhases =
         {
-            "MarketScene", "PayDeptScene", "TakeALoanScene", "Loading",
-            "MarketScene", "PayDeptScene", "TakeALoanScene", "Loading",
-            "MarketScene", "MoneyCorrectionScene", "MoneyToPointScene", "DonatePointsScene", "EndScene"
+            PhaseLibrary.MarketPhase.Name, PhaseLibrary.PayDebtPhase.Name, PhaseLibrary.TakeALoanPhase.Name, PhaseLibrary.LoadingPhase.Name,
+            PhaseLibrary.MarketPhase.Name, PhaseLibrary.PayDebtPhase.Name, PhaseLibrary.TakeALoanPhase.Name, PhaseLibrary.LoadingPhase.Name,
+            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.MoneyToPointPhase.Name, PhaseLibrary.DonatePointsPhase.Name, PhaseLibrary.EndPhase.Name
         };
 
         private readonly string[] _sustainableMoneyPhases =
         {
-            "MarketScene", "MoneyCorrectionScene", "Loading",
-            "MarketScene", "MoneyCorrectionScene", "Loading",
-            "MarketScene", "MoneyCorrectionScene", "Loading",
-            "MoneyToPointScene", "DonatePointsScene", "EndScene"
+            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.LoadingPhase.Name,
+            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.LoadingPhase.Name,
+            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.LoadingPhase.Name,
+            PhaseLibrary.MoneyToPointPhase.Name, PhaseLibrary.DonatePointsPhase.Name, PhaseLibrary.EndPhase.Name
         };
 
         private readonly string[] _interestAtIntervalsPhases =
         {
-            "MarketScene", "MoneyCorrectionScene", "PayDeptScene", "TakeALoanScene", "Loading",
-            "MarketScene", "MoneyCorrectionScene", "PayDeptScene", "TakeALoanScene", "Loading",
-            "MarketScene", "MoneyCorrectionScene", "MoneyToPointScene", "DonatePointsScene", "EndScene"
+            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.PayDebtPhase.Name, PhaseLibrary.TakeALoanPhase.Name, PhaseLibrary.LoadingPhase.Name,
+            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.PayDebtPhase.Name, PhaseLibrary.TakeALoanPhase.Name, PhaseLibrary.LoadingPhase.Name,
+            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.MoneyToPointPhase.Name, PhaseLibrary.DonatePointsPhase.Name, PhaseLibrary.EndPhase.Name
         };
 
         private readonly string[] _closedEconomyPhases =
         {
-            "MarketScene", "MoneyCorrectionScene", "PayDeptScene", "TakeALoanScene", "Loading",
-            "MarketScene", "MoneyCorrectionScene", "PayDeptScene", "TakeALoanScene", "Loading",
-            "MarketScene", "MoneyCorrectionScene", "MoneyToPointScene", "DonatePointsScene", "EndScene"
+            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.PayDebtPhase.Name, PhaseLibrary.TakeALoanPhase.Name, PhaseLibrary.LoadingPhase.Name,
+            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.PayDebtPhase.Name, PhaseLibrary.TakeALoanPhase.Name, PhaseLibrary.LoadingPhase.Name,
+            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.MoneyToPointPhase.Name, PhaseLibrary.DonatePointsPhase.Name, PhaseLibrary.EndPhase.Name
         };
 
         private readonly string[] _testPhases =
         {
-            "MarketScene", "MoneyCorrectionScene", "Loading",
-            "MarketScene", "MoneyCorrectionScene", "Loading",
-            "MarketScene", "MoneyCorrectionScene", "Loading",
-            "MoneyToPointScene", "DonatePointsScene", "EndScene"
+            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.LoadingPhase.Name,
+            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.LoadingPhase.Name,
+            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.LoadingPhase.Name,
+            PhaseLibrary.MoneyToPointPhase.Name, PhaseLibrary.DonatePointsPhase.Name, PhaseLibrary.EndPhase.Name
         };
 
         private string[] _currentPhases;

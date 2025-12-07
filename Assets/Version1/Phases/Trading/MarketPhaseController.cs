@@ -1,4 +1,5 @@
 ﻿using System;
+using Assets.Version1.Phases;
 using UnityEngine;
 using Version1.Market;
 using Version1.Nats.Messages.Host;
@@ -6,47 +7,40 @@ using Version1.Utilities;
 
 namespace Version1.Phases.Trading
 {
-    public class TradingPhaseController : MonoBehaviour
+    public class MarketPhaseController : MonoBehaviour, IPhaseController
     {
         [SerializeField] private Timer timer;
-        //[SerializeField] private MarketUIManager market;
         [SerializeField] private CardBar cardBar;
         [SerializeField] private TopBar topBar;
-        [SerializeField] private GameObject overlay;
         [SerializeField] private MarketView marketView;
-
-        private bool started;
 
         private void Start()
         {
-            var gm = Utilities.GameManager.Instance;
-
-            NetworkManager.Instance.WebSocketClient.OnStopRound += StopPhase;
-
             timer.Init(300);
-            //market.Init();
             cardBar.Init();
             topBar.Init();
             
             marketView.InitializeData();
 
-            StartPhase();
+            // Start the phase
+            Utilities.GameManager.Instance.PhaseManager.CurrentPhaseController = this;
         }
 
-        private void StartPhase()
+        public void StartPhase()
         {
             timer.StartTimer();
-            overlay.SetActive(false);
-            //market.OpenMarket();
+            marketView.OpenMarket();
         }
 
-        private void StopPhase(object sender, StopRoundMessage message)
+        public void StopPhase()
         {
             timer.StopTimer();
-            overlay.SetActive(true);
+            marketView.CloseMarket();
+        }
 
-
-            //market.CloseMarket();
+        public void OnDestroy()
+        {
+            Utilities.GameManager.Instance.PhaseManager.CurrentPhaseController = null;
         }
     }
 }
