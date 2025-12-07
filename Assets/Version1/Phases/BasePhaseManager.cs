@@ -53,7 +53,7 @@ namespace Assets.Version1.Phases
         public void LoadPhase(int index, string name)
         {
             if (index >= Phases.Length)
-                throw new ArgumentOutOfRangeException("index");
+                throw new ArgumentOutOfRangeException("Phase number doesn't exist in phasemanager");
 
             if (Phases[index].Name != name)
                 throw new Exception("Phase doesnt correspond to phase name");
