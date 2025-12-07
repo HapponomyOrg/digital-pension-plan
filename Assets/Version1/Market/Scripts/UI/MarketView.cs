@@ -44,27 +44,11 @@ namespace Version1.Market
             marketServices.RejectBidService.RejectBid -= RejectBid;
         }
 
-
-        public void InitializeData()
+        public void Clear()
         {
-            var playerId = PlayerData.PlayerData.Instance.PlayerId;
-
-            var peerListings = Utilities.GameManager.Instance.ListingRepository.GetPeerListings(playerId);
-            var outgoingList = new List<(Guid listing, Guid bid)>();
-            var personalListings = Utilities.GameManager.Instance.ListingRepository.GetPersonalListings(playerId);
-
-            foreach (var listing in peerListings) 
-            { 
-                var bid = listing.BidRepository.GetLastBidBetweenPlayer(playerId);
-                if (bid == null)
-                    continue;
-                
-                outgoingList.Add((listing.ListingId, bid.BidId));
-            }
-
-            marketOfferList.InitializeData(peerListings.Select(l => l.ListingId).ToArray());
-            outgoingBidsList.InitializeData(outgoingList);
-            personalListingList.InitializeData(personalListings.Select(l => l.ListingId).ToArray());
+            marketOfferList.Clear();
+            outgoingBidsList.Clear();
+            personalListingList.Clear();
         }
 
         public void OpenMarket()

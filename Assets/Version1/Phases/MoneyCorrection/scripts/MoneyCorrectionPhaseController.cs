@@ -243,5 +243,10 @@ namespace Version1.Phases.MoneyCorrection
         {
             SceneManager.LoadScene(Utilities.GameManager.LOADING);
         }
+
+        public void OnDestroy()
+        {
+            Utilities.GameManager.Instance.PhaseManager.CurrentPhaseController = null;
+        }
     }
 }

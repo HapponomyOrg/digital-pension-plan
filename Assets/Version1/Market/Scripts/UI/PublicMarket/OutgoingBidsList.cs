@@ -13,14 +13,11 @@ namespace Version1.Market
         [Header("Overlays")]
         [SerializeField] private CancelBidOverlay cancelBidOverlay;
 
-        public void InitializeData(List<(Guid listingId, Guid bid)> bids)
+        public void Clear()
         {
             foreach (Transform child in transform)
                 Destroy(child.gameObject);
             outgoingBids.Clear();
-
-            foreach (var (listingId, bid) in bids)
-                CreateDisplay(listingId, bid);
         }
 
         public void CreateDisplay(Guid listingId, Guid bidId)

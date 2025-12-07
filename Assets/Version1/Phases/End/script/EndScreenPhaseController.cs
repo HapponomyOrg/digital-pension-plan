@@ -81,5 +81,10 @@ namespace Version1.Phases.EndScreen
                 yield return new WaitForSeconds(0.03f); // Wait for a specified time before displaying the next letter
             }
         }
+
+        public void OnDestroy()
+        {
+            Utilities.GameManager.Instance.PhaseManager.CurrentPhaseController = null;
+        }
     }
 }

@@ -19,8 +19,7 @@ namespace Version1.Phases.Trading
             timer.Init(300);
             cardBar.Init();
             topBar.Init();
-            
-            marketView.InitializeData();
+            marketView.Clear();
 
             // Start the phase
             Utilities.GameManager.Instance.PhaseManager.CurrentPhaseController = this;
@@ -36,11 +35,28 @@ namespace Version1.Phases.Trading
         {
             timer.StopTimer();
             marketView.CloseMarket();
+
+            ClearMarket();
         }
 
         public void OnDestroy()
         {
             Utilities.GameManager.Instance.PhaseManager.CurrentPhaseController = null;
+        }
+
+        // TODO Fix that disconnected players listings also get canceled
+        private void ClearMarket()
+        {
+            var listingRepository = Utilities.GameManager.Instance.ListingRepository;
+
+            var listings = listingRepository.GetPersonalListings(PlayerData.PlayerData.Instance.PlayerId);
+
+            foreach (var item in listings)
+            {
+                Utilities.GameManager.Instance.MarketServices.CancelListingService.CancelListingLocally(item);
+            }
+
+            marketView.Clear();
         }
     }
 }

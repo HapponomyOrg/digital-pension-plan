@@ -83,5 +83,10 @@ namespace Version1.Phases.MoneyToPoint
         {
 
         }
+
+        public void OnDestroy()
+        {
+            Utilities.GameManager.Instance.PhaseManager.CurrentPhaseController = null;
+        }
     }
 }
