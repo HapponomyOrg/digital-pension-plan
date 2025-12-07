@@ -7,7 +7,7 @@ using Version1.Utilities;
 
 namespace Version1.Phases.Trading
 {
-    public class TradingPhaseController : MonoBehaviour, IPhaseController
+    public class MarketPhaseController : MonoBehaviour, IPhaseController
     {
         [SerializeField] private Timer timer;
         [SerializeField] private CardBar cardBar;
