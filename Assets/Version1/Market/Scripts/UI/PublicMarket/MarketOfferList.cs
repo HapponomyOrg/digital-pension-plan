@@ -16,14 +16,11 @@ namespace Version1.Market
         [SerializeField] private BuyListingOverlay buyListingOverlay;
         [SerializeField] private CreateBidOverlay createBidOverlay;
 
-        public void InitializeData(Guid[] listings)
+        public void Clear()
         {
             foreach (Transform child in transform)
                 Destroy(child.gameObject);
             marketOffers.Clear();
-
-            foreach (var offer in listings)
-                CreateDisplay(offer);
         }
 
         public void CreateDisplay(Guid listingId)
@@ -73,14 +70,12 @@ namespace Version1.Market
         {
             var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
             buyListingOverlay.Open(listing);
-            Console.WriteLine("buyAction");
         }
 
         private void BidAction(Guid listingId)
         {
             var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
             createBidOverlay.Open(listing);
-            Console.WriteLine("bidAction");
         }
 
         private void SelectAction(Guid listingId)
@@ -92,7 +87,6 @@ namespace Version1.Market
             };
 
             marketOfferDetailsDisplayPrefab.SetDisplay(listingId, displayActions);
-            Console.WriteLine("selectAction");
         }
     }
 }

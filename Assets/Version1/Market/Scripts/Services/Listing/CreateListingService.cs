@@ -30,7 +30,7 @@ namespace Version1.Market
             NetworkManager.Instance.Publish(message.LobbyID.ToString(), message);
         }
 
-        public void CreateListingHandler(object sender, ListCardsmessage message)
+        public void CreateListingHandler(ListCardsmessage message)
         {
             var listing = new Listing(
                 Guid.Parse(message.AuctionID), 

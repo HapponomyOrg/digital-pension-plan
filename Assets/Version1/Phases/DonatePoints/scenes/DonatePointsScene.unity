@@ -151,6 +151,18 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 812795934258481821, guid: ef002ba8055727040be19c60726400d3, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2125331357}
+    - target: {fileID: 812795934258481821, guid: ef002ba8055727040be19c60726400d3, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SkipDonation
+      objectReference: {fileID: 0}
+    - target: {fileID: 812795934258481821, guid: ef002ba8055727040be19c60726400d3, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Version1.Phases.DonatePoints.DonatePointsPhaseController, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 952144759260177154, guid: ef002ba8055727040be19c60726400d3, type: 3}
       propertyPath: m_Name
       value: PointDonationOverlay
@@ -254,11 +266,98 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7280637128180389536, guid: ef002ba8055727040be19c60726400d3, type: 3}
   m_PrefabInstance: {fileID: 281413087}
   m_PrefabAsset: {fileID: 0}
+--- !u!224 &281413089 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2819575225880280036, guid: ef002ba8055727040be19c60726400d3, type: 3}
+  m_PrefabInstance: {fileID: 281413087}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &281413090 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4641596118653389850, guid: ef002ba8055727040be19c60726400d3, type: 3}
   m_PrefabInstance: {fileID: 281413087}
   m_PrefabAsset: {fileID: 0}
+--- !u!224 &281413091 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8846001963057236029, guid: ef002ba8055727040be19c60726400d3, type: 3}
+  m_PrefabInstance: {fileID: 281413087}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &281413092 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5765502214217512844, guid: ef002ba8055727040be19c60726400d3, type: 3}
+  m_PrefabInstance: {fileID: 281413087}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &281413093 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 362015671600484963, guid: ef002ba8055727040be19c60726400d3, type: 3}
+  m_PrefabInstance: {fileID: 281413087}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &281413094 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2657679456317568249, guid: ef002ba8055727040be19c60726400d3, type: 3}
+  m_PrefabInstance: {fileID: 281413087}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &281413095 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6935923804957746767, guid: ef002ba8055727040be19c60726400d3, type: 3}
+  m_PrefabInstance: {fileID: 281413087}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &281413096 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7546914535289790715, guid: ef002ba8055727040be19c60726400d3, type: 3}
+  m_PrefabInstance: {fileID: 281413087}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &281413097 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4866470223542327195, guid: ef002ba8055727040be19c60726400d3, type: 3}
+  m_PrefabInstance: {fileID: 281413087}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &281413098 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 620274628452221386, guid: ef002ba8055727040be19c60726400d3, type: 3}
+  m_PrefabInstance: {fileID: 281413087}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &398828374
 GameObject:
   m_ObjectHideFlags: 0
@@ -615,6 +714,61 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2125331356
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2125331358}
+  - component: {fileID: 2125331357}
+  m_Layer: 0
+  m_Name: PhaseController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2125331357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2125331356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45bc1fab769c33b458b3702b83e6863a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ownPointsTMP: {fileID: 281413098}
+  otherPointsTMP: {fileID: 281413097}
+  descriptionText: {fileID: 281413096}
+  otherNameTMP: {fileID: 281413095}
+  increaseButton: {fileID: 281413094}
+  decreaseButton: {fileID: 281413093}
+  donateButton: {fileID: 281413092}
+  playerListPrefab: {fileID: 281413091}
+  playerScrollView: {fileID: 281413089}
+  ToasterPrefab: {fileID: 6582798710711096504, guid: e4c5eacc5a9376246a527899f93cc42e, type: 3}
+  ToasterList: {fileID: 281413090}
+--- !u!4 &2125331358
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2125331356}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -623,3 +777,4 @@ SceneRoots:
   - {fileID: 643984973}
   - {fileID: 398828378}
   - {fileID: 1811698235}
+  - {fileID: 2125331358}

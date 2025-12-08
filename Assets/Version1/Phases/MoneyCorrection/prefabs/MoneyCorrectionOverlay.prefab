@@ -572,7 +572,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5702108641458191508}
   - component: {fileID: 7344586701878121652}
-  - component: {fileID: 3627938575213605658}
   m_Layer: 5
   m_Name: MoneyCorrectionOverlay
   m_TagString: Untagged
@@ -613,19 +612,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7932245887794574821}
   m_CullTransparentMesh: 1
---- !u!114 &3627938575213605658
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7932245887794574821}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f847045b11f1cd74ca52e57af025f5a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  text: {fileID: 5544127782958252358}
 --- !u!1 &8545265687884070485
 GameObject:
   m_ObjectHideFlags: 0
@@ -748,7 +734,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3627938575213605658}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Version1.Phases.MoneyCorrection.scripts.MoneyCorrection,
           Assembly-CSharp
         m_MethodName: Continue

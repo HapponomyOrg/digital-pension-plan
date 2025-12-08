@@ -32,7 +32,7 @@ namespace Version1.Market
             PlayerData.PlayerData.Instance.AddToBalance(listing.Price);
         }
 
-        public void BuyListingHandler(object sender, BuyCardsRequestMessage message)
+        public void BuyListingHandler(BuyCardsRequestMessage message)
         {
             var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(Guid.Parse(message.AuctionID));
 

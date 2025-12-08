@@ -38,7 +38,7 @@ namespace Version1.Market
                 );
 
             NetworkManager.Instance.Publish(message.LobbyID.ToString(), message);
-            Utilities.GameManager.Instance.ListingRepository.RemoveListing(listing);
+            //Utilities.GameManager.Instance.ListingRepository.RemoveListing(listing);
         }
 
         public void CancelBidHandler(CancelBidMessage message)

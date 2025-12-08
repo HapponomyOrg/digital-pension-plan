@@ -12,7 +12,7 @@ namespace Version1.Nats.Messages.Client
             int playerID, 
             string auctionID, 
             string bidID, 
-            int originalBidder) : base(dateTimeStamp, MessageSubject.CancelBidding, lobbyID, playerID)
+            int originalBidder) : base(dateTimeStamp, MessageSubject.CancelBid, lobbyID, playerID)
         {
             AuctionID = auctionID;
             BidID = bidID;

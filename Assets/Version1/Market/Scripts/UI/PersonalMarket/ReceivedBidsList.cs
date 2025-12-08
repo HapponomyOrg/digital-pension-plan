@@ -39,7 +39,7 @@ namespace Version1.Market
             };
 
             display.SetDisplay(listingId, bidId, displayActions);
-            bidDisplays.Add(listingId, display);
+            bidDisplays.Add(bidId, display);
         }
 
         public void UpdateDisplay(Guid listingId, Guid bidId)
@@ -57,11 +57,11 @@ namespace Version1.Market
             Destroy(display.gameObject);
         }
 
-        public void RemoveDisplay(Guid listingId)
+        public void RemoveDisplay(Guid bidId)
         {
-            var display = bidDisplays[listingId];
+            var display = bidDisplays[bidId];
 
-            bidDisplays.Remove(listingId);
+            bidDisplays.Remove(bidId);
             Destroy(display.gameObject);
         }
 

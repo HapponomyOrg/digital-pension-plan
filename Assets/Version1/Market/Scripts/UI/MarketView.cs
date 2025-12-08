@@ -12,6 +12,8 @@ namespace Version1.Market
         [SerializeField] private OutgoingBidsList outgoingBidsList;
         [SerializeField] private PersonalListingList personalListingList;
 
+        [SerializeField] private GameObject closeMarketOverlay;
+
         private void Start()
         {
             var marketServices = Utilities.GameManager.Instance.MarketServices;
@@ -42,27 +44,21 @@ namespace Version1.Market
             marketServices.RejectBidService.RejectBid -= RejectBid;
         }
 
-
-        public void InitializeData()
+        public void Clear()
         {
-            var playerId = PlayerData.PlayerData.Instance.PlayerId;
+            marketOfferList.Clear();
+            outgoingBidsList.Clear();
+            personalListingList.Clear();
+        }
 
-            var peerListings = Utilities.GameManager.Instance.ListingRepository.GetPeerListings(playerId);
-            var outgoingList = new List<(Guid listing, Guid bid)>();
-            var personalListings = Utilities.GameManager.Instance.ListingRepository.GetPersonalListings(playerId);
+        public void OpenMarket()
+        {
+            closeMarketOverlay.SetActive(false);
+        }
 
-            foreach (var listing in peerListings) 
-            { 
-                var bid = listing.BidRepository.GetLastBidBetweenPlayer(playerId);
-                if (bid == null)
-                    continue;
-                
-                outgoingList.Add((listing.ListingId, bid.BidId));
-            }
-
-            marketOfferList.InitializeData(peerListings.Select(l => l.ListingId).ToArray());
-            outgoingBidsList.InitializeData(outgoingList);
-            personalListingList.InitializeData(personalListings.Select(l => l.ListingId).ToArray());
+        public void CloseMarket()
+        {
+            closeMarketOverlay.SetActive(true);
         }
 
         private void CreateListing(object sender, ListingEventArgs e)
@@ -79,6 +75,7 @@ namespace Version1.Market
             {
                 personalListingList.RemoveDisplay(e.Listing.ListingId);
 
+                personalListingList.DetailsDisplay.Clear();
                 if (personalListingList.ReceivedBidsList.ActiveListing == e.Listing.ListingId)
                     personalListingList.ReceivedBidsList.Clear();
             }
@@ -97,6 +94,7 @@ namespace Version1.Market
             {
                 personalListingList.RemoveDisplay(e.Listing.ListingId);
 
+                personalListingList.DetailsDisplay.Clear();
                 if (personalListingList.ReceivedBidsList.ActiveListing == e.Listing.ListingId)
                     personalListingList.ReceivedBidsList.Clear();
             }
@@ -116,8 +114,11 @@ namespace Version1.Market
             if (e.Listing.Lister == PlayerData.PlayerData.Instance.PlayerId)
             { 
                 personalListingList.UpdateDisplay(e.Listing.ListingId);
+
+                if (personalListingList.ReceivedBidsList.ActiveListing == e.Listing.ListingId)
+                    personalListingList.ReceivedBidsList.CreateDisplay(e.Listing.ListingId, e.Bid.BidId);
             }
-            else
+            else if (e.Bid.Bidder == PlayerData.PlayerData.Instance.PlayerId)
             {
                 marketOfferList.RemoveDisplay(e.Listing.ListingId);
                 outgoingBidsList.CreateDisplay(e.Listing.ListingId, e.Bid.BidId);
@@ -140,6 +141,19 @@ namespace Version1.Market
             // Remove outgoing bid display
             // Add market listing display
             // Update personal listing display
+
+            if (e.Listing.Lister == PlayerData.PlayerData.Instance.PlayerId)
+            {
+                personalListingList.UpdateDisplay(e.Listing.ListingId);
+
+                if (personalListingList.ReceivedBidsList.ActiveListing == e.Listing.ListingId)
+                    personalListingList.ReceivedBidsList.RemoveDisplay(e.Bid.BidId);
+            }
+            else if (e.Bid.Bidder == PlayerData.PlayerData.Instance.PlayerId)
+            {
+                outgoingBidsList.RemoveDisplay(e.Listing.ListingId);
+                marketOfferList.CreateDisplay(e.Listing.ListingId);
+            }
         }
 
         private void AcceptBid(object sender, BidEventArgs e)
@@ -147,6 +161,19 @@ namespace Version1.Market
             // Remove outgoing bid display
             // Remove personal listing display
             // Clear bid list if necessary
+
+            if (e.Listing.Lister == PlayerData.PlayerData.Instance.PlayerId)
+            {
+                personalListingList.RemoveDisplay(e.Listing.ListingId);
+
+                personalListingList.DetailsDisplay.Clear();
+                if (personalListingList.ReceivedBidsList.ActiveListing == e.Listing.ListingId)
+                    personalListingList.ReceivedBidsList.Clear();
+            }
+            else if (e.Bid.Bidder == PlayerData.PlayerData.Instance.PlayerId)
+            {
+                outgoingBidsList.RemoveDisplay(e.Listing.ListingId);
+            }
         }
 
         private void CancelBid(object sender, BidEventArgs e)
@@ -155,6 +182,21 @@ namespace Version1.Market
             // Create market listing display
             // Update personal listing display
             // Update bid list if necessary
+
+            if (e.Bid.Bidder == PlayerData.PlayerData.Instance.PlayerId)
+            {
+                outgoingBidsList.RemoveDisplay(e.Listing.ListingId);
+                marketOfferList.CreateDisplay(e.Listing.ListingId);
+
+
+            }
+            else if (e.Listing.Lister == PlayerData.PlayerData.Instance.PlayerId)
+            {
+                personalListingList.UpdateDisplay(e.Listing.ListingId);
+
+                if (personalListingList.ReceivedBidsList.ActiveListing == e.Listing.ListingId)
+                    personalListingList.ReceivedBidsList.RemoveDisplay(e.Bid.BidId);
+            }
         }
 
 

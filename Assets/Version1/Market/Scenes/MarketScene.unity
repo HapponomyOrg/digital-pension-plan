@@ -1007,7 +1007,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Are you sure you want to buy this listing?
+  m_text: Are you sure you want to cancel this bid?
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
   m_sharedMaterial: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
@@ -2882,7 +2882,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4630411789324394585, guid: cb49005d7f4748d4c99993d55acb2267, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4630411789324394585, guid: cb49005d7f4748d4c99993d55acb2267, type: 3}
       propertyPath: m_AnchorMin.x
@@ -2890,7 +2890,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4630411789324394585, guid: cb49005d7f4748d4c99993d55acb2267, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4630411789324394585, guid: cb49005d7f4748d4c99993d55acb2267, type: 3}
       propertyPath: m_SizeDelta.x
@@ -5612,6 +5612,7 @@ MonoBehaviour:
   marketOfferList: {fileID: 102178261}
   outgoingBidsList: {fileID: 1494311771}
   personalListingList: {fileID: 940594825}
+  closeMarketOverlay: {fileID: 1171836334}
 --- !u!1 &639906049
 GameObject:
   m_ObjectHideFlags: 0
@@ -6320,6 +6321,7 @@ MonoBehaviour:
   interestRemainder: 0
   cards: 010000000200000001000000060000000c0000000c0000000c0000000c0000000c000000
   allPoints: 
+  isBank: 0
   currentMoneySystem: 0
   balance: 47000
   points: 3
@@ -6387,7 +6389,6 @@ MonoBehaviour:
   timer: {fileID: 1961030224}
   cardBar: {fileID: 1818398202}
   topBar: {fileID: 1173528036}
-  overlay: {fileID: 1171836334}
   marketView: {fileID: 627438877}
 --- !u!1 &755597170
 GameObject:
@@ -7450,7 +7451,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4630411789324394585, guid: cb49005d7f4748d4c99993d55acb2267, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4630411789324394585, guid: cb49005d7f4748d4c99993d55acb2267, type: 3}
       propertyPath: m_AnchorMin.x
@@ -7458,7 +7459,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4630411789324394585, guid: cb49005d7f4748d4c99993d55acb2267, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4630411789324394585, guid: cb49005d7f4748d4c99993d55acb2267, type: 3}
       propertyPath: m_SizeDelta.x
@@ -7716,7 +7717,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Are you sure you want to cancel this bid?
+  m_text: Are you sure you want to reject this bid?
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
   m_sharedMaterial: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
@@ -8482,7 +8483,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   listingDisplayPrefab: {fileID: 1406116112081940865, guid: 090d8413f3022f64db28bb966da8706a, type: 3}
-  listingDetailsDisplayPrefab: {fileID: 305372364}
+  <DetailsDisplay>k__BackingField: {fileID: 305372364}
   <ReceivedBidsList>k__BackingField: {fileID: 787389151}
   cancelListingOverlay: {fileID: 1565349780}
 --- !u!1 &947053040
@@ -8815,7 +8816,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4630411789324394585, guid: cb49005d7f4748d4c99993d55acb2267, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4630411789324394585, guid: cb49005d7f4748d4c99993d55acb2267, type: 3}
       propertyPath: m_AnchorMin.x
@@ -8823,7 +8824,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4630411789324394585, guid: cb49005d7f4748d4c99993d55acb2267, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4630411789324394585, guid: cb49005d7f4748d4c99993d55acb2267, type: 3}
       propertyPath: m_SizeDelta.x
@@ -11324,7 +11325,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Cancel Bid
+  m_text: Reject bid
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
   m_sharedMaterial: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
@@ -16530,7 +16531,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4630411789324394585, guid: cb49005d7f4748d4c99993d55acb2267, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4630411789324394585, guid: cb49005d7f4748d4c99993d55acb2267, type: 3}
       propertyPath: m_AnchorMin.x
@@ -16538,7 +16539,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4630411789324394585, guid: cb49005d7f4748d4c99993d55acb2267, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4630411789324394585, guid: cb49005d7f4748d4c99993d55acb2267, type: 3}
       propertyPath: m_SizeDelta.x
@@ -17555,7 +17556,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Buy listing
+  m_text: Cancel bid
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
   m_sharedMaterial: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
@@ -19101,7 +19102,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4630411789324394585, guid: cb49005d7f4748d4c99993d55acb2267, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4630411789324394585, guid: cb49005d7f4748d4c99993d55acb2267, type: 3}
       propertyPath: m_AnchorMin.x
@@ -19109,7 +19110,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4630411789324394585, guid: cb49005d7f4748d4c99993d55acb2267, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4630411789324394585, guid: cb49005d7f4748d4c99993d55acb2267, type: 3}
       propertyPath: m_SizeDelta.x

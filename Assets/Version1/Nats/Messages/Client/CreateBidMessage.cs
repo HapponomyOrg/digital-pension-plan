@@ -9,7 +9,7 @@ namespace Version1.Nats.Messages.Client
         public int OfferPrice;
         public string BidDateTimeStamp;
 
-        public CreateBidMessage(string dateTimeStamp, int lobbyID, int playerID, string auctionID, string bidID, int originalBidder, string playername, int offerprice, string bidDateTimeStamp) : base(dateTimeStamp, MessageSubject.MakeBidding, lobbyID, playerID)
+        public CreateBidMessage(string dateTimeStamp, int lobbyID, int playerID, string auctionID, string bidID, int originalBidder, string playername, int offerprice, string bidDateTimeStamp) : base(dateTimeStamp, MessageSubject.CreateBid, lobbyID, playerID)
         {
             AuctionID = auctionID;
             BidID = bidID;

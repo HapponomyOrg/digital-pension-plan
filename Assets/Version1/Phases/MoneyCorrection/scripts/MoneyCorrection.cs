@@ -53,7 +53,7 @@ namespace Version1.Phases.MoneyCorrection.scripts
                 case MoneySystems.DebtBased:
                     // TODO this is at the end of the game.
                     throw new NotImplementedException();
-                case MoneySystems.InterestAtIntervals:
+                /*case MoneySystems.InterestAtIntervals:
                     {
                         int newInterest =
                             (int)(PlayerData.PlayerData.Instance.Debt * 0.10);
@@ -116,9 +116,9 @@ namespace Version1.Phases.MoneyCorrection.scripts
                         }
 
                         break;
-                    }
+                    }*/
 
-                case MoneySystems.ClosedEconomy:
+                /*case MoneySystems.ClosedEconomy:
                     {
                         // This is an addition to the interest at intervals/
                         // choose 1 player that is the bank.
@@ -190,7 +190,7 @@ namespace Version1.Phases.MoneyCorrection.scripts
                             }
                         }
                         break;
-                    }
+                    }*/
                 case MoneySystems.RealisticDebtDistribution:
                     throw new NotImplementedException();
                     // At the beginning the host sets the debt of players at the same random interval as the balance

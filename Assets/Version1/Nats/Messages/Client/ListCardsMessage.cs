@@ -8,7 +8,7 @@ namespace Version1.Nats.Messages.Client
         public int Amount;
         public string ListingDateTimeStamp;
 
-        public ListCardsmessage(string dateTimeStamp, int lobbyID, int playerID, string playerName, string auctionID, int[] cards, int amount, string listingDateTimeStamp) : base(dateTimeStamp, MessageSubject.ListCards, lobbyID, playerID)
+        public ListCardsmessage(string dateTimeStamp, int lobbyID, int playerID, string playerName, string auctionID, int[] cards, int amount, string listingDateTimeStamp) : base(dateTimeStamp, MessageSubject.CreateListing, lobbyID, playerID)
         {
             PlayerName = playerName;
             AuctionID = auctionID;

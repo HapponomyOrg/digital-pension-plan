@@ -42,7 +42,7 @@ namespace Version1.Market
             Utilities.GameManager.Instance.ListingRepository.RemoveListing(listing);
         }
 
-        public void AcceptBidHandler(object o, AcceptBidMessage message)
+        public void AcceptBidHandler(AcceptBidMessage message)
         {
             var listingId = Guid.Parse(message.AuctionID);
             var bidId = Guid.Parse(message.BidID);
