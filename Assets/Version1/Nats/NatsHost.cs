@@ -24,15 +24,27 @@ namespace Version1.Nats
 
         private NatsHost()
         {
-        #if UNITY_WEBGL && !UNITY_EDITOR
-            string url = Application.absoluteURL;
-            System.Uri uri = new System.Uri(url);
-            string wsUrl = $"ws://{uri.Host}:8080/ws";
-            WebSocketClient = new WebsocketClient(wsUrl);
-        #else
-            // For testing in Unity Editor
+#if UNITY_WEBGL && !UNITY_EDITOR
+    WebSocketClient = new WebsocketClient("ws://localhost:8080/ws");
+#else
             WebSocketClient = new WebsocketClient("ws://localhost:8080/ws");
-        #endif
+#endif
+
+            // Add this:
+            ConnectAsync();
+        }
+
+        private async void ConnectAsync()
+        {
+            try
+            {
+                await WebSocketClient.Connect();
+                Debug.Log("NatsHost WebSocket connected!");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"NatsHost connection failed: {ex.Message}");
+            }
         }
 
         /*public event EventHandler<ListCardsmessage> OnListCards;

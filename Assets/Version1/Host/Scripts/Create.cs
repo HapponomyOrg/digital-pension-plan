@@ -32,9 +32,8 @@ namespace Version1.Host.Scripts
 
         private int oldCode;
 
-        private async void Start()
+        private void Start()
         {
-            await Nats.NatsHost.C.WebSocketClient.Connect();
             SetupGameModeDropdown();
         }
 
