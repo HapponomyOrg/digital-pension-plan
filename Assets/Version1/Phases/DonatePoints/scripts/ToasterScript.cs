@@ -8,10 +8,17 @@ namespace Version1.Phases.DonatePoints.scripts
     {
         [SerializeField] private Button _closeButton;
         [SerializeField] public TMP_Text toasterText;
+        [SerializeField] private float autoDestroyTime = 30f;
+
+        private void Start()
+        {
+            // Automatically destroy after 30 seconds
+            Destroy(gameObject, autoDestroyTime);
+        }
 
         public void CloseToaster()
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
     }
 }

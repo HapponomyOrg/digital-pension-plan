@@ -14,6 +14,7 @@ namespace Version1.Utilities
         public static NetworkManager Instance { get; private set; }
 
         public int heartbeatInterval = 2;
+        private Coroutine heartbeatCoroutine;
 
         public event EventHandler<RejectedMessage> OnRejected;
         public event EventHandler<string> OnError;
@@ -61,47 +62,80 @@ namespace Version1.Utilities
         {
             DontDestroyOnLoad(gameObject);
 
+            Debug.Log("NetworkManager Awake started");
+
 #if UNITY_WEBGL && !UNITY_EDITOR
-    WebSocketClient = new WebsocketClient("ws://localhost:8080/ws");
+    // Dynamically get the host from the current URL
+    string url = Application.absoluteURL;
+    System.Uri uri = new System.Uri(url);
+
+    // Build WebSocket URL from current page host
+    string wsUrl = $"ws://{uri.Host}:8080/ws";
+
+    Debug.Log($"Connecting to WebSocket at: {wsUrl}");
+    WebSocketClient = new WebsocketClient(wsUrl);
 #else
+            // For testing in Unity Editor
             WebSocketClient = new WebsocketClient("ws://localhost:8080/ws");
 #endif
 
+
+            Debug.Log("WebSocketClient created");
+
             // IMPORTANT: Subscribe to ALL events BEFORE connecting
-            WebSocketClient.OnError += WebSocketClientOnOnError;
+            // Subscribe to NatsClient events
             WebSocketClient.OnRejected += NatsClientOnOnRejected;
-            WebSocketClient.OnAcceptBidding += NatsClientOnOnAcceptBidding;
-            WebSocketClient.OnBuyCards += NatsClientOnOnBuyCards;
-            WebSocketClient.OnCancelBidding += NatsClientOnOnCancelBidding;
-            WebSocketClient.OnCancelListing += NatsClientOnOnCancelListing;
-            WebSocketClient.OnConfirmBuy += NatsClientOnOnConfirmBuy;
+            //WebSocketClient.OnConfirmBuy += NatsClientOnOnConfirmBuy;
             WebSocketClient.OnConfirmJoin += NatsClientOnOnConfirmJoin;
             WebSocketClient.OnDonatePoints += NatsClientOnOnDonatePoints;
             WebSocketClient.OnEndGame += NatsClientOnOnEndGame;
-            WebSocketClient.OnListCards += NatsClientOnOnListCards;
-            WebSocketClient.OnMakeBidding += NatsClientOnOnMakeBidding;
-            WebSocketClient.OnRejectBidding += NatsClientOnOnRejectBidding;
-            WebSocketClient.OnRespondBidding += NatsClientOnOnRespondBidding;
+
+            // Listings
+            WebSocketClient.OnCreateListing += CreateListing;
+            WebSocketClient.OnCancelListing += CancelListing;
+            WebSocketClient.OnBuyListing += BuyListing;
+
+            // Bids
+            WebSocketClient.OnCreateBid += CreateBid;
+            WebSocketClient.OnCancelBid += CancelBid;
+            WebSocketClient.OnAcceptBid += AcceptBid;
+            WebSocketClient.OnAcceptCounterBid += AcceptCounterBid;
+            WebSocketClient.OnCounterBid += CounterBid;
+            WebSocketClient.OnRejectBid += RejectBid;
+            WebSocketClient.OnRejectCounterBid += RejectCounterBid;
+
+
             WebSocketClient.OnStartGame += NatsClientOnOnStartGame;
             WebSocketClient.OnStartRound += NatsClientOnOnStartRound;
             WebSocketClient.OnStopRound += NatsClientOnOnStopRound;
-            WebSocketClient.OnAcceptCounterBidding += NatsClientOnOnAcceptCounterBidding;
-            WebSocketClient.OnConfirmCancelListing += NatsClientOnOnConfirmCancelListing;
+            //WebSocketClient.OnConfirmCancelListing += NatsClientOnOnConfirmCancelListing;
             WebSocketClient.OnConfirmHandIn += NatsClientOnOnConfirmHandIn;
             WebSocketClient.OnEndOfRounds += NatsClientOnOnEndOfRounds;
+            WebSocketClient.OnOpen += NatsClientOnOpen;
 
-            // Now connect after all events are subscribed
+            Debug.Log("All events subscribed");
+
             try
             {
                 Debug.Log("Attempting to connect to WebSocket...");
                 await WebSocketClient.Connect();
-                Debug.Log("WebSocket connection successful!");
             }
             catch (Exception ex)
             {
                 Debug.LogError($"Failed to connect: {ex.Message}\nStack: {ex.StackTrace}");
-                OnError?.Invoke(this, ex.Message); // Pass actual error message
+                OnError?.Invoke(this, ex.Message);
             }
+        }
+
+        private void NatsClientOnOpen(object sender, bool e)
+        {
+            Debug.Log($"Heartbeat coroutine is null: {heartbeatCoroutine == null}");
+
+            if (heartbeatCoroutine != null) return;
+
+            Debug.Log("About to start heartbeat coroutine...");
+            heartbeatCoroutine = StartCoroutine(HeartbeatRoutine());
+            Debug.Log($"Heartbeat started, coroutine reference: {heartbeatCoroutine != null}");
         }
 
         private void WebSocketClientOnOnError(object sender, string e)
@@ -112,6 +146,13 @@ namespace Version1.Utilities
 
         private void OnDestroy()
         {
+            if (heartbeatCoroutine != null)
+            {
+                StopCoroutine(heartbeatCoroutine);
+                heartbeatCoroutine = null;
+                Debug.Log("Heartbeat stopped");
+            }
+
             WebSocketClient?.Dispose();
         }
 
@@ -119,6 +160,13 @@ namespace Version1.Utilities
         {
             while (true)
             {
+                if (PlayerData.PlayerData.Instance == null)
+                {
+                    Debug.LogWarning("PlayerData.Instance is null, skipping heartbeat");
+                    yield return new WaitForSeconds(heartbeatInterval);
+                    continue;
+                }
+
                 var msg = new HeartBeatMessage(
                     DateTime.UtcNow.ToString("o"),
                     PlayerData.PlayerData.Instance.LobbyID,
@@ -131,6 +179,8 @@ namespace Version1.Utilities
                 );
 
                 Publish(PlayerData.PlayerData.Instance.LobbyID.ToString(), msg);
+
+                Debug.Log("Sent heartbeat");
 
                 yield return new WaitForSeconds(heartbeatInterval);
             }
@@ -151,54 +201,36 @@ namespace Version1.Utilities
             PlayerData.PlayerData.Instance.ConfirmHandIn(e);
         }
 
-        private void NatsClientOnOnConfirmCancelListing(object sender, ConfirmCancelListingMessage e)
+/*        private void NatsClientOnOnConfirmCancelListing(object sender, ConfirmCancelListingMessage e)
         {
             // TODO MARKET FUNCTION
         }
+*/
 
-        private void NatsClientOnOnAcceptCounterBidding(object sender, AcceptCounterBiddingMessage e)
-        {
-            // TODO MARKET FUNCTION
-        }
 
         private void NatsClientOnOnStopRound(object sender, StopRoundMessage e)
         {
-            // TODO game phase system
+            var phaseController = GameManager.Instance.PhaseManager.CurrentPhaseController;
+            if (phaseController != null)
+                phaseController.StopPhase();
         }
 
         private void NatsClientOnOnStartRound(object sender, StartRoundMessage e)
         {
-            //   Utilities.GameManager.Instance.LoadPhase(e.RoundNumber, e.RoundName);
+            Utilities.GameManager.Instance.PhaseManager.LoadPhase(e.RoundNumber, e.RoundName);
         }
 
         private void NatsClientOnOnStartGame(object sender, StartGameMessage e)
         {
             if (e.OtherPlayerID != PlayerData.PlayerData.Instance.PlayerId) return;
 
-            //   Utilities.GameManager.Instance.StartGame();
+            Utilities.GameManager.Instance.PhaseManager.StartPhases();
             PlayerData.PlayerData.Instance.StartGame(e);
         }
 
-        private void NatsClientOnOnRespondBidding(object sender, CounterBidMessage e)
+        private void NatsClientOnOnRejected(object sender, RejectedMessage e)
         {
-            // TODO MARKET FUNCTION
-        }
-
-        private void NatsClientOnOnRejectBidding(object sender, RejectBidMessage e)
-        {
-            // TODO MARKET FUNCTION
-        }
-
-        private void NatsClientOnOnMakeBidding(object sender, CreateBidMessage e)
-        {
-            // GameManager.Instance.MarketServices.CreateBidService.CreateBidHandler(sender, e);
-            // TODO MARKET FUNCTION
-            //throw new NotImplementedException();
-        }
-
-        private void NatsClientOnOnListCards(object sender, ListCardsmessage e)
-        {
-            // GameManager.Instance.MarketServices.CreateListingService.CreateListingHandler(sender, e);
+            OnRejected?.Invoke(sender, e);
         }
 
         private void NatsClientOnOnEndGame(object sender, EndGameMessage e)
@@ -226,37 +258,56 @@ namespace Version1.Utilities
             SceneManager.LoadScene("Loading");
         }
 
-        private void NatsClientOnOnConfirmBuy(object sender, ConfirmBuyMessage e)
+        /*private void NatsClientOnOnConfirmBuy(object sender, ConfirmBuyMessage e)
+        {
+            // TODO MARKET FUNCTION
+        }*/
+
+
+        #region Listing
+
+        private void CreateListing(object sender, ListCardsmessage e)
+            => GameManager.Instance.MarketServices.CreateListingService.CreateListingHandler(e);
+
+        private void CancelListing(object sender, CancelListingMessage e)
+            => GameManager.Instance.MarketServices.CancelListingService.CancelListingHandler(e);
+
+        private void BuyListing(object sender, BuyCardsRequestMessage e)
+            => GameManager.Instance.MarketServices.BuyListingService.BuyListingHandler(e);
+
+        #endregion
+
+
+        #region Bid
+
+        private void CreateBid(object sender, CreateBidMessage e)
+            => GameManager.Instance.MarketServices.CreateBidService.CreateBidHandler(e);
+
+        private void CancelBid(object sender, CancelBidMessage e)
+            => GameManager.Instance.MarketServices.CancelBidService.CancelBidHandler(e);
+
+        private void AcceptBid(object sender, AcceptBidMessage e)
+            => GameManager.Instance.MarketServices.AcceptBidService.AcceptBidHandler(e);
+
+        private void AcceptCounterBid(object sender, AcceptCounterBiddingMessage e)
         {
             // TODO MARKET FUNCTION
         }
 
-        private void NatsClientOnOnCancelListing(object sender, CancelListingMessage e)
-        {
-            //  GameManager.Instance.MarketServices.CancelListingService.CancelListingHandler(sender, e);
-        }
 
-        private void NatsClientOnOnCancelBidding(object sender, CancelBidMessage e)
+        private void CounterBid(object sender, CounterBidMessage e)
         {
             // TODO MARKET FUNCTION
         }
 
-        private void NatsClientOnOnBuyCards(object sender, BuyCardsRequestMessage e)
-        {
-            // TODO MARKET FUNCTION
-            //throw new NotImplementedException();
+        private void RejectBid(object sender, RejectBidMessage e)
+            => GameManager.Instance.MarketServices.RejectBidService.RejectBidHandler(e);
 
-            // GameManager.Instance.MarketServices.BuyListingService.BuyListingHandler(sender, e);
-        }
-
-        private void NatsClientOnOnAcceptBidding(object sender, AcceptBidMessage e)
+        private void RejectCounterBid(object sender, RejectCounterBidMessage e)
         {
             // TODO MARKET FUNCTION
         }
 
-        private void NatsClientOnOnRejected(object sender, RejectedMessage e)
-        {
-            OnRejected?.Invoke(sender, e);
-        }
+        #endregion
     }
 }

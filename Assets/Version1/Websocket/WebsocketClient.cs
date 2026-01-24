@@ -18,8 +18,8 @@ namespace Version1.Websocket
 
     public class WebsocketClient
     {
-        public event EventHandler<ListCardsmessage> OnListCards;
-        public event EventHandler<BuyCardsRequestMessage> OnBuyCards;
+        public event EventHandler<ListCardsmessage> OnCreateListing;
+        public event EventHandler<BuyCardsRequestMessage> OnBuyListing;
         public event EventHandler<CancelListingMessage> OnCancelListing;
         public event EventHandler<DonateMoneyMessage> OnDonateMoney;
         public event EventHandler<DonatePointsMessage> OnDonatePoints;
@@ -38,20 +38,21 @@ namespace Version1.Websocket
         public event EventHandler<ConfirmBuyMessage> OnConfirmBuy;
         public event EventHandler<ConfirmHandInMessage> OnConfirmHandIn;
         public event EventHandler<ConfirmCancelListingMessage> OnConfirmCancelListing;
-        public event EventHandler<CreateBidMessage> OnMakeBidding;
-        public event EventHandler<AcceptBidMessage> OnAcceptBidding;
-        public event EventHandler<CancelBidMessage> OnCancelBidding;
-        public event EventHandler<RejectBidMessage> OnRejectBidding;
-        public event EventHandler<CounterBidMessage> OnRespondBidding;
-        public event EventHandler<AcceptCounterBiddingMessage> OnAcceptCounterBidding;
+        public event EventHandler<CreateBidMessage> OnCreateBid;
+        public event EventHandler<AcceptBidMessage> OnAcceptBid;
+        public event EventHandler<CancelBidMessage> OnCancelBid;
+        public event EventHandler<RejectBidMessage> OnRejectBid;
+        public event EventHandler<CounterBidMessage> OnCounterBid;
+        public event EventHandler<AcceptCounterBiddingMessage> OnAcceptCounterBid;
+        public event EventHandler<RejectCounterBidMessage> OnRejectCounterBid;
         public event EventHandler<AbortSessionMessage> OnAbortSession;
         public event EventHandler<SkipRoundMessage> OnSkipRound;
         public event EventHandler<ContinueMessage> OnContinue;
+        public event EventHandler<bool> OnOpen;
         public event EventHandler<string> OnError;
 
         private WebSocket _webSocket;
         private string _uri;
-        private bool _isOpen;
 
         public int clientID;
 
@@ -66,12 +67,16 @@ namespace Version1.Websocket
 
             _webSocket = new WebSocket(_uri);
 
-            _webSocket.OnOpen += () => { Debug.Log("WebSocket Connected!"); };
+            _webSocket.OnOpen += () =>
+            {
+                Debug.Log("WebSocket Connected!");
+                OnOpen?.Invoke(this, true);
+            };
 
             _webSocket.OnError += (e) =>
             {
-                OnError?.Invoke(this, e);
                 Debug.LogError($"WebSocket Error: {e}");
+                OnError?.Invoke(this, e);
             };
 
             _webSocket.OnClose += (e) => { Debug.Log($"WebSocket Closed: {e}"); };
@@ -79,7 +84,7 @@ namespace Version1.Websocket
             _webSocket.OnMessage += OnMessageReceived;
 
             // Connect to the server
-            await _webSocket.Connect();
+            _ = _webSocket.Connect();
         }
 
         private void OnMessageReceived(byte[] bytes)
@@ -91,6 +96,8 @@ namespace Version1.Websocket
             try
             {
                 var wsMessage = JsonUtility.FromJson<WebSocketMessage>(messageJson);
+
+                //Debug.LogWarning($"{wsMessage.action} , {wsMessage.subject}");
 
                 if (wsMessage.action == "message")
                 {
@@ -114,6 +121,7 @@ namespace Version1.Websocket
                     }
 
                     string dataJson = messageJson.Substring(openBrace, closeBrace - openBrace + 1);
+                    //Debug.LogWarning("Extracted data: " + dataJson);
 
                     var innerData = JsonUtility.FromJson<BaseMessage>(dataJson);
 
@@ -172,13 +180,15 @@ namespace Version1.Websocket
                                 Debug.LogError($"Error in OnStopRound event handler: {ex.Message}\n{ex.StackTrace}");
                             }
                         }
-
                         break;
                     case MessageSubject.StartRound:
                         OnStartRound?.Invoke(this, JsonUtility.FromJson<StartRoundMessage>(jsonData));
                         break;
                     case MessageSubject.Rejected:
                         OnRejected?.Invoke(this, JsonUtility.FromJson<RejectedMessage>(jsonData));
+                        break;
+                    case MessageSubject.BuyListing:
+                        OnBuyListing?.Invoke(this, JsonUtility.FromJson<BuyCardsRequestMessage>(jsonData));
                         break;
                     case MessageSubject.CancelListing:
                         OnCancelListing?.Invoke(this, JsonUtility.FromJson<CancelListingMessage>(jsonData));
@@ -214,9 +224,31 @@ namespace Version1.Websocket
                     case MessageSubject.ConfirmHandIn:
                         OnConfirmHandIn?.Invoke(this, JsonUtility.FromJson<ConfirmHandInMessage>(jsonData));
                         break;
+                    case MessageSubject.CreateListing:
+                        OnCreateListing?.Invoke(this, JsonUtility.FromJson<ListCardsmessage>(jsonData));
+                        break;
+                    case MessageSubject.CreateBid:
+                        OnCreateBid?.Invoke(this, JsonUtility.FromJson<CreateBidMessage>(jsonData));
+                        break;
+                    case MessageSubject.AcceptBid:
+                        OnAcceptBid?.Invoke(this, JsonUtility.FromJson<AcceptBidMessage>(jsonData));
+                        break;
+                    case MessageSubject.CancelBid:
+                        OnCancelBid?.Invoke(this, JsonUtility.FromJson<CancelBidMessage>(jsonData));
+                        break;
+                    case MessageSubject.RejectBid:
+                        OnRejectBid?.Invoke(this, JsonUtility.FromJson<RejectBidMessage>(jsonData));
+                        break;
+                    case MessageSubject.CounterBid:
+                        OnCounterBid?.Invoke(this, JsonUtility.FromJson<CounterBidMessage>(jsonData));
+                        break;
                     case MessageSubject.AcceptCounterBidding:
-                        OnAcceptCounterBidding?.Invoke(this,
+                        OnAcceptCounterBid?.Invoke(this,
                             JsonUtility.FromJson<AcceptCounterBiddingMessage>(jsonData));
+                        break;
+                    case MessageSubject.RejectCounterBidding:
+                        OnRejectCounterBid?.Invoke(this,
+                            JsonUtility.FromJson<RejectCounterBidMessage>(jsonData));
                         break;
                     case MessageSubject.Continue:
                         OnContinue?.Invoke(this, JsonUtility.FromJson<ContinueMessage>(jsonData));
@@ -278,6 +310,7 @@ namespace Version1.Websocket
             return "{" + string.Join(",", jsonParts) + "}";
         }
 
+
         public async Task Subscribe(string topic)
         {
             string message = $"{{\"action\": \"subscribe\", \"subject\": \"{topic}\"}}";
@@ -304,12 +337,12 @@ namespace Version1.Websocket
             await Send(message);
         }
 
+
         private async Task Send(string message)
         {
-            if (_webSocket == null || _webSocket.State != WebSocketState.Open)
+            if (_webSocket.State != WebSocketState.Open)
             {
-                Debug.LogError($"WebSocket is not open. Current state: {_webSocket?.State}. Cannot send message.");
-                OnError?.Invoke(this, "Websocket is not open");
+                Debug.LogError("WebSocket is not open. Cannot send message.");
                 return;
             }
 
@@ -320,7 +353,6 @@ namespace Version1.Websocket
             catch (Exception ex)
             {
                 Debug.LogError($"Error sending message: {ex.Message}");
-                OnError?.Invoke(this, "Could not send text");
                 throw;
             }
         }

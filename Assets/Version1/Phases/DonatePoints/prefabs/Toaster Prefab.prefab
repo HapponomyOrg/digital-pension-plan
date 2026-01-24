@@ -300,7 +300,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 917c5b372480638479ea948868966740, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toasterText: {fileID: 0}
+  toasterText: {fileID: 2368461872604019312}
+  autoDestroyTime: 10
 --- !u!1001 &2349985359182298374
 PrefabInstance:
   m_ObjectHideFlags: 0

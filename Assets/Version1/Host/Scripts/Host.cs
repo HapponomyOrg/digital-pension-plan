@@ -260,9 +260,9 @@ namespace Version1.Host.Scripts
             var cards = cardManager.TakeCards(4);
             var intArray = new int[4];
 
-            foreach (var card in cards)
+            for (int i = 0; i < cards.Count && i < 4; i++)
             {
-                intArray.Append(card.ID);
+                intArray[i] = cards[i].ID;
             }
 
             Nats.NatsHost.C.Publish(msg.LobbyID.ToString(), new ConfirmHandInMessage(
@@ -339,6 +339,8 @@ namespace Version1.Host.Scripts
         private void OnHeartBeat(object sender, HeartBeatMessage e)
         {
             DateTime parsedDate = DateTime.Parse(e.DateTimeStamp);
+
+            Debug.Log(e);
 
             if (!players.ContainsKey(e.PlayerID))
             {
