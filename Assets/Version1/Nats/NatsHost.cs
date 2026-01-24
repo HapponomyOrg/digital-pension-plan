@@ -54,7 +54,6 @@ namespace Version1.Nats
         public event EventHandler<DonatePointsMessage> OnDonatePoints;
         public event EventHandler<DeptUpdateMessage> OnDeptUpdate;
         public event EventHandler<CardHandInMessage> OnCardHandIn;
-        public event EventHandler<HeartBeatMessage> OnHeartBeat;
         public event EventHandler<JoinRequestMessage> OnJoinrequest;
         public event EventHandler<ContinueMessage> OnContinue;
         public event EventHandler<string> MessageLog;*/
