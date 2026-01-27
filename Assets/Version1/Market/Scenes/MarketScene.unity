@@ -16374,7 +16374,7 @@ MonoBehaviour:
   buyButton: {fileID: 551452895}
   bidButton: {fileID: 1505893446}
   cardList: {fileID: 1445316602}
-  cardAmountPrefab: {fileID: 0}
+  cardAmountPrefab: {fileID: 8007875703584852651, guid: cb49005d7f4748d4c99993d55acb2267, type: 3}
 --- !u!1 &1860515870
 GameObject:
   m_ObjectHideFlags: 0
