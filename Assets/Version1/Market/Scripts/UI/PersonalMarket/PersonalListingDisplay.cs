@@ -60,7 +60,7 @@ namespace Version1.Market
             foreach (var cardAmount in cardAmounts)
             {
                 var obj = Instantiate(cardIconPrefab, cardList);
-                obj.SetDisplay(cardAmount.Key, cardAmount.Value);
+                obj.SetDisplay(cardAmount.Key, cardAmount.Value, icon: true);
             }
         }
     }
