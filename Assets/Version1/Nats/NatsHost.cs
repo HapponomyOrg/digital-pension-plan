@@ -25,12 +25,20 @@ namespace Version1.Nats
         private NatsHost()
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
-    WebSocketClient = new WebsocketClient("ws://localhost:8080/ws");
+    // Dynamically get the host from the current URL
+    string url = Application.absoluteURL;
+    System.Uri uri = new System.Uri(url);
+
+    // Build WebSocket URL from current page host
+    string wsUrl = $"ws://{uri.Host}:8080/ws";
+
+    Debug.Log($"Connecting to WebSocket at: {wsUrl}");
+    WebSocketClient = new WebsocketClient(wsUrl);
 #else
+            // For testing in Unity Editor
             WebSocketClient = new WebsocketClient("ws://localhost:8080/ws");
 #endif
 
-            // Add this:
             ConnectAsync();
         }
 
