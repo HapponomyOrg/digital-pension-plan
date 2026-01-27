@@ -14,9 +14,10 @@ namespace Version1.Market
         [SerializeField] private Image imageDisplay;
         [SerializeField] private TMP_Text amountDisplay;
 
-        public void SetDisplay(int cardId, int amount)
+        public void SetDisplay(int cardId, int amount, bool icon = false)
         {
-            imageDisplay.sprite = Utilities.GameManager.Instance.CardLibrary.CardData(cardId).Art;
+            var cardData = Utilities.GameManager.Instance.CardLibrary.CardData(cardId);
+            imageDisplay.sprite = icon ? cardData.Icon : cardData.Art;
             amountDisplay.text = amount.ToString();
         }
     }

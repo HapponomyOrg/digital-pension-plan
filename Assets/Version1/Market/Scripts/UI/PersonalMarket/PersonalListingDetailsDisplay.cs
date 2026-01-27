@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Reflection;
 using TMPro;
 using UnityEngine;
@@ -16,6 +17,11 @@ namespace Version1.Market
         [SerializeField] private CardAmountDisplay cardPrefab;
         [SerializeField] private Button cancelButton;
 
+        private readonly CultureInfo numberFormatter = new("en-US")
+        {
+            NumberFormat = { NumberGroupSeparator = "." }
+        };
+
         public void SetDisplay(Guid listingId, Dictionary<EListingAction, Action> listingActions)
         {
             var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
@@ -23,7 +29,7 @@ namespace Version1.Market
             if (listing == null)
                 return; // TODO Error handling
 
-            priceDisplay.text = listing.BidRepository.GetUniqueBidderCount().ToString();
+            priceDisplay.text = listing.BidRepository.GetUniqueBidderCount().ToString("N0", numberFormatter);
             bidCountDisplay.text = listing.Lister.ToString();
 
             cancelButton.onClick.RemoveAllListeners();
@@ -61,6 +67,9 @@ namespace Version1.Market
             bidCountDisplay.text = string.Empty;
 
             cancelButton.onClick.RemoveAllListeners();
+
+            foreach (Transform child in cardList)
+                Destroy(child.gameObject);
         }
     }
 }

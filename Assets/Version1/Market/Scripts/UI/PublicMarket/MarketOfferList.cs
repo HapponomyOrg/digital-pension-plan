@@ -20,6 +20,8 @@ namespace Version1.Market
         {
             foreach (Transform child in transform)
                 Destroy(child.gameObject);
+
+            marketOfferDetailsDisplayPrefab.Clear();
             marketOffers.Clear();
         }
 

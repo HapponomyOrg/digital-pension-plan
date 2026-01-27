@@ -63,7 +63,8 @@ namespace Version1.Market
         {
             var listing = new Listing(
                 Guid.NewGuid(), 
-                PlayerData.PlayerData.Instance.PlayerId, 
+                PlayerData.PlayerData.Instance.PlayerId,
+                PlayerData.PlayerData.Instance.PlayerName,
                 DateTime.Now, 
                 price, 
                 selectedCards.ToArray());
