@@ -29,8 +29,12 @@ namespace Version1.Market
             if (listing == null)
                 return; // TODO Error handling
 
-            priceDisplay.text = listing.BidRepository.GetUniqueBidderCount().ToString("N0", numberFormatter);
-            bidCountDisplay.text = listing.Lister.ToString();
+            priceDisplay.text = listing.Price.ToString("N0", numberFormatter);
+
+            var bidderCount = listing.BidRepository.GetUniqueBidderCount();
+            var bidSuffix = bidderCount == 1 ? "bid" : "bids";
+
+            bidCountDisplay.text = $"{bidderCount} + {bidSuffix}";
 
             selectButton.onClick.RemoveAllListeners();
             cancelButton.onClick.RemoveAllListeners();
@@ -47,7 +51,6 @@ namespace Version1.Market
         {
             foreach (Transform child in cardList)
                 Destroy(child.gameObject);
-
 
             var cardAmounts = new Dictionary<int, int>();
             foreach (var cardId in cards)
