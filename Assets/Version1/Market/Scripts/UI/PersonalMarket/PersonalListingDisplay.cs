@@ -34,7 +34,7 @@ namespace Version1.Market
             var bidderCount = listing.BidRepository.GetUniqueBidderCount();
             var bidSuffix = bidderCount == 1 ? "bid" : "bids";
 
-            bidCountDisplay.text = $"{bidderCount} + {bidSuffix}";
+            bidCountDisplay.text = $"{bidderCount} {bidSuffix}";
 
             selectButton.onClick.RemoveAllListeners();
             cancelButton.onClick.RemoveAllListeners();
