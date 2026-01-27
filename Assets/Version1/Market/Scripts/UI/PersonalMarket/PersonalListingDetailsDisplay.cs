@@ -67,6 +67,9 @@ namespace Version1.Market
             bidCountDisplay.text = string.Empty;
 
             cancelButton.onClick.RemoveAllListeners();
+
+            foreach (Transform child in cardList)
+                Destroy(child.gameObject);
         }
     }
 }
