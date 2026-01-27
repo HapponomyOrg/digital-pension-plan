@@ -22,6 +22,8 @@ namespace Version1.Market
         {
             foreach (Transform child in transform)
                 Destroy(child.gameObject);
+
+            DetailsDisplay.Clear();
             listingDisplays.Clear();
         }
 

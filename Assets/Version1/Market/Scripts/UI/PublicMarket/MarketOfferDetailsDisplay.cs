@@ -29,6 +29,7 @@ namespace Version1.Market
         {
             NumberFormat = { NumberGroupSeparator = "." }
         };
+
         public void SetDisplay(Guid listingId, Dictionary<EListingAction, Action> listingActions)
         {
             var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
@@ -69,6 +70,17 @@ namespace Version1.Market
                 var obj = Instantiate(cardAmountPrefab, cardList);
                 obj.SetDisplay(cardAmount.Key, cardAmount.Value);
             }
+        }
+
+        public void Clear()
+        {
+            priceDisplay.text = string.Empty;
+
+            buyButton.onClick.RemoveAllListeners();
+            bidButton.onClick.RemoveAllListeners();
+
+            foreach (Transform child in cardList)
+                Destroy(child.gameObject);
         }
     }
 }
