@@ -5,6 +5,7 @@ using Assets.Version1.Phases;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using Version1.Market;
 using Version1.Phases.Trading;
 using Version1.Utilities;
@@ -14,6 +15,7 @@ namespace Version1.Phases.MoneyCorrection
     public class MoneyCorrectionPhaseController : MonoBehaviour, IPhaseController
     {
         [SerializeField] private TMP_Text text;
+        [SerializeField] private Button continueButton;
 
         private void Start()
         {
@@ -29,35 +31,46 @@ namespace Version1.Phases.MoneyCorrection
                     switch (PlayerData.PlayerData.Instance.Balance)
                     {
                         case > 6000:
-                            {
-                                var oldAmount = PlayerData.PlayerData.Instance.Balance;
+                        {
+                            var oldAmount = PlayerData.PlayerData.Instance.Balance;
+                            var amountToPay = RoundToThousand((PlayerData.PlayerData.Instance.Balance - 6000) / 2);
+                            PlayerData.PlayerData.Instance.Balance -= amountToPay;
 
-                                var amountToPay = RoundToThousand((PlayerData.PlayerData.Instance.Balance - 6000) / 2);
-                                PlayerData.PlayerData.Instance.Balance -= amountToPay;
+                            Debug.LogWarning(
+                                $"Over or equal 6000     {amountToPay}       {PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}");
 
-                                Debug.LogWarning(
-                                    $"Over or equal 6000     {amountToPay}       {PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}");
-
-                                StartCoroutine(DisplayTextLetterByLetter(
-                                    $"Because your balance is over 6.000\nyou will get a penalty of {amountToPay.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}\n\nYour old balance was {oldAmount.ToString("N0", new System.Globalization.CultureInfo("de-DE"))} \n\nYour new balance is {PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}"));
-                                break;
-                            }
+                            StartCoroutine(DisplayTextLetterByLetter(
+                                $"! Balance Penalty !\n\n" +
+                                $"Your balance exceeded €6.000!\n" +
+                                $"Penalty: €{amountToPay.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}\n\n" +
+                                $"Previous balance: €{oldAmount.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}\n" +
+                                $"New balance: €{PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}"));
+                            break;
+                        }
                         case < 4000:
-                            {
-                                var oldAmount = PlayerData.PlayerData.Instance.Balance;
-                                PlayerData.PlayerData.Instance.Balance += 2000;
-                                Debug.LogWarning(
-                                    $"under or equal 4000  {PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}");
-                                StartCoroutine(DisplayTextLetterByLetter(
-                                    $"Because your balance is less then 4.000\n2.000 will be added to your balance\n\nYour old balance was {oldAmount}\n\nYour new balance is now {PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}"));
-                                break;
-                            }
+                        {
+                            var oldAmount = PlayerData.PlayerData.Instance.Balance;
+                            PlayerData.PlayerData.Instance.Balance += 2000;
+
+                            Debug.LogWarning(
+                                $"under or equal 4000  {PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}");
+
+                            StartCoroutine(DisplayTextLetterByLetter(
+                                $"! Balance Bonus !\n\n" +
+                                $"Your balance fell below €4.000!\n" +
+                                $"Bonus received: €2.000\n\n" +
+                                $"Previous balance: €{oldAmount.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}\n" +
+                                $"New balance: €{PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}"));
+                            break;
+                        }
                         default:
-                            {
-                                StartCoroutine(DisplayTextLetterByLetter(
-                                    $"Your balance is between 4.000 and 6.000\n Nothing will be done with your balance\n You keep {PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}"));
-                                break;
-                            }
+                        {
+                            StartCoroutine(DisplayTextLetterByLetter(
+                                $"! No Balance Adjustment !\n\n" +
+                                $"Your balance is between €4.000 and €6.000\n" +
+                                $"Current balance: €{PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}"));
+                            break;
+                        }
                     }
 
                     break;
@@ -211,12 +224,11 @@ namespace Version1.Phases.MoneyCorrection
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
         }
 
         public void StopPhase()
         {
-            
+
         }
 
         private int RoundToThousand(float value)
@@ -237,10 +249,13 @@ namespace Version1.Phases.MoneyCorrection
                 text.text += letter; // Add one letter at a time
                 yield return new WaitForSeconds(0.03f); // Wait for a specified time before displaying the next letter
             }
+
+            continueButton.interactable = true;
         }
 
         public void Continue()
         {
+            continueButton.interactable = false;
             SceneManager.LoadScene(Utilities.GameManager.LOADING);
         }
 
