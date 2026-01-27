@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -24,7 +25,10 @@ namespace Version1.Market
         [SerializeField] private Transform cardList;
         [SerializeField] private CardAmountDisplay cardAmountPrefab;
 
-
+        private readonly CultureInfo numberFormatter = new("en-US")
+        {
+            NumberFormat = { NumberGroupSeparator = "." }
+        };
         public void SetDisplay(Guid listingId, Dictionary<EListingAction, Action> listingActions)
         {
             var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
@@ -32,7 +36,7 @@ namespace Version1.Market
             if (listing == null)
                 return; // TODO Error handling
 
-            priceDisplay.text = listing.Price.ToString();
+            priceDisplay.text = listing.Price.ToString("N0", numberFormatter);
             //bidCountDisplay.text = listing.BidRepository.GetUniqueBidderCount().ToString();
 
             buyButton.onClick.RemoveAllListeners();

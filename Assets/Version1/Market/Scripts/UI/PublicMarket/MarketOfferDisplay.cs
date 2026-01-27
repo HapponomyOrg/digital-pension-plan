@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,11 @@ namespace Version1.Market
 
         private const int minListingPriceForBids = 2000;
 
+        private readonly CultureInfo numberFormatter = new("en-US")
+        {
+            NumberFormat = { NumberGroupSeparator = "." }
+        };
+
         public void SetDisplay(Guid listingId, Dictionary<EListingAction, Action> listingActions)
         {
             var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
@@ -32,7 +38,7 @@ namespace Version1.Market
                 return; // TODO Error handling
 
             sellerDisplay.text = listing.Lister.ToString();
-            priceDisplay.text = listing.Price.ToString();
+            priceDisplay.text = listing.Price.ToString("N0", numberFormatter);
 
             buyButton.onClick.RemoveAllListeners();
             bidButton.onClick.RemoveAllListeners();

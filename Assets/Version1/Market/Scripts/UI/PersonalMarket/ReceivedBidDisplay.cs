@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,11 @@ namespace Version1.Market
         [SerializeField] private Button counterButton;
         [SerializeField] private Button rejectButton;
 
+        private readonly CultureInfo numberFormatter = new("en-US")
+        {
+            NumberFormat = { NumberGroupSeparator = "." }
+        };
+
         public void SetDisplay(Guid listingId, Guid bidId, Dictionary<EBidAction, Action> bidActions)
         {
             var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
@@ -33,7 +39,7 @@ namespace Version1.Market
                 return; // TODO Error handling
 
             bidderNameDisplay.text = bid.BidderName;
-            offerDisplay.text = bid.BidOffer.ToString();
+            offerDisplay.text = bid.BidOffer.ToString("N0", numberFormatter);
 
             acceptButton.interactable = bid.BidStatus == EBidStatus.Active;
             counterButton.interactable = bid.BidStatus == EBidStatus.Active;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +21,10 @@ namespace Version1.Market
         [SerializeField] private Transform cardList;
         [SerializeField] private CardAmountDisplay cardIconPrefab;
 
+        private readonly CultureInfo numberFormatter = new("en-US")
+        {
+            NumberFormat = { NumberGroupSeparator = "." }
+        };
 
         public void SetDisplay(Guid listingId, Guid bidId, Dictionary<EBidAction, Action> bidActions)
         {
@@ -33,8 +38,8 @@ namespace Version1.Market
             if (bid == null)
                 return; // TODO Error handling
 
-            sellerDisplay.text = listing.Lister.ToString();
-            offerDisplay.text = bid.BidOffer.ToString();
+            sellerDisplay.text = listing.Lister.ToString("N0", numberFormatter);
+            offerDisplay.text = bid.BidOffer.ToString("N0", numberFormatter);
 
             cancelButton.onClick.RemoveAllListeners();
 

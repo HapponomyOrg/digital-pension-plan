@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,6 +17,11 @@ namespace Version1.Market
         [SerializeField] private Button selectButton;
         [SerializeField] private Button cancelButton;
 
+        private readonly CultureInfo numberFormatter = new("en-US")
+        {
+            NumberFormat = { NumberGroupSeparator = "." }
+        };
+
         public void SetDisplay(Guid listingId, Dictionary<EListingAction, Action> listingActions)
         {
             var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
@@ -23,7 +29,7 @@ namespace Version1.Market
             if (listing == null)
                 return; // TODO Error handling
 
-            priceDisplay.text = listing.BidRepository.GetUniqueBidderCount().ToString();
+            priceDisplay.text = listing.BidRepository.GetUniqueBidderCount().ToString("N0", numberFormatter);
             bidCountDisplay.text = listing.Lister.ToString();
 
             selectButton.onClick.RemoveAllListeners();
