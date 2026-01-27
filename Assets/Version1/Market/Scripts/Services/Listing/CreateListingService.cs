@@ -34,7 +34,8 @@ namespace Version1.Market
         {
             var listing = new Listing(
                 Guid.Parse(message.AuctionID), 
-                message.PlayerID, 
+                message.PlayerID,
+                message.PlayerName,
                 DateTime.Parse(message.ListingDateTimeStamp), 
                 message.Amount, 
                 message.Cards

@@ -37,7 +37,7 @@ namespace Version1.Market
             if (listing == null)
                 return; // TODO Error handling
 
-            sellerDisplay.text = listing.Lister.ToString();
+            sellerDisplay.text = listing.ListerName;
             priceDisplay.text = listing.Price.ToString("N0", numberFormatter);
 
             buyButton.onClick.RemoveAllListeners();
