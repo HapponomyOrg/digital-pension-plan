@@ -180,8 +180,6 @@ namespace Version1.Utilities
 
                 Publish(PlayerData.PlayerData.Instance.LobbyID.ToString(), msg);
 
-                Debug.Log("Sent heartbeat");
-
                 yield return new WaitForSeconds(heartbeatInterval);
             }
         }

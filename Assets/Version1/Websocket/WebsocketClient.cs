@@ -91,8 +91,6 @@ namespace Version1.Websocket
         {
             var messageJson = System.Text.Encoding.UTF8.GetString(bytes);
 
-            Debug.LogWarning("Raw message: " + messageJson);
-
             try
             {
                 var wsMessage = JsonUtility.FromJson<WebSocketMessage>(messageJson);
@@ -140,9 +138,12 @@ namespace Version1.Websocket
 
         private void DispatchMessage(string subject, string jsonData)
         {
-            Debug.LogWarning($"DispatchMessage called with subject: {subject}");
-            Debug.LogWarning($"JSON data being parsed: [{jsonData}]");
-            Debug.LogWarning($"JSON length: {jsonData.Length}");
+            if (subject != MessageSubject.HeartBeat)
+            {
+                Debug.LogWarning($"DispatchMessage called with subject: {subject}");
+                Debug.LogWarning($"JSON data being parsed: [{jsonData}]");
+                Debug.LogWarning($"JSON length: {jsonData.Length}");
+            }
 
             var msg = JsonUtility.FromJson<BaseMessage>(jsonData);
             if (msg.PlayerID == PlayerData.PlayerData.Instance.PlayerId)
@@ -153,7 +154,6 @@ namespace Version1.Websocket
                 switch (subject)
                 {
                     case MessageSubject.ConfirmJoin:
-                        Debug.Log("confrim join test");
                         OnConfirmJoin?.Invoke(this, JsonUtility.FromJson<ConfirmJoinMessage>(jsonData));
                         break;
                     case MessageSubject.DeptUpdate:
@@ -332,7 +332,10 @@ namespace Version1.Websocket
             // Manually wrap it in a JSON message
             string message = $"{{\"action\": \"publish\", \"subject\": \"{topic}\", \"data\": {serializedContent}}}";
 
-            Debug.Log($"Publishing: {message}");
+            if (topic != MessageSubject.HeartBeat)
+            {
+                Debug.Log($"Publishing: {message}");
+            }
 
             await Send(message);
         }

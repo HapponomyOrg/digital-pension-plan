@@ -74,17 +74,14 @@ namespace Version1.Phases.DonatePoints.scripts
             playerListPrefab = Resources.Load<Transform>("Prefabs/Phases/DonatePoints/PlayerlistPrefab");
             playerScrollView = GameObject.Find("PlayerScrollView").transform;
 
-            NetworkManager.Instance.WebSocketClient.OnDonatePoints += OnOnDonatePoints;
+            _players = new Dictionary<int, PlayerListPrefab>();
 
-            NetworkManager.Instance.WebSocketClient.OnHeartBeat += OnOnHeartBeat;
             otherNameTMP.text = "";
             otherPointsTMP.text = "0";
 
-            _players = new Dictionary<int, PlayerListPrefab>();
-
             OwnPoints = PlayerData.PlayerData.Instance.Points;
 
-            descriptionText.text = OwnPoints! >= 1
+            descriptionText.text = OwnPoints >= 1
                 ? "Please click on another player if you want to donate your point?"
                 : "Please click on another player if you want to donate one of your points?";
 
@@ -95,18 +92,81 @@ namespace Version1.Phases.DonatePoints.scripts
             increaseButton.onClick.AddListener(OnIncreases);
             decreaseButton.onClick.AddListener(OnDecrease);
             donateButton.onClick.AddListener(OnDonate);
+
+            // Wait for WebSocket to be ready before subscribing
+            StartCoroutine(WaitForWebSocketAndSubscribe());
+
+            InvokeRepeating(nameof(CheckForStalePlayers), 2f, 2f);
+        }
+
+        private void CheckForStalePlayers()
+        {
+            var keysToRemove = new List<int>();
+
+            foreach (var player in _players)
+            {
+                if (DateTime.Now - TimeSpan.FromSeconds(5) > player.Value.LastPing)
+                {
+                    Destroy(player.Value.gameObject);
+                    keysToRemove.Add(player.Key);
+                    Debug.Log($"Removing stale player: {player.Value.Name}");
+                }
+            }
+
+            foreach (var key in keysToRemove)
+            {
+                _players.Remove(key);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            CancelInvoke(nameof(CheckForStalePlayers));
+
+            if (NetworkManager.Instance?.WebSocketClient != null)
+            {
+                NetworkManager.Instance.WebSocketClient.OnDonatePoints -= OnOnDonatePoints;
+                NetworkManager.Instance.WebSocketClient.OnHeartBeat -= OnOnHeartBeat;
+            }
+        }
+
+        private System.Collections.IEnumerator WaitForWebSocketAndSubscribe()
+        {
+            // Wait until NetworkManager and WebSocketClient are ready
+            while (NetworkManager.Instance?.WebSocketClient == null)
+            {
+                yield return new WaitForSeconds(0.1f);
+            }
+
+            Debug.Log("WebSocket ready, subscribing to events");
+
+            // Now subscribe to events
+            NetworkManager.Instance.WebSocketClient.OnDonatePoints += OnOnDonatePoints;
+            NetworkManager.Instance.WebSocketClient.OnHeartBeat += OnOnHeartBeat;
         }
 
         private void OnOnDonatePoints(object sender, DonatePointsMessage e)
         {
-            if (PlayerData.PlayerData.Instance.PlayerId != e.Receiver && e.PlayerID == PlayerData.PlayerData.Instance.PlayerId) return;
+            var myId = PlayerData.PlayerData.Instance.PlayerId;
+            var myName = PlayerData.PlayerData.Instance.PlayerName;
+
+            Debug.LogWarning($"[{myName} (ID:{myId})] Received DonatePoints - From: {e.PlayerName} (ID:{e.PlayerID}), To: Receiver ID:{e.Receiver}, Amount: {e.Amount}");
+
+            // Only the receiver should process this
+            if (myId != e.Receiver)
+            {
+                Debug.LogWarning($"[{myName}] This message is not for me. My ID: {myId}, Receiver ID: {e.Receiver}");
+                return;
+            }
+
+            Debug.LogWarning($"[{myName}] I AM the receiver! Adding {e.Amount} points");
 
             OwnPoints += e.Amount;
+            PlayerData.PlayerData.Instance.Points = OwnPoints;
 
             var toaster = Instantiate(ToasterPrefab, ToasterList);
             toaster.GetComponent<ToasterScript>().toasterText.text =
-                $"Congratulations you received {e.Amount} points from {e.PlayerName}";
-
+                $"Congratulations! You received {e.Amount} point{(e.Amount != 1 ? "s" : "")} from {e.PlayerName}";
         }
 
         private void OnDonate()
@@ -163,10 +223,14 @@ namespace Version1.Phases.DonatePoints.scripts
 
         private void OnOnHeartBeat(object sender, HeartBeatMessage e)
         {
+            Debug.Log($"Received heartbeat from PlayerID: {e.PlayerID}, Name: {e.PlayerName}, Points: {e.Points}");
+
             DateTime parsedDate = DateTime.Parse(e.DateTimeStamp);
 
             if (!_players.ContainsKey(e.PlayerID))
             {
+                Debug.Log($"Adding new player: {e.PlayerName} (ID: {e.PlayerID})");
+
                 var player = Instantiate(playerListPrefab, playerScrollView);
                 player.gameObject.SetActive(true);
                 var plistprefab = player.GetComponent<PlayerListPrefab>();
@@ -183,13 +247,17 @@ namespace Version1.Phases.DonatePoints.scripts
             }
             else
             {
+                Debug.Log($"Updating existing player: {e.PlayerName} (ID: {e.PlayerID})");
+
                 _players[e.PlayerID].LastPing = parsedDate;
                 _players[e.PlayerID].ID = e.PlayerID;
                 _players[e.PlayerID].Name = e.PlayerName;
                 _players[e.PlayerID].Points = e.Points;
 
-                if (OtherName != e.PlayerName || OtherPoints == e.Points) return;
-                OtherPoints = e.Points + _pointsToDonate;
+                if (OtherName == e.PlayerName && OtherPoints != e.Points)
+                {
+                    OtherPoints = e.Points + _pointsToDonate;
+                }
             }
         }
 
@@ -210,46 +278,6 @@ namespace Version1.Phases.DonatePoints.scripts
         public void SkipDonation()
         {
             SceneManager.LoadScene(Utilities.GameManager.LOADING);
-        }
-
-        /*private void OnEnable()
-        {
-            new Nats.NatsClient();
-            Nats.NatsClient.C.Connect();
-            Nats.NatsClient.C.SubscribeToSubject("0");
-
-            Nats.NatsClient.C.OnHeartBeat += OnOnHeartBeat;
-            otherNameTMP.text = "";
-            otherPointsTMP.text = "0";
-
-            players = new Dictionary<int, playerlistprefab>();
-
-            OwnPoints = PlayerData.PlayerData.Instance.Points;
-
-            descriptionText.text = OwnPoints ! >= 1
-                ? "Do you want to donate your point?"
-                : "Do you want to donate your points?";
-        }*/
-
-        private void Update()
-        {
-            //TODO misschien is dit in de update een beetje een overkill
-
-            var keysToRemove = new List<int>();
-
-            foreach (var player in _players)
-            {
-                if (DateTime.Now - TimeSpan.FromSeconds(5) > player.Value.LastPing)
-                {
-                    Destroy(player.Value.gameObject);
-                    keysToRemove.Add(player.Key);
-                }
-            }
-
-            foreach (var key in keysToRemove)
-            {
-                _players.Remove(key);
-            }
         }
     }
 }
