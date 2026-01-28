@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using Version1.Phases.tmp;
 
@@ -33,6 +34,7 @@ namespace Assets.Version1.Phases
         }
 
         private IPhaseController _currentPhaseController;
+
         public IPhaseController CurrentPhaseController
         {
             get => _currentPhaseController;
@@ -41,7 +43,8 @@ namespace Assets.Version1.Phases
                 _currentPhaseController = value;
 
                 if (_currentPhaseController != null)
-                    _currentPhaseController.StartPhase(); // Starts the phase when the controller gets assigned. This is to avoid unity scene loading errors
+                    _currentPhaseController
+                        .StartPhase(); // Starts the phase when the controller gets assigned. This is to avoid unity scene loading errors
             }
         }
 
@@ -58,7 +61,14 @@ namespace Assets.Version1.Phases
             if (Phases[index].Name != name)
                 throw new Exception("Phase doesnt correspond to phase name");
 
-            SceneManager.LoadScene(Phases[index].Scene);
+            if (SceneManager.GetActiveScene().name == Phases[index].Scene)
+            {
+                Debug.Log("Scene is already loaded");
+            }
+            else
+            {
+                SceneManager.LoadScene(Phases[index].Scene);
+            }
         }
 
         public void EndPhases()
