@@ -16,8 +16,8 @@ namespace Version1.Market
 {
     public class MarketOfferDetailsDisplay : MonoBehaviour
     {
+        [SerializeField] private TMP_Text sellerDisplay;
         [SerializeField] private TMP_Text priceDisplay;
-        //[SerializeField] private TMP_Text bidCountDisplay;
 
         [SerializeField] private Button buyButton;
         [SerializeField] private Button bidButton;
@@ -37,8 +37,8 @@ namespace Version1.Market
             if (listing == null)
                 return; // TODO Error handling
 
+            sellerDisplay.text = listing.ListerName;
             priceDisplay.text = listing.Price.ToString("N0", numberFormatter);
-            //bidCountDisplay.text = listing.BidRepository.GetUniqueBidderCount().ToString();
 
             buyButton.onClick.RemoveAllListeners();
             bidButton.onClick.RemoveAllListeners();
