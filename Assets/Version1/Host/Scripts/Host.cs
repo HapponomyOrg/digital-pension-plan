@@ -271,7 +271,21 @@ namespace Version1.Host.Scripts
 
         private void OnJoinRequest(object sender, JoinRequestMessage msg)
         {
+
             Debug.Log($"Join request received - PlayerID in message: {msg.PlayerID}, Assigning ID: {playerId}");
+
+
+            if (currentRound > 0)
+            {
+                RejectedMessage rejectedMessage = new RejectedMessage(
+                    DateTime.Now.ToString("o"), msg.LobbyID, -1, msg.PlayerName,
+                    "SessionAlreadyStarted",
+                    $"Sorry but the session you are trying to join has already started.",
+                    msg.RequestID);
+
+                Nats.NatsHost.C.Publish(msg.LobbyID.ToString(), rejectedMessage);
+                return;
+            }
 
             if (players.Any(record =>
                     string.Equals(record.Value.Name, msg.PlayerName, StringComparison.CurrentCultureIgnoreCase)))

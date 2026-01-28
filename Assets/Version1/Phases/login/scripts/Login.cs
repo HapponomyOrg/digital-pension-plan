@@ -22,6 +22,7 @@ namespace Version1.Phases.Login.Scripts
         private GameObject natsError;
 
         [SerializeField] private GameObject nameError;
+        [SerializeField] private GameObject sessionError;
 
         private string playerName = string.Empty;
         private int age = -1;
@@ -131,8 +132,21 @@ namespace Version1.Phases.Login.Scripts
         private void HandleRejected(object sender, RejectedMessage message)
         {
             var player = PlayerData.PlayerData.Instance;
-            if (message.TargetPlayer == player.PlayerName && message.RequestID == player.RequestID)
+            if (message.TargetPlayer != player.PlayerName && message.RequestID != player.RequestID)
+                return;
+
+            // TODO make these enums
+            if (message.ReferenceID == "SessionAlreadyStarted")
+            {
+                sessionError.SetActive(true);
+            } else if (message.ReferenceID == "PlayerNameAlreadyTaken")
+            {
                 nameError.SetActive(true);
+            }
+            else
+            {
+                Debug.Log(message);
+            }
         }
     }
 }
