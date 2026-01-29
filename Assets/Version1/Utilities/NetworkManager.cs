@@ -9,7 +9,7 @@ using Version1.Websocket;
 
 namespace Version1.Utilities
 {
-    public class NetworkManager : MonoBehaviour
+    public class NetworkManager :  MonoBehaviour , INetworkManager
     {
         public static NetworkManager Instance { get; private set; }
 
@@ -29,7 +29,7 @@ namespace Version1.Utilities
 
         public WebsocketClient WebSocketClient;
 
-        public async void Publish(string sessionID, BaseMessage baseMessage, bool flushImmediately = true)
+        public async void Publish(string sessionID, BaseMessage baseMessage)
         {
             try
             {

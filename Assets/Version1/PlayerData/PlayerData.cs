@@ -8,7 +8,7 @@ using Version1.Nats.Messages.Host;
 namespace Version1.PlayerData
 {
     // TODO when start looking at the money system set the debt to the balance.
-    public class PlayerData : MonoBehaviour
+    public class PlayerData : MonoBehaviour, IPlayerData
     {
         // Singleton instance
         private static PlayerData _instance;
