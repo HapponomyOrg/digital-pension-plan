@@ -1,11 +1,11 @@
-using System;
+﻿using Assets.Version1.Phases;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Version1.PayDept.script
+namespace Version1.Phases.PayDept.script
 {
-    public class PayDept : MonoBehaviour
+    public class PayDeptPhaseController : MonoBehaviour , IPhaseController
     {
         [SerializeField] private TMP_Text amountText;
 
@@ -13,10 +13,13 @@ namespace Version1.PayDept.script
         private const int PriceStep = 1000;
 
         private int _maxAmount = 0;
-
         private void Start()
         {
-            // TODO skip to next phase
+            Utilities.GameManager.Instance.PhaseManager.CurrentPhaseController = this;
+        }
+
+        public void StartPhase()
+        {
             if (PlayerData.PlayerData.Instance.Debt <= 0) SceneManager.LoadScene(Utilities.GameManager.LOADING);
 
             amountText.text = "0";
@@ -24,10 +27,15 @@ namespace Version1.PayDept.script
             _maxAmount = PlayerData.PlayerData.Instance.Debt;
         }
 
+        public void StopPhase()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void IncreaseAmount()
         {
             _currentAmount += PriceStep;
-            // TODO check what is max to take a loan
+            // TODO B.Nierop check what is max to take a loan
             if (_currentAmount > _maxAmount)
                 _currentAmount = _maxAmount;
 
@@ -57,13 +65,6 @@ namespace Version1.PayDept.script
         {
             PlayerData.PlayerData.Instance.Debt -= _currentAmount;
             PlayerData.PlayerData.Instance.Balance -= _currentAmount;
-
-            // TODO check if there is a message
-            /*var sessionId = PlayerData.PlayerData.Instance.LobbyID;
-            var msg = new DonateMoneyMessage(DateTime.Now.ToString("o"), sessionId, PlayerData.PlayerData.Instance.PlayerId,
-                currentDonation);
-
-            Nats.NatsClient.C.Publish(sessionId.ToString(), msg);*/
         }
     }
 }

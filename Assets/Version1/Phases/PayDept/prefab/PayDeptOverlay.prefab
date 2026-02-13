@@ -323,7 +323,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Do you want to pay off \nyour dept?"
+  m_text: "Do you want to pay off \nyour debt?"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 345914b607ea30541a1fd769b254f581, type: 2}
   m_sharedMaterial: {fileID: -185881325436670113, guid: 345914b607ea30541a1fd769b254f581, type: 2}
@@ -514,7 +514,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8348416085616319727}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Version1.PayDept.script.PayDept, Assembly-CSharp
         m_MethodName: PayDeptButton
         m_Mode: 1
@@ -681,7 +681,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Pay off Dept
+  m_text: Pay off Debt
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 345914b607ea30541a1fd769b254f581, type: 2}
   m_sharedMaterial: {fileID: -185881325436670113, guid: 345914b607ea30541a1fd769b254f581, type: 2}
@@ -1028,7 +1028,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4298453554369138593}
   - component: {fileID: 8450631128550449246}
-  - component: {fileID: 8348416085616319727}
+  - component: {fileID: 5037241109964986141}
   m_Layer: 5
   m_Name: PayDeptOverlay
   m_TagString: Untagged
@@ -1073,7 +1073,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6069971675557217153}
   m_CullTransparentMesh: 1
---- !u!114 &8348416085616319727
+--- !u!114 &5037241109964986141
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1082,7 +1082,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6069971675557217153}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f00f1281b88ac9247b8e45094f499dfd, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f3d95f0b3204ff58ecaf1af296e0b83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   amountText: {fileID: 1457509758363083080}
@@ -1208,7 +1208,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8348416085616319727}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Version1.PayDept.script.PayDept, Assembly-CSharp
         m_MethodName: IncreaseAmount
         m_Mode: 1
@@ -1357,7 +1357,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8348416085616319727}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Version1.PayDept.script.PayDept, Assembly-CSharp
         m_MethodName: DecreaseAmount
         m_Mode: 1
@@ -1715,10 +1715,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6069971675557217153}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: Version1.PayDept.script.PayDept, Assembly-CSharp
+        m_MethodName: Continue
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

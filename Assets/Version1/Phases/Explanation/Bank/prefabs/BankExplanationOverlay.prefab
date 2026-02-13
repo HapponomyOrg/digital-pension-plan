@@ -412,9 +412,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Version1.Phases.DonatePoints.scripts.DonatePoints,
+        m_TargetAssemblyTypeName: Version1.Phases.Explanation.Bank.scripts.BankExplanation,
           Assembly-CSharp
-        m_MethodName: 
+        m_MethodName: Continue
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -526,6 +526,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1115744198160214665}
   - component: {fileID: 6075133184853544529}
+  - component: {fileID: 8475912529555441696}
   m_Layer: 5
   m_Name: BankExplanationOverlay
   m_TagString: Untagged
@@ -561,6 +562,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5465699312874636887}
   m_CullTransparentMesh: 1
+--- !u!114 &8475912529555441696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5465699312874636887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d1b50678b7d302499ce3d7816e85622, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 6684467186516912410}
 --- !u!1 &5644720254917037757
 GameObject:
   m_ObjectHideFlags: 0

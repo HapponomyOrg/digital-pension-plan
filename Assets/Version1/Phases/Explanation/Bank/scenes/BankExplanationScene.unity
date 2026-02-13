@@ -479,11 +479,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!1 &952144759156379066 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5465699312874636887, guid: 13e0f52914fac3640a1bb30c1077514a, type: 3}
-  m_PrefabInstance: {fileID: 7560978121386418600}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &7280637128210495512 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1115744198160214665, guid: 13e0f52914fac3640a1bb30c1077514a, type: 3}
@@ -578,39 +573,35 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1937113606476132075, guid: 13e0f52914fac3640a1bb30c1077514a, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 8875669150925184830}
-    - target: {fileID: 1937113606476132075, guid: 13e0f52914fac3640a1bb30c1077514a, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Continue
+      propertyPath: m_Interactable
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1937113606476132075, guid: 13e0f52914fac3640a1bb30c1077514a, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: Version1.Phases.Explanation.Bank.scripts.BankExplanation, Assembly-CSharp
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5465699312874636887, guid: 13e0f52914fac3640a1bb30c1077514a, type: 3}
       propertyPath: m_Name
       value: BankExplanationOverlay
       objectReference: {fileID: 0}
+    - target: {fileID: 8475912529555441696, guid: 13e0f52914fac3640a1bb30c1077514a, type: 3}
+      propertyPath: continueButton
+      value: 
+      objectReference: {fileID: 7560978121386418601}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5465699312874636887, guid: 13e0f52914fac3640a1bb30c1077514a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8875669150925184830}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 13e0f52914fac3640a1bb30c1077514a, type: 3}
---- !u!114 &8875669150925184830
+--- !u!114 &7560978121386418601 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 1937113606476132075, guid: 13e0f52914fac3640a1bb30c1077514a, type: 3}
+  m_PrefabInstance: {fileID: 7560978121386418600}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 952144759156379066}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a98f773b90a709741b7ebc399397b729, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807

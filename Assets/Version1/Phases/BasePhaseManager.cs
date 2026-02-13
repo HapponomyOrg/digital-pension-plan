@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Assets.Version1.Phases;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Version1.Phases.tmp;
 
-namespace Assets.Version1.Phases
+namespace Version1.Phases
 {
     public class BasePhaseManager : IPhaseManager
     {
@@ -17,6 +13,7 @@ namespace Assets.Version1.Phases
             {
                 return new[]
                 {
+                    PhaseLibrary.BankExplanation,
                     PhaseLibrary.MarketPhase,
                     PhaseLibrary.MoneyCorrectionPhase,
                     PhaseLibrary.LoadingPhase,

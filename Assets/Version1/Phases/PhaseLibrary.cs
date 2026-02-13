@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Assets.Version1.Phases;
 
-namespace Assets.Version1.Phases
+namespace Version1.Phases
 {
     public static class PhaseLibrary
     {
@@ -13,8 +9,9 @@ namespace Assets.Version1.Phases
         public static Phase MoneyCorrectionPhase { get; } = new("MoneyCorrection", "MoneyCorrectionScene");
         public static Phase MoneyToPointPhase { get; } = new("MoneyToPoint", "MoneyToPointScene");
         public static Phase DonatePointsPhase { get; } = new("DonatePoints", "DonatePointsScene");
-        public static Phase PayDebtPhase { get; } = new("PayDebt", "PayDeptScene");
+        public static Phase PayDebtPhase { get; } = new("PayDebt", "PayDebtScene");
         public static Phase TakeALoanPhase { get; } = new("TakeALoan", "TakeALoanScene");
         public static Phase EndPhase { get; } = new("End", "EndScene");
+        public static Phase BankExplanation { get; } = new("BankExplanation", "BankExplanationScene");
     }
 }

@@ -173,9 +173,6 @@ namespace Version1.Host.Scripts
                 case 1:
                     SessionData.Instance.CurrentMoneySystem = MoneySystems.DebtBased;
                     break;
-                case 2:
-                    SessionData.Instance.CurrentMoneySystem = MoneySystems.InterestAtIntervals;
-                    break;
                 default:
                     Debug.LogWarning("This Money system is not implemented");
                     break;

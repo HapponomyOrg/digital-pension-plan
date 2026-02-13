@@ -1,267 +1,131 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using Assets.Version1.Phases;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Version1.Market;
-using Version1.Phases.Trading;
+using Version1.Nats.Messages.Client;
 using Version1.Utilities;
 
-namespace Version1.Phases.MoneyCorrection
+namespace Version1.Phases.MoneyCorrection.scripts
 {
     public class MoneyCorrectionPhaseController : MonoBehaviour, IPhaseController
     {
         [SerializeField] private TMP_Text text;
         [SerializeField] private Button continueButton;
 
+        private static readonly System.Globalization.CultureInfo deCulture = new("de-DE");
+
+        private static PlayerData.PlayerData Player => PlayerData.PlayerData.Instance;
+
         private void Start()
         {
-            // Start the phase
-            Utilities.GameManager.Instance.PhaseManager.CurrentPhaseController = this;
+            GameManager.Instance.PhaseManager.CurrentPhaseController = this;
         }
 
         public void StartPhase()
         {
-            switch (PlayerData.PlayerData.Instance.CurrentMoneySystem)
+            switch (Player.CurrentMoneySystem)
             {
                 case MoneySystems.Sustainable:
-                    switch (PlayerData.PlayerData.Instance.Balance)
-                    {
-                        case > 6000:
-                        {
-                            var oldAmount = PlayerData.PlayerData.Instance.Balance;
-                            var amountToPay = RoundToThousand((PlayerData.PlayerData.Instance.Balance - 6000) / 2);
-                            PlayerData.PlayerData.Instance.Balance -= amountToPay;
-
-                            Debug.LogWarning(
-                                $"Over or equal 6000     {amountToPay}       {PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}");
-
-                            StartCoroutine(DisplayTextLetterByLetter(
-                                $"! Balance Penalty !\n\n" +
-                                $"Your balance exceeded €6.000!\n" +
-                                $"Penalty: €{amountToPay.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}\n\n" +
-                                $"Previous balance: €{oldAmount.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}\n" +
-                                $"New balance: €{PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}"));
-                            break;
-                        }
-                        case < 4000:
-                        {
-                            var oldAmount = PlayerData.PlayerData.Instance.Balance;
-                            PlayerData.PlayerData.Instance.Balance += 2000;
-
-                            Debug.LogWarning(
-                                $"under or equal 4000  {PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}");
-
-                            StartCoroutine(DisplayTextLetterByLetter(
-                                $"! Balance Bonus !\n\n" +
-                                $"Your balance fell below €4.000!\n" +
-                                $"Bonus received: €2.000\n\n" +
-                                $"Previous balance: €{oldAmount.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}\n" +
-                                $"New balance: €{PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}"));
-                            break;
-                        }
-                        default:
-                        {
-                            StartCoroutine(DisplayTextLetterByLetter(
-                                $"! No Balance Adjustment !\n\n" +
-                                $"Your balance is between €4.000 and €6.000\n" +
-                                $"Current balance: €{PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}"));
-                            break;
-                        }
-                    }
-
+                    HandleSustainableSystem();
                     break;
                 case MoneySystems.DebtBased:
-                    // TODO this is at the end of the game.
-                    throw new NotImplementedException();
-                /*case MoneySystems.InterestAtIntervals:
-                    {
-                        int newInterest =
-                            (int)(PlayerData.PlayerData.Instance.Debt * 0.10);
-                        var interestDue =
-                            PlayerData.PlayerData.Instance.InterestRemainder +
-                            newInterest;
-
-                        int payment = 0;
-
-                        //TODO this is dirty
-                        // TODO maybe check here if there are any other money corrections in the array, if we remove the phases. im not sure
-                        if (Utilities.GameManager.Instance.CurrentPhase == 7)
-                        {
-
-                            PlayerData.PlayerData.Instance.Debt += interestDue;
-                            interestDue = 0;
-                            payment = PlayerData.PlayerData.Instance.Debt;
-                            PlayerData.PlayerData.Instance.Balance -= payment;
-
-                            StartCoroutine(DisplayTextLetterByLetter(
-                                $"You have a debt of {PlayerData.PlayerData.Instance.Debt.ToString("N0", new System.Globalization.CultureInfo("de-DE"))} with an interest rate of 10%\n" +
-                                $"All remaining debt and interest ({interestDue.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}) have been added to the debt.\n" +
-                                $"Your total debt now is {PlayerData.PlayerData.Instance.Debt.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}. " +
-                                $"You have paid {payment.ToString("N0", new System.Globalization.CultureInfo("de-DE"))} from your balance, leaving you with {PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}."));
-                        }
-                        else
-                        {
-                            if (interestDue >= 1000)
-                            {
-                                payment = Math.Min((interestDue / 1000) * 1000, PlayerData.PlayerData.Instance.Balance);
-
-                                if (payment > 0)
-                                {
-                                    PlayerData.PlayerData.Instance.Balance -= payment;
-                                    interestDue -= payment;
-
-                                    PlayerData.PlayerData.Instance.InterestRemainder = interestDue;
-
-                                    StartCoroutine(DisplayTextLetterByLetter(
-                                        $"You have a debt of {PlayerData.PlayerData.Instance.Debt.ToString("N0", new System.Globalization.CultureInfo("de-DE"))} with an interest rate of 10%\n" +
-                                        $"Remaining interest from last round: {PlayerData.PlayerData.Instance.InterestRemainder.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}\n" +
-                                        $"Interest due this round: {interestDue.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}\n\n" +
-                                        $"You paid {payment.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}, leaving {interestDue.ToString("N0", new System.Globalization.CultureInfo("de-DE"))} remaining interest."));
-                                }
-                            }
-
-                            // If the player didn't make a payment
-                            if (payment == 0)
-                            {
-                                // If no payment was made, the interest is added to the total debt and carried over
-                                PlayerData.PlayerData.Instance.Debt += interestDue;
-                                PlayerData.PlayerData.Instance.InterestRemainder = interestDue;
-                                interestDue = 0;
-
-
-                                StartCoroutine(DisplayTextLetterByLetter(
-                                    $"You have a debt of {PlayerData.PlayerData.Instance.Debt.ToString("N0", new System.Globalization.CultureInfo("de-DE"))} with an interest rate of 10%\n" +
-                                    $"No payment was made. The interest of {interestDue.ToString("N0", new System.Globalization.CultureInfo("de-DE"))} has been added to your debt."));
-                            }
-                        }
-
-                        break;
-                    }*/
-
-                /*case MoneySystems.ClosedEconomy:
-                    {
-                        // This is an addition to the interest at intervals/
-                        // choose 1 player that is the bank.
-                        // this player can not borrow money but gets the interest as income.
-
-                        // If it is the bank and comes to this point something went wrong
-                        if (PlayerData.PlayerData.Instance.isBank)
-                            throw new InvalidImplementationException();
-
-                        int newInterest =
-                            (int)(PlayerData.PlayerData.Instance.Debt * 0.10);
-                        var interestDue =
-                            PlayerData.PlayerData.Instance.InterestRemainder +
-                            newInterest;
-
-                        int payment = 0;
-
-                        //TODO this is dirty
-                        // TODO maybe check here if there are any other money corrections in the array, if we remove the phases. im not sure
-                        if (Utilities.GameManager.Instance.CurrentPhase == 7)
-                        {
-
-                            PlayerData.PlayerData.Instance.Debt += interestDue;
-                            interestDue = 0;
-                            payment = PlayerData.PlayerData.Instance.Debt;
-                            PlayerData.PlayerData.Instance.Balance -= payment;
-
-                            StartCoroutine(DisplayTextLetterByLetter(
-                                $"You have a debt of {PlayerData.PlayerData.Instance.Debt.ToString("N0", new System.Globalization.CultureInfo("de-DE"))} with an interest rate of 10%\n" +
-                                $"All remaining debt and interest ({interestDue.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}) have been added to the debt.\n" +
-                                $"Your total debt now is {PlayerData.PlayerData.Instance.Debt.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}. " +
-                                $"You have paid {payment.ToString("N0", new System.Globalization.CultureInfo("de-DE"))} from your balance, leaving you with {PlayerData.PlayerData.Instance.Balance.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}."));
-                        }
-                        else
-                        {
-                            if (interestDue >= 1000)
-                            {
-                                payment = Math.Min((interestDue / 1000) * 1000, PlayerData.PlayerData.Instance.Balance);
-
-                                if (payment > 0)
-                                {
-                                    // TODO send payment to bank player.
-
-                                    PlayerData.PlayerData.Instance.Balance -= payment;
-                                    interestDue -= payment;
-
-                                    PlayerData.PlayerData.Instance.InterestRemainder = interestDue;
-
-                                    StartCoroutine(DisplayTextLetterByLetter(
-                                        $"You have a debt of {PlayerData.PlayerData.Instance.Debt.ToString("N0", new System.Globalization.CultureInfo("de-DE"))} with an interest rate of 10%\n" +
-                                        $"Remaining interest from last round: {PlayerData.PlayerData.Instance.InterestRemainder.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}\n" +
-                                        $"Interest due this round: {interestDue.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}\n\n" +
-                                        $"You paid {payment.ToString("N0", new System.Globalization.CultureInfo("de-DE"))}, leaving {interestDue.ToString("N0", new System.Globalization.CultureInfo("de-DE"))} remaining interest."));
-                                }
-                            }
-
-                            // If the player didn't make a payment
-                            if (payment == 0)
-                            {
-                                // If no payment was made, the interest is added to the total debt and carried over
-                                PlayerData.PlayerData.Instance.Debt += interestDue;
-                                PlayerData.PlayerData.Instance.InterestRemainder = interestDue;
-                                interestDue = 0;
-
-
-                                StartCoroutine(DisplayTextLetterByLetter(
-                                    $"You have a debt of {PlayerData.PlayerData.Instance.Debt.ToString("N0", new System.Globalization.CultureInfo("de-DE"))} with an interest rate of 10%\n" +
-                                    $"No payment was made. The interest of {interestDue.ToString("N0", new System.Globalization.CultureInfo("de-DE"))} has been added to your debt."));
-                            }
-                        }
-                        break;
-                    }*/
-                case MoneySystems.RealisticDebtDistribution:
-                    throw new NotImplementedException();
-                    // At the beginning the host sets the debt of players at the same random interval as the balance
-                    // After that it is just the interest at intervals with a close economy. TODO check this because the rules are not really descriptive
-                    // Also the bank does not have a debt, other players carry this debt.
+                    HandleDebtBasedSystem();
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new NotImplementedException(
+                        $"Money system '{Player.CurrentMoneySystem}' not yet implemented.");
+            }
+        }
+
+        private void HandleDebtBasedSystem()
+        {
+            var balance = Player.Balance;
+            var interest = 0;
+            // TODO B.Nierop do something with the balance.
+            // wait for the script of steff to do this.
+
+            // TODO B.Nierop at the end pay the interest to the bank player.
+            var msg = new PayInterestToBankMessage(DateTime.Now.ToString("o"), PlayerData.PlayerData.Instance.LobbyID,
+                PlayerData.PlayerData.Instance.PlayerId, PlayerData.PlayerData.Instance.bankPlayer, interest);
+            NetworkManager.Instance.Publish(PlayerData.PlayerData.Instance.LobbyID.ToString(), msg);
+        }
+
+        private void HandleSustainableSystem()
+        {
+            var balance = Player.Balance;
+
+            switch (balance)
+            {
+                case > 6000:
+                {
+                    var penalty = RoundToThousand((balance - 6000) / 2f);
+                    Player.Balance -= penalty;
+
+                    Debug.LogWarning($"Over 6000 | Penalty: {penalty} | New Balance: {FormatMoney(Player.Balance)}");
+                    StartCoroutine(DisplayTextLetterByLetter(
+                        $"! Balance Penalty !\n\n" +
+                        $"Your balance exceeded €6.000!\n" +
+                        $"Penalty: €{FormatMoney(penalty)}\n\n" +
+                        $"Previous balance: €{FormatMoney(balance)}\n" +
+                        $"New balance: €{FormatMoney(Player.Balance)}"));
+                    break;
+                }
+                case < 4000:
+                    Player.Balance += 2000;
+
+                    Debug.LogWarning($"Under 4000 | New Balance: {FormatMoney(Player.Balance)}");
+                    StartCoroutine(DisplayTextLetterByLetter(
+                        $"! Balance Bonus !\n\n" +
+                        $"Your balance fell below €4.000!\n" +
+                        $"Bonus received: €2.000\n\n" +
+                        $"Previous balance: €{FormatMoney(balance)}\n" +
+                        $"New balance: €{FormatMoney(Player.Balance)}"));
+                    break;
+                default:
+                    StartCoroutine(DisplayTextLetterByLetter(
+                        $"! No Balance Adjustment !\n\n" +
+                        $"Your balance is between €4.000 and €6.000\n" +
+                        $"Current balance: €{FormatMoney(balance)}"));
+                    break;
             }
         }
 
         public void StopPhase()
         {
-
-        }
-
-        private int RoundToThousand(float value)
-        {
-            return (int)Math.Round(value / 1000, MidpointRounding.AwayFromZero) * 1000;
-        }
-
-        private IEnumerator DisplayTextLetterByLetter(string message)
-        {
-            // Start by resetting the text
-            text.text = "";
-
-            // The text you want to display
-
-            // Loop through each character in the message and reveal it one by one
-            foreach (char letter in message)
-            {
-                text.text += letter; // Add one letter at a time
-                yield return new WaitForSeconds(0.03f); // Wait for a specified time before displaying the next letter
-            }
-
-            continueButton.interactable = true;
         }
 
         public void Continue()
         {
             continueButton.interactable = false;
-            SceneManager.LoadScene(Utilities.GameManager.LOADING);
+            SceneManager.LoadScene(GameManager.LOADING);
         }
 
         public void OnDestroy()
         {
-            Utilities.GameManager.Instance.PhaseManager.CurrentPhaseController = null;
+            GameManager.Instance.PhaseManager.CurrentPhaseController = null;
         }
+
+        private IEnumerator DisplayTextLetterByLetter(string message)
+        {
+            text.text = "";
+
+            foreach (var letter in message)
+            {
+                text.text += letter;
+                yield return new WaitForSeconds(0.03f);
+            }
+
+            continueButton.interactable = true;
+        }
+
+        private static int RoundToThousand(float value)
+        {
+            return (int)Math.Round(value / 1000, MidpointRounding.AwayFromZero) * 1000;
+        }
+
+        private static string FormatMoney(int amount) => amount.ToString("N0", deCulture);
     }
 }

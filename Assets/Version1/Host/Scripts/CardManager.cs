@@ -38,6 +38,8 @@ namespace Version1.Host.Scripts
 
             var cardsPerPlayer = CalculateCardsPerPlayer(players.Count);
 
+            var bankPlayer = players.ElementAt(Random.Range(0, players.Count)).Value;
+
             foreach (var player in players)
             {
                 List<CardData> playerCards = TakeCards(cardsPerPlayer);
@@ -52,14 +54,16 @@ namespace Version1.Host.Scripts
                 StartGameMessage msg;
                 if (SessionData.Instance.InbalanceMode)
                 {
-                    msg = new StartGameMessage(DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, -1, player.Key,
-                        CalculateBalancePerPlayer(player.Key), handCards, (int)SessionData.Instance.CurrentMoneySystem);
+                    msg = new StartGameMessage(DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, -1,
+                        player.Key,
+                        CalculateBalancePerPlayer(player.Key), handCards, (int)SessionData.Instance.CurrentMoneySystem,
+                        bankPlayer.Name);
                 }
                 else
                 {
                     msg = new StartGameMessage(DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, -1, player.Key, 6000,
                         handCards,
-                        (int)SessionData.Instance.CurrentMoneySystem);
+                        (int)SessionData.Instance.CurrentMoneySystem, bankPlayer.Name);
                 }
 
                 Debug.Log($"sent cards, msg: {msg}");

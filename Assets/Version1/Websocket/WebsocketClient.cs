@@ -23,7 +23,6 @@ namespace Version1.Websocket
         public event EventHandler<CancelListingMessage> OnCancelListing;
         public event EventHandler<DonateMoneyMessage> OnDonateMoney;
         public event EventHandler<DonatePointsMessage> OnDonatePoints;
-        public event EventHandler<DeptUpdateMessage> OnDeptUpdate;
         public event EventHandler<CardHandInMessage> OnCardHandIn;
         public event EventHandler<HeartBeatMessage> OnHeartBeat;
         public event EventHandler<JoinRequestMessage> OnJoinrequest;
@@ -155,9 +154,6 @@ namespace Version1.Websocket
                 {
                     case MessageSubject.ConfirmJoin:
                         OnConfirmJoin?.Invoke(this, JsonUtility.FromJson<ConfirmJoinMessage>(jsonData));
-                        break;
-                    case MessageSubject.DeptUpdate:
-                        OnDeptUpdate?.Invoke(this, JsonUtility.FromJson<DeptUpdateMessage>(jsonData));
                         break;
                     case MessageSubject.StartGame:
                         OnStartGame?.Invoke(this, JsonUtility.FromJson<StartGameMessage>(jsonData));

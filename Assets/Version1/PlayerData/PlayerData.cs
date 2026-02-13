@@ -34,7 +34,7 @@ namespace Version1.PlayerData
         [SerializeField] private List<int> cards = new List<int>();
         [SerializeField] private List<int> allPoints = new List<int>();
 
-        [SerializeField] public bool isBank = false;
+        [SerializeField] public string bankPlayer = "";
 
         [SerializeField] private MoneySystems currentMoneySystem = 0;
 
@@ -127,26 +127,31 @@ namespace Version1.PlayerData
             get => lobbyID;
             set => SetAndInvoke(ref lobbyID, value, OnLobbyIDChange);
         }
+
+        public bool isBankPlayer()
+        {
+            return bankPlayer == PlayerName;
+        }
         #endregion
 
         #region Public State Methods
 
         public void StartGame(StartGameMessage msg)
         {
-            //reset
+            ResetData();
+
             Debug.Log("Cards received");
             Debug.Log(string.Join(", ", msg.Cards));
 
-
-            // TODO check i think this is not needed
             playerId = msg.OtherPlayerID;
-
             AddToBalance(msg.Balance);
 
             foreach (var card in msg.Cards)
             {
                 AddCard(card);
             }
+
+            SetBankPlayer(msg.BankPlayer);
         }
 
         public void ConfirmHandIn(ConfirmHandInMessage msg)
@@ -218,6 +223,11 @@ namespace Version1.PlayerData
             OnBalanceChange?.Invoke(this, balance);
         }
 
+        public void SetBankPlayer( string bank)
+        {
+            bankPlayer = bank;
+        }
+
         public void SubtractFromBalance(int amount)
         {
             if (balance >= amount)
@@ -250,11 +260,20 @@ namespace Version1.PlayerData
             AddPoints(msg.Amount);
         }
 
-        // TODO() Rename to non-event function
         public void ResetData()
         {
-            // TODO RESET EVERYTHING
-            throw new NotImplementedException();
+            debt = 0;
+            interestRemainder = 0;
+            cards.Clear();
+            allPoints.Clear();
+            bankPlayer = "";
+            currentMoneySystem = 0;
+            balance = 0;
+            points = 0;
+
+            OnBalanceChange?.Invoke(this, balance);
+            OnPointsChange?.Invoke(this, points);
+            OnCardsChange?.Invoke(this, new List<int>(cards));
         }
     }
 }

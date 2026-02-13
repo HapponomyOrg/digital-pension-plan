@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Version1.Nats.Messages.Client;
 using Version1.Nats.Messages.Host;
+using Version1.Phases;
 using Debug = UnityEngine.Debug;
 
 namespace Version1.Host.Scripts
@@ -17,41 +18,23 @@ namespace Version1.Host.Scripts
     {
         private int currentRound = 0;
 
-        private readonly string[] debtBasedPhases =
-        {
-            PhaseLibrary.MarketPhase.Name, PhaseLibrary.PayDebtPhase.Name, PhaseLibrary.TakeALoanPhase.Name, PhaseLibrary.LoadingPhase.Name,
-            PhaseLibrary.MarketPhase.Name, PhaseLibrary.PayDebtPhase.Name, PhaseLibrary.TakeALoanPhase.Name, PhaseLibrary.LoadingPhase.Name,
-            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.MoneyToPointPhase.Name, PhaseLibrary.DonatePointsPhase.Name, PhaseLibrary.EndPhase.Name
-        };
-
         private readonly string[] sustainableMoneyPhases =
         {
-            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.LoadingPhase.Name,
-            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.LoadingPhase.Name,
-            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.LoadingPhase.Name,
-            PhaseLibrary.MoneyToPointPhase.Name, PhaseLibrary.DonatePointsPhase.Name, PhaseLibrary.EndPhase.Name
-        };
-
-        private readonly string[] interestAtIntervalsPhases =
-        {
-            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.PayDebtPhase.Name, PhaseLibrary.TakeALoanPhase.Name, PhaseLibrary.LoadingPhase.Name,
-            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.PayDebtPhase.Name, PhaseLibrary.TakeALoanPhase.Name, PhaseLibrary.LoadingPhase.Name,
-            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.MoneyToPointPhase.Name, PhaseLibrary.DonatePointsPhase.Name, PhaseLibrary.EndPhase.Name
-        };
-
-        private readonly string[] closedEconomyPhases =
-        {
-            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.PayDebtPhase.Name, PhaseLibrary.TakeALoanPhase.Name, PhaseLibrary.LoadingPhase.Name,
-            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.PayDebtPhase.Name, PhaseLibrary.TakeALoanPhase.Name, PhaseLibrary.LoadingPhase.Name,
-            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.MoneyToPointPhase.Name, PhaseLibrary.DonatePointsPhase.Name, PhaseLibrary.EndPhase.Name
-        };
-
-        private readonly string[] testPhases =
-        {
-            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.LoadingPhase.Name,
+            PhaseLibrary.BankExplanation.Name, PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name,
+            PhaseLibrary.LoadingPhase.Name,
             PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.LoadingPhase.Name,
             PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.LoadingPhase.Name,
             PhaseLibrary.MoneyToPointPhase.Name, PhaseLibrary.DonatePointsPhase.Name, PhaseLibrary.EndPhase.Name
+        };
+
+        private readonly string[] debtBasedPhases =
+        {
+            PhaseLibrary.MarketPhase.Name, PhaseLibrary.PayDebtPhase.Name, PhaseLibrary.TakeALoanPhase.Name,
+            PhaseLibrary.LoadingPhase.Name,
+            PhaseLibrary.MarketPhase.Name, PhaseLibrary.PayDebtPhase.Name, PhaseLibrary.TakeALoanPhase.Name,
+            PhaseLibrary.LoadingPhase.Name,
+            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.MoneyToPointPhase.Name,
+            PhaseLibrary.DonatePointsPhase.Name, PhaseLibrary.EndPhase.Name
         };
 
         private string[] currentPhases;
@@ -148,10 +131,7 @@ namespace Version1.Host.Scripts
             {
                 MoneySystems.Sustainable => sustainableMoneyPhases,
                 MoneySystems.DebtBased => debtBasedPhases,
-                MoneySystems.InterestAtIntervals => interestAtIntervalsPhases,
-                MoneySystems.ClosedEconomy => closedEconomyPhases,
-                MoneySystems.RealisticDebtDistribution => throw new NotImplementedException(),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new NotImplementedException()
             };
 
             activities = new List<GameObject>();
@@ -271,7 +251,6 @@ namespace Version1.Host.Scripts
 
         private void OnJoinRequest(object sender, JoinRequestMessage msg)
         {
-
             Debug.Log($"Join request received - PlayerID in message: {msg.PlayerID}, Assigning ID: {playerId}");
 
 

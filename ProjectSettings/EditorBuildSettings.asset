@@ -27,7 +27,7 @@ EditorBuildSettings:
     path: Assets/Version1/Phases/MoneyToPoint/scenes/MoneyToPointScene.unity
     guid: e998af63ab528b9499620de3364d403f
   - enabled: 0
-    path: Assets/Version1/Phases/PayDept/scenes/PayDeptScene.unity
+    path: Assets/Version1/Phases/PayDept/scenes/PayDebtScene.unity
     guid: 727f489ef402f9348ab8332a1b53f3bb
   - enabled: 0
     path: Assets/Version1/Phases/TakeALoan/scenes/TakeALoanScene.unity

@@ -22,17 +22,8 @@ namespace Version1.Phases.TakeALoan.scripts
                 case MoneySystems.DebtBased:
                     descriptionText.text = "Here you can take a loan against 10% of interest you have to pay back by the end of the game.";
                     break;
-                case MoneySystems.InterestAtIntervals:
-                    descriptionText.text = "Here you can take a loan against 10% of interest you have to pay back after every round.";
-                    break;
-                case MoneySystems.ClosedEconomy:
-                    descriptionText.text = "Here you can take a loan against 10% of interest you have to pay back after every round.";
-                    break;
-                case MoneySystems.RealisticDebtDistribution:
-                    descriptionText.text = "Here you can take a loan against 10% of interest you have to pay back after every round.";
-                    break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new NotImplementedException();
             }
 
             amountText.text = "0";
@@ -70,7 +61,7 @@ namespace Version1.Phases.TakeALoan.scripts
             /*var sessionId = PlayerData.PlayerData.Instance.LobbyID;
             var msg = new DonateMoneyMessage(DateTime.Now.ToString("o"), sessionId, PlayerData.PlayerData.Instance.PlayerId,
                 currentDonation);
-        
+
             Nats.NatsClient.C.Publish(sessionId.ToString(), msg);*/
         }
     }
