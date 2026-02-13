@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -79,7 +80,7 @@ namespace Tests.Utilities
         #region Reflection Helpers
 
         /// <summary>
-        /// Sets a private field value on an object using reflection
+        /// Sets a private instance field value on an object using reflection
         /// </summary>
         /// <param name="target">The object containing the field</param>
         /// <param name="fieldName">Name of the private field</param>
@@ -97,6 +98,27 @@ namespace Tests.Utilities
             }
 
             field.SetValue(target, value);
+        }
+
+        /// <summary>
+        /// Sets a private static field value on a type using reflection.
+        /// Useful for injecting singleton instances in tests.
+        /// </summary>
+        /// <param name="type">The type containing the static field</param>
+        /// <param name="fieldName">Name of the private static field</param>
+        /// <param name="value">Value to set</param>
+        public static void SetPrivateStaticField(Type type, string fieldName, object value)
+        {
+            var field = type.GetField(fieldName,
+                BindingFlags.NonPublic | BindingFlags.Static);
+
+            if (field == null)
+            {
+                Debug.LogError($"Static field '{fieldName}' not found on type '{type.Name}'");
+                return;
+            }
+
+            field.SetValue(null, value);
         }
 
         /// <summary>

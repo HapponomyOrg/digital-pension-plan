@@ -77,3 +77,6 @@ crashlytics-build.properties
 
 # Database
 /db/postgresql/
+
+# Generated Code coverage files
+/CodeCoverage/
