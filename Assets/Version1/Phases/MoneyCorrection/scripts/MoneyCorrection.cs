@@ -64,6 +64,7 @@ namespace Version1.Phases.MoneyCorrection.scripts
 
                     break;
                 case MoneySystems.DebtBased:
+                    // 1 player has to be the bank and has to
                     // TODO this is at the end of the game.
                     throw new NotImplementedException();
                 /*case MoneySystems.InterestAtIntervals:
@@ -130,7 +131,6 @@ namespace Version1.Phases.MoneyCorrection.scripts
 
                         break;
                     }*/
-
                 /*case MoneySystems.ClosedEconomy:
                     {
                         // This is an addition to the interest at intervals/
@@ -204,12 +204,12 @@ namespace Version1.Phases.MoneyCorrection.scripts
                         }
                         break;
                     }*/
-                case MoneySystems.RealisticDebtDistribution:
+                /*case MoneySystems.RealisticDebtDistribution:
                     throw new NotImplementedException();
                     // At the beginning the host sets the debt of players at the same random interval as the balance
                     // After that it is just the interest at intervals with a close economy. TODO check this because the rules are not really descriptive
                     // Also the bank does not have a debt, other players carry this debt.
-                    break;
+                    break;*/
                 default:
                     throw new ArgumentOutOfRangeException();
             }

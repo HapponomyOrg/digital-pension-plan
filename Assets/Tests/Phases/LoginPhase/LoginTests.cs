@@ -40,9 +40,11 @@ namespace Tests.Phases.LoginPhase
         [SetUp]
         public void SetUp()
         {
-            // Create the main login GameObject
+            // Create the main login GameObject — keep it INACTIVE so OnEnable doesn't fire yet
             loginGameObject = new GameObject("LoginTest");
-            loginComponent = loginGameObject.AddComponent<Login>();
+            loginGameObject.SetActive(false);
+
+            loginComponent = loginGameObject.AddComponent<Login>(); // OnEnable NOT called yet
 
             // Create UI components using TestHelpers
             playerNameInput = TestHelpers.CreateInputField("PlayerNameInput");
@@ -56,12 +58,11 @@ namespace Tests.Phases.LoginPhase
             nameError = new GameObject("NameError");
             sessionError = new GameObject("SessionError");
 
-            // Set inactive by default
             natsError.SetActive(false);
             nameError.SetActive(false);
             sessionError.SetActive(false);
 
-            // Set private fields using reflection helper
+            // Assign all fields BEFORE OnEnable fires
             TestHelpers.SetPrivateField(loginComponent, "playerNameInput", playerNameInput);
             TestHelpers.SetPrivateField(loginComponent, "ageInput", ageInput);
             TestHelpers.SetPrivateField(loginComponent, "genderDropdown", genderDropdown);
@@ -75,8 +76,8 @@ namespace Tests.Phases.LoginPhase
             mockNetworkManager = new MockNetworkManager();
             mockPlayerData = new MockPlayerData();
 
-            // Enable the component to trigger OnEnable
-            loginComponent.enabled = true;
+            // NOW activate — triggers OnEnable with all references in place
+            loginGameObject.SetActive(true); // <-- REPLACES loginComponent.enabled = true
         }
 
         [TearDown]
@@ -504,7 +505,7 @@ namespace Tests.Phases.LoginPhase
                 0,
                 -1,
                 "Player",
-                "request-123",
+                "PlayerNameAlreadyTaken",
                 "Player name is already taken",
                 "123"
             );
