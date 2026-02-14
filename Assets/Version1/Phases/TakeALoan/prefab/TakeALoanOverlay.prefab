@@ -406,7 +406,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3633895719680919525}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Version1.TakePayLoan.scripts.TakeALoan, Assembly-CSharp
         m_MethodName: DecreaseAmount
         m_Mode: 1
@@ -973,7 +973,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3633895719680919525}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Version1.TakePayLoan.scripts.TakeALoan, Assembly-CSharp
         m_MethodName: IncreaseAmount
         m_Mode: 1
@@ -1122,7 +1122,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3633895719680919525}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Version1.TakePayLoan.scripts.TakeALoan, Assembly-CSharp
         m_MethodName: TakeALoanButton
         m_Mode: 1
@@ -1819,7 +1819,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3039939611800734692}
   - component: {fileID: 3676604898997406929}
-  - component: {fileID: 3633895719680919525}
+  - component: {fileID: 2916670423493135213}
   m_Layer: 5
   m_Name: TakeALoanOverlay
   m_TagString: Untagged
@@ -1864,7 +1864,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7598935341831181303}
   m_CullTransparentMesh: 1
---- !u!114 &3633895719680919525
+--- !u!114 &2916670423493135213
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1873,7 +1873,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7598935341831181303}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be337f40adf6fca48b5acd235431d09b, type: 3}
+  m_Script: {fileID: 11500000, guid: 0e19db6e95b74c6e97fcceab5ebd490c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   descriptionText: {fileID: 1100595775935084903}

@@ -38,7 +38,12 @@ namespace Version1.Host.Scripts
 
             var cardsPerPlayer = CalculateCardsPerPlayer(players.Count);
 
-            var bankPlayer = players.ElementAt(Random.Range(0, players.Count)).Value;
+            PlayerListPrefab bankPlayer = null;
+
+            if (players.Count > 0)
+            {
+                bankPlayer = players.ElementAt(Random.Range(0, players.Count)).Value;
+            }
 
             foreach (var player in players)
             {

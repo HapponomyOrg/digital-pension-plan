@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using Version1.Nats.Messages;
 using Version1.Nats.Messages.Client;
 using Version1.Nats.Messages.Host;
+using Version1.Phases;
 using Version1.Websocket;
 
 namespace Version1.Utilities
@@ -234,6 +235,7 @@ namespace Version1.Utilities
         private void NatsClientOnOnEndGame(object sender, EndGameMessage e)
         {
             PlayerData.PlayerData.Instance.ResetData();
+            SceneManager.LoadScene(PhaseLibrary.LoadingPhase.Scene);
         }
 
         private void NatsClientOnOnDonatePoints(object sender, DonatePointsMessage e)

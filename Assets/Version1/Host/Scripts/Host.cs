@@ -18,27 +18,7 @@ namespace Version1.Host.Scripts
     {
         private int currentRound = 0;
 
-        private readonly string[] sustainableMoneyPhases =
-        {
-            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name,
-            PhaseLibrary.LoadingPhase.Name,
-            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.LoadingPhase.Name,
-            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.LoadingPhase.Name,
-            PhaseLibrary.MoneyToPointPhase.Name, PhaseLibrary.DonatePointsPhase.Name, PhaseLibrary.EndPhase.Name
-        };
-
-        private readonly string[] debtBasedPhases =
-        {
-            PhaseLibrary.BankExplanation.Name,
-            PhaseLibrary.MarketPhase.Name, PhaseLibrary.PayDebtPhase.Name, PhaseLibrary.TakeALoanPhase.Name,
-            PhaseLibrary.LoadingPhase.Name,
-            PhaseLibrary.MarketPhase.Name, PhaseLibrary.PayDebtPhase.Name, PhaseLibrary.TakeALoanPhase.Name,
-            PhaseLibrary.LoadingPhase.Name,
-            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.MoneyToPointPhase.Name,
-            PhaseLibrary.DonatePointsPhase.Name, PhaseLibrary.EndPhase.Name
-        };
-
-        private string[] currentPhases;
+        private IPhase[] currentPhases;
 
         [SerializeField] private CardManager cardManager;
         [SerializeField] private GameObject natsError;
@@ -130,8 +110,8 @@ namespace Version1.Host.Scripts
 
             currentPhases = SessionData.Instance.CurrentMoneySystem switch
             {
-                MoneySystems.Sustainable => sustainableMoneyPhases,
-                MoneySystems.DebtBased => debtBasedPhases,
+                MoneySystems.Sustainable => GameModes.Sustainable,
+                MoneySystems.DebtBased => GameModes.DebtBased,
                 _ => throw new NotImplementedException()
             };
 
@@ -169,8 +149,8 @@ namespace Version1.Host.Scripts
             sessionIsActive = true;
 
             // Set phase info
-            currentPhaseTMP.text = currentPhases[currentRound].Split("Scene")[0];
-            nextPhaseTMP.text = currentPhases[currentRound + 1].Split("Scene")[0];
+            currentPhaseTMP.text = currentPhases[currentRound].Name;
+            nextPhaseTMP.text = currentPhases[currentRound + 1].Name;
 
             // Create progression cards
             CreateProgressionCards();
@@ -180,11 +160,10 @@ namespace Version1.Host.Scripts
         {
             for (var i = 0; i < currentPhases.Length; i++)
             {
-                var phaseName = currentPhases[i].Split("Scene");
                 var prefab = Instantiate(progressionPrefab, progressionScrollView);
                 prefab.gameObject.SetActive(true);
                 var card = prefab.GetComponent<ProgressionCard>();
-                card.Name.text = phaseName[0];
+                card.Name.text = currentPhases[i].Name;
                 card.Status.text = "Not Started";
                 progressionCards.Add(i, card);
             }
@@ -399,19 +378,19 @@ namespace Version1.Host.Scripts
         {
             progressionCards[currentRound].Status.text = "Current";
 
-            currentPhaseTMP.text = currentPhases[currentRound].Split("Scene")[0];
+            currentPhaseTMP.text = currentPhases[currentRound].Name;
             nextPhaseTMP.text = currentPhases.Length == currentRound + 1
                 ? ""
-                : currentPhases[currentRound + 1].Split("Scene")[0];
+                : currentPhases[currentRound + 1].Name;
 
-            if (currentPhases[currentRound].Contains("Market"))
+            if (currentPhases[currentRound].Name.Contains("Market"))
             {
                 timeLeft = 300;
             }
 
             Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(), new StartRoundMessage(
                 DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, -1,
-                currentRound, currentPhases[currentRound], 100));
+                currentRound, currentPhases[currentRound].Name, 100));
 
             roundStarted = true;
         }
@@ -493,7 +472,7 @@ namespace Version1.Host.Scripts
             // Handle round timer
             if (currentRound < currentPhases.Length && roundStarted)
             {
-                if (currentPhases[currentRound].Contains("Market"))
+                if (currentPhases[currentRound].Name.Contains("Market"))
                 {
                     if (timeLeft > 0)
                     {
