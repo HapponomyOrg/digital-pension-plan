@@ -3,6 +3,7 @@ using Assets.Version1.Phases;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace Version1.Phases.TakeALoan.scripts
 {
@@ -10,6 +11,7 @@ namespace Version1.Phases.TakeALoan.scripts
     {
         [SerializeField] private TMP_Text descriptionText;
         [SerializeField] private TMP_Text amountText;
+        [SerializeField] private Button confirmButton;
 
         private int currentAmount;
         private const int priceStep = 1000;
@@ -59,6 +61,7 @@ namespace Version1.Phases.TakeALoan.scripts
         private void UpdateOverlay()
         {
             amountText.text = currentAmount.ToString("N0", new System.Globalization.CultureInfo("de-DE"));
+            confirmButton.interactable = currentAmount > 0;
         }
 
         public void TakeALoanButton()

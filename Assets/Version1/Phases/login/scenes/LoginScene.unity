@@ -615,7 +615,7 @@ MonoBehaviour:
   interestRemainder: 0
   cards: 
   allPoints: 
-  isBank: 0
+  bankPlayer: 
   currentMoneySystem: 0
   balance: 0
   points: 0
@@ -719,6 +719,34 @@ PrefabInstance:
     - target: {fileID: 4065804672437165788, guid: 8609ef5d52802f049ac4becaf749f0e1, type: 3}
       propertyPath: m_Name
       value: LoginScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 4094838289710652470, guid: 8609ef5d52802f049ac4becaf749f0e1, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4094838289710652470, guid: 8609ef5d52802f049ac4becaf749f0e1, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4094838289710652470, guid: 8609ef5d52802f049ac4becaf749f0e1, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4094838289710652470, guid: 8609ef5d52802f049ac4becaf749f0e1, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4094838289710652470, guid: 8609ef5d52802f049ac4becaf749f0e1, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4094838289710652470, guid: 8609ef5d52802f049ac4becaf749f0e1, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0.12011719
+      objectReference: {fileID: 0}
+    - target: {fileID: 4094838289710652470, guid: 8609ef5d52802f049ac4becaf749f0e1, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5314189656914894639, guid: 8609ef5d52802f049ac4becaf749f0e1, type: 3}
       propertyPath: m_IsActive

@@ -229,11 +229,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7280637128180389536, guid: ef002ba8055727040be19c60726400d3, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.000061035
+      value: -0.000061035156
       objectReference: {fileID: 0}
     - target: {fileID: 7280637128180389536, guid: ef002ba8055727040be19c60726400d3, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.00045776
+      value: 0.00045776367
       objectReference: {fileID: 0}
     - target: {fileID: 7280637128180389536, guid: ef002ba8055727040be19c60726400d3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -246,6 +246,38 @@ PrefabInstance:
     - target: {fileID: 7280637128180389536, guid: ef002ba8055727040be19c60726400d3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7887829294978570406, guid: ef002ba8055727040be19c60726400d3, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7887829294978570406, guid: ef002ba8055727040be19c60726400d3, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7887829294978570406, guid: ef002ba8055727040be19c60726400d3, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7887829294978570406, guid: ef002ba8055727040be19c60726400d3, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7887829294978570406, guid: ef002ba8055727040be19c60726400d3, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7887829294978570406, guid: ef002ba8055727040be19c60726400d3, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0.12011719
+      objectReference: {fileID: 0}
+    - target: {fileID: 7887829294978570406, guid: ef002ba8055727040be19c60726400d3, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.00012207031
+      objectReference: {fileID: 0}
+    - target: {fileID: 7887829294978570406, guid: ef002ba8055727040be19c60726400d3, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.0004272461
       objectReference: {fileID: 0}
     - target: {fileID: 8639645823494548240, guid: ef002ba8055727040be19c60726400d3, type: 3}
       propertyPath: ToasterList
