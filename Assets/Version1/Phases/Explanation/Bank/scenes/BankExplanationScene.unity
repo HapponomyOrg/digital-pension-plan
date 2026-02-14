@@ -484,6 +484,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1115744198160214665, guid: 13e0f52914fac3640a1bb30c1077514a, type: 3}
   m_PrefabInstance: {fileID: 7560978121386418600}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7280637128210495513 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8475912529555441696, guid: 13e0f52914fac3640a1bb30c1077514a, type: 3}
+  m_PrefabInstance: {fileID: 7560978121386418600}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d1b50678b7d302499ce3d7816e85622, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7560978121386418600
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -579,6 +590,15 @@ PrefabInstance:
     - target: {fileID: 1937113606476132075, guid: 13e0f52914fac3640a1bb30c1077514a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
+      objectReference: {fileID: 7280637128210495513}
+    - target: {fileID: 1937113606476132075, guid: 13e0f52914fac3640a1bb30c1077514a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Continue
+      objectReference: {fileID: 0}
+    - target: {fileID: 1937113606476132075, guid: 13e0f52914fac3640a1bb30c1077514a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Version1.Phases.Explanation.Bank.scripts.BankExplanationPhaseController,
+        Version1
       objectReference: {fileID: 0}
     - target: {fileID: 5465699312874636887, guid: 13e0f52914fac3640a1bb30c1077514a, type: 3}
       propertyPath: m_Name

@@ -2,35 +2,15 @@
 using Assets.Version1.Phases;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Version1.Nats.Messages.Host;
 
 namespace Version1.Phases
 {
     public class BasePhaseManager : IPhaseManager
     {
-        public IPhase[] Phases
-        {
-            get
-            {
-                return new[]
-                {
-                    PhaseLibrary.BankExplanation,
-                    PhaseLibrary.MarketPhase,
-                    PhaseLibrary.MoneyCorrectionPhase,
-                    PhaseLibrary.LoadingPhase,
-                    PhaseLibrary.MarketPhase,
-                    PhaseLibrary.MoneyCorrectionPhase,
-                    PhaseLibrary.LoadingPhase,
-                    PhaseLibrary.MarketPhase,
-                    PhaseLibrary.MoneyCorrectionPhase,
-                    PhaseLibrary.LoadingPhase,
-                    PhaseLibrary.MoneyToPointPhase,
-                    PhaseLibrary.DonatePointsPhase,
-                    PhaseLibrary.EndPhase
-                };
-            }
-        }
-
         private IPhaseController _currentPhaseController;
+
+        public IPhase[] Phases { get; set; }
 
         public IPhaseController CurrentPhaseController
         {
@@ -45,9 +25,22 @@ namespace Version1.Phases
             }
         }
 
-        public void StartPhases()
+        public void StartPhases(StartGameMessage msg)
         {
-            LoadPhase(0, Phases[0].Name);
+            switch (msg.IntrestMode)
+            {
+                case 0:
+                    Phases = GameModes.Sustainable;
+                    break;
+                case 1:
+                    Phases = GameModes.DebtBased;
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+
+            SceneManager.LoadScene(PhaseLibrary.LoadingPhase.Scene);
+            /*LoadPhase(0, Phases[0].Name);*/
         }
 
         public void LoadPhase(int index, string name)
@@ -64,7 +57,17 @@ namespace Version1.Phases
             }
             else
             {
-                SceneManager.LoadScene(Phases[index].Scene);
+                if (PlayerData.PlayerData.Instance.IsBankPlayer() && (name == PhaseLibrary.PayDebtPhase.Name || name == PhaseLibrary.TakeALoanPhase.Name))
+                {
+                    if (SceneManager.GetActiveScene().name != PhaseLibrary.LoadingPhase.Name)
+                    {
+                        SceneManager.LoadScene(PhaseLibrary.LoadingPhase.Scene);
+                    }
+                }
+                else
+                {
+                    SceneManager.LoadScene(Phases[index].Scene);
+                }
             }
         }
 

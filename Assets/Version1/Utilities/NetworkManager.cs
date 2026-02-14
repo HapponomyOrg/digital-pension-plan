@@ -215,14 +215,14 @@ namespace Version1.Utilities
 
         private void NatsClientOnOnStartRound(object sender, StartRoundMessage e)
         {
-            Utilities.GameManager.Instance.PhaseManager.LoadPhase(e.RoundNumber, e.RoundName);
+            GameManager.Instance.PhaseManager.LoadPhase(e.RoundNumber, e.RoundName);
         }
 
         private void NatsClientOnOnStartGame(object sender, StartGameMessage e)
         {
             if (e.OtherPlayerID != PlayerData.PlayerData.Instance.PlayerId) return;
 
-            Utilities.GameManager.Instance.PhaseManager.StartPhases();
+            GameManager.Instance.PhaseManager.StartPhases(e);
             PlayerData.PlayerData.Instance.StartGame(e);
         }
 

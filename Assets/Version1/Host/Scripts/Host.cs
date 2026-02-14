@@ -20,7 +20,7 @@ namespace Version1.Host.Scripts
 
         private readonly string[] sustainableMoneyPhases =
         {
-            PhaseLibrary.BankExplanation.Name, PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name,
+            PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name,
             PhaseLibrary.LoadingPhase.Name,
             PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.LoadingPhase.Name,
             PhaseLibrary.MarketPhase.Name, PhaseLibrary.MoneyCorrectionPhase.Name, PhaseLibrary.LoadingPhase.Name,
@@ -29,6 +29,7 @@ namespace Version1.Host.Scripts
 
         private readonly string[] debtBasedPhases =
         {
+            PhaseLibrary.BankExplanation.Name,
             PhaseLibrary.MarketPhase.Name, PhaseLibrary.PayDebtPhase.Name, PhaseLibrary.TakeALoanPhase.Name,
             PhaseLibrary.LoadingPhase.Name,
             PhaseLibrary.MarketPhase.Name, PhaseLibrary.PayDebtPhase.Name, PhaseLibrary.TakeALoanPhase.Name,

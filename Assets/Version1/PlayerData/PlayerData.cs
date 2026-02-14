@@ -128,7 +128,7 @@ namespace Version1.PlayerData
             set => SetAndInvoke(ref lobbyID, value, OnLobbyIDChange);
         }
 
-        public bool isBankPlayer()
+        public bool IsBankPlayer()
         {
             return bankPlayer == PlayerName;
         }

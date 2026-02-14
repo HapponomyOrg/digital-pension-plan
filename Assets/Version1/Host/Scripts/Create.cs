@@ -32,7 +32,7 @@ namespace Version1.Host.Scripts
 
         private int oldCode;
 
-        private void Start()
+        private void Awake()
         {
             SetupGameModeDropdown();
         }
@@ -64,10 +64,13 @@ namespace Version1.Host.Scripts
             // Set input field values without triggering listeners
             hostInputField.SetTextWithoutNotify(SessionData.Instance.HostName);
             seedInputField.SetTextWithoutNotify(SessionData.Instance.Seed.ToString());
-            gameCodeInputField.SetTextWithoutNotify(
-                $"{SessionData.Instance.LobbyCode.ToString().Substring(0, 3)} " +
-                $"{SessionData.Instance.LobbyCode.ToString().Substring(3, 3)} " +
-                $"{SessionData.Instance.LobbyCode.ToString().Substring(6, 3)}");
+
+            var code = SessionData.Instance.LobbyCode.ToString();
+            if (code.Length == 9)
+            {
+                gameCodeInputField.SetTextWithoutNotify(
+                    $"{code.Substring(0, 3)} {code.Substring(3, 3)} {code.Substring(6, 3)}");
+            }
 
             // Handle locked game code state
             if (SessionData.Instance.LobbyCode == oldCode)

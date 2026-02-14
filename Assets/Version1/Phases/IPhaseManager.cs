@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Assets.Version1.Phases;
+using Version1.Nats.Messages.Host;
 
-namespace Assets.Version1.Phases
+namespace Version1.Phases
 {
     public interface IPhaseManager
     {
-        IPhase[] Phases { get; }
+        IPhase[] Phases { get; set; }
         IPhaseController CurrentPhaseController { get; set; }
 
-        void StartPhases();
+        void StartPhases(StartGameMessage msg);
         void LoadPhase(int index, string name);
         void EndPhases();
     }
