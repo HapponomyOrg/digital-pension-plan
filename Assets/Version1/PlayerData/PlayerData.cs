@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Version1.Host.Scripts;
 using Version1.Nats.Messages.Client;
 using Version1.Nats.Messages.Host;
 
@@ -143,8 +144,17 @@ namespace Version1.PlayerData
             Debug.Log("Cards received");
             Debug.Log(string.Join(", ", msg.Cards));
 
+            SessionData.Instance.CurrentMoneySystem = (MoneySystems)msg.IntrestMode;
+            CurrentMoneySystem = (MoneySystems)msg.IntrestMode;
+
             playerId = msg.OtherPlayerID;
             AddToBalance(msg.Balance);
+
+            if (SessionData.Instance.CurrentMoneySystem == MoneySystems.DebtBased)
+            {
+                Debt += msg.Balance;
+            }
+
 
             foreach (var card in msg.Cards)
             {

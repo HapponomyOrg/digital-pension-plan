@@ -11,5 +11,7 @@ namespace Version1.Phases
         void StartPhases(StartGameMessage msg);
         void LoadPhase(int index, string name);
         void EndPhases();
+
+        int GetRoundNumber();
     }
 }

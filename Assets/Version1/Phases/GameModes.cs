@@ -24,10 +24,12 @@ namespace Version1.Phases
         {
             PhaseLibrary.BankExplanation,
             PhaseLibrary.MarketPhase,
+            PhaseLibrary.MoneyCorrectionPhase,
             PhaseLibrary.PayDebtPhase,
             PhaseLibrary.TakeALoanPhase,
             PhaseLibrary.LoadingPhase,
             PhaseLibrary.MarketPhase,
+            PhaseLibrary.MoneyCorrectionPhase,
             PhaseLibrary.PayDebtPhase,
             PhaseLibrary.TakeALoanPhase,
             PhaseLibrary.LoadingPhase,

@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using Assets.Version1.Phases;
 using TMPro;
@@ -14,6 +13,8 @@ namespace Version1.Phases.Explanation.Bank.scripts
         [SerializeField] private TMP_Text text;
         [SerializeField] private Button continueButton;
 
+        private static readonly System.Globalization.CultureInfo deCulture = new("de-DE");
+
         private void Start()
         {
             GameManager.Instance.PhaseManager.CurrentPhaseController = this;
@@ -22,10 +23,22 @@ namespace Version1.Phases.Explanation.Bank.scripts
         public void StartPhase()
         {
             continueButton.interactable = false;
-            StartCoroutine(DisplayTextLetterByLetter(!PlayerData.PlayerData.Instance.IsBankPlayer()
-                ? $"Welcome! You’re a Regular Player\n\nYou start the game with a debt of {PlayerData.PlayerData.Instance.Debt}.\n\nDuring pauses, you owe 10% interest. If it’s less than 1,000, it carries over.\n\nIf you can’t pay, the interest is added to your debt—this means more debt and more interest later.\n\nAt the end, you repay your total debt, 10% extra, and any unpaid interest.\n\nManage your loans carefully!"
-                : "Congratulations, you are the Bank Player!\n\nYou start with no money.\n\nAs the bank, you manage loans. When players borrow money, it's newly created—you're not lending your own funds.\n\nWhen they repay, only the interest goes to you. The borrowed amount is destroyed and removed from the game.\n\nSince you are the bank, you cannot take loans yourself.\nYour income comes from interest—use it wisely!"));
+
+            StartCoroutine(DisplayTextLetterByLetter(
+                !PlayerData.PlayerData.Instance.IsBankPlayer()
+                    ? $"Welcome! You’re a Regular Player.\n\n" +
+                      $"You start the game with a debt of €{FormatMoney(PlayerData.PlayerData.Instance.Debt)} " +
+                      $"and a balance of €{FormatMoney(PlayerData.PlayerData.Instance.Balance)}, " +
+                      $"which you borrowed from the bank.\n\n" +
+                      $"After each round, you owe 10% interest on your debt. " +
+                      $"If the interest is less than €1,000, it carries over to the next round.\n\n" +
+                      $"You can repay part or all of your debt after each round, and you can also take additional loans if needed.\n\n"
+                    : $"Congratulations! You are the Bank Player.\n\n" +
+                      $"You start with €0.\n\n" +
+                      $"As the bank, you receive interest payments from all regular players after each round. " +
+                      $"You cannot take loans and you have no debt.\n\n"));
         }
+
 
         public void StopPhase()
         {
@@ -33,7 +46,7 @@ namespace Version1.Phases.Explanation.Bank.scripts
 
         public void Continue()
         {
-            SceneManager.LoadScene(Utilities.GameManager.LOADING);
+            SceneManager.LoadScene(GameManager.LOADING);
         }
 
         private IEnumerator DisplayTextLetterByLetter(string message)
@@ -48,5 +61,7 @@ namespace Version1.Phases.Explanation.Bank.scripts
 
             continueButton.interactable = true;
         }
+
+        private static string FormatMoney(int amount) => amount.ToString("N0", deCulture);
     }
 }

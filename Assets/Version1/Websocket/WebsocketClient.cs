@@ -37,6 +37,7 @@ namespace Version1.Websocket
         public event EventHandler<ConfirmBuyMessage> OnConfirmBuy;
         public event EventHandler<ConfirmHandInMessage> OnConfirmHandIn;
         public event EventHandler<ConfirmCancelListingMessage> OnConfirmCancelListing;
+        public event EventHandler<PayInterestToBankMessage> OnPayInterestToBank;
         public event EventHandler<CreateBidMessage> OnCreateBid;
         public event EventHandler<AcceptBidMessage> OnAcceptBid;
         public event EventHandler<CancelBidMessage> OnCancelBid;
@@ -254,6 +255,9 @@ namespace Version1.Websocket
                         break;
                     case MessageSubject.SkipRounds:
                         OnSkipRound?.Invoke(this, JsonUtility.FromJson<SkipRoundMessage>(jsonData));
+                        break;
+                    case MessageSubject.PayInterestToBank:
+                        OnPayInterestToBank?.Invoke(this, JsonUtility.FromJson<PayInterestToBankMessage>(jsonData));
                         break;
                     default:
                         throw new NotImplementedException("This message is not implemented");

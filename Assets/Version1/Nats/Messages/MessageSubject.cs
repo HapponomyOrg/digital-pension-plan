@@ -25,6 +25,7 @@ namespace Version1.Nats.Messages
         public const string RejectCounterBidding = nameof(RejectCounterBidding);
         // Client Misc.
         public const string JoinRequest = nameof(JoinRequest);
+        public const string PayInterestToBank = nameof(PayInterestToBank);
 
 
         // Host Hosting

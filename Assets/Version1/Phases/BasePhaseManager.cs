@@ -10,6 +10,7 @@ namespace Version1.Phases
     {
         private IPhaseController _currentPhaseController;
 
+        public int currentRound = 0;
         public IPhase[] Phases { get; set; }
 
         public IPhaseController CurrentPhaseController
@@ -45,6 +46,8 @@ namespace Version1.Phases
 
         public void LoadPhase(int index, string name)
         {
+            currentRound = index;
+
             if (index >= Phases.Length)
                 throw new ArgumentOutOfRangeException("Phase number doesn't exist in phasemanager");
 
@@ -57,7 +60,7 @@ namespace Version1.Phases
             }
             else
             {
-                if (PlayerData.PlayerData.Instance.IsBankPlayer() && (name == PhaseLibrary.PayDebtPhase.Name || name == PhaseLibrary.TakeALoanPhase.Name))
+                if (PlayerData.PlayerData.Instance.IsBankPlayer() && (name == PhaseLibrary.PayDebtPhase.Name || name == PhaseLibrary.TakeALoanPhase.Name || name == PhaseLibrary.MoneyCorrectionPhase.Name))
                 {
                     if (SceneManager.GetActiveScene().name != PhaseLibrary.LoadingPhase.Name)
                     {
@@ -74,6 +77,11 @@ namespace Version1.Phases
         public void EndPhases()
         {
             throw new NotImplementedException();
+        }
+
+        public int GetRoundNumber()
+        {
+            return currentRound;
         }
     }
 }

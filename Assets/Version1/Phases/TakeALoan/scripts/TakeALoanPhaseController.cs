@@ -9,9 +9,11 @@ namespace Version1.Phases.TakeALoan.scripts
 {
     public class TakeALoanPhaseController : MonoBehaviour, IPhaseController
     {
-        [SerializeField] private TMP_Text descriptionText;
+        [SerializeField] private TMP_Text currentBalanceText;
         [SerializeField] private TMP_Text amountText;
         [SerializeField] private Button confirmButton;
+
+        private static readonly System.Globalization.CultureInfo deCulture = new("de-DE");
 
         private int currentAmount;
         private const int priceStep = 1000;
@@ -23,20 +25,8 @@ namespace Version1.Phases.TakeALoan.scripts
 
         public void StartPhase()
         {
-            switch (PlayerData.PlayerData.Instance.CurrentMoneySystem)
-            {
-                case MoneySystems.Sustainable:
-                    Debug.Log("take a loan is not used in the sustainable money system.");
-                    break;
-                case MoneySystems.DebtBased:
-                    descriptionText.text =
-                        "Here you can take a loan against 10% of interest you have to pay back by the end of the game.";
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-
             amountText.text = "0";
+            currentBalanceText.text = "Current balance: " + FormatMoney(PlayerData.PlayerData.Instance.Balance);
         }
 
         public void IncreaseAmount()
@@ -60,17 +50,17 @@ namespace Version1.Phases.TakeALoan.scripts
 
         private void UpdateOverlay()
         {
-            amountText.text = currentAmount.ToString("N0", new System.Globalization.CultureInfo("de-DE"));
+            amountText.text = FormatMoney(currentAmount);
+            currentBalanceText.text =  "Current balance: " + FormatMoney(PlayerData.PlayerData.Instance.Balance + currentAmount);
             confirmButton.interactable = currentAmount > 0;
         }
 
         public void TakeALoanButton()
         {
             PlayerData.PlayerData.Instance.Balance += currentAmount;
+            PlayerData.PlayerData.Instance.Debt += currentAmount;
 
             SceneManager.LoadScene(PhaseLibrary.LoadingPhase.Scene);
-
-            // TODO check if there is a message to be sent.
         }
 
         public void Continue()
@@ -82,5 +72,8 @@ namespace Version1.Phases.TakeALoan.scripts
         public void StopPhase()
         {
         }
+
+
+        private static string FormatMoney(int amount) => amount.ToString("N0", deCulture);
     }
 }

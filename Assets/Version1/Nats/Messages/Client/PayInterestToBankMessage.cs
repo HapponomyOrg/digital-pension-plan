@@ -6,7 +6,7 @@
         public int Amount;
 
         public PayInterestToBankMessage(string dateTimeStamp, int lobbyID, int playerID, string bankPlayer, int amount)
-            : base(dateTimeStamp, MessageSubject.AcceptBid, lobbyID, playerID)
+            : base(dateTimeStamp, MessageSubject.PayInterestToBank, lobbyID, playerID)
         {
             BankPlayer = bankPlayer;
             Amount = amount;

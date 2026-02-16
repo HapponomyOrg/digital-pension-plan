@@ -2,17 +2,23 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace Version1.Phases.PayDept.script
 {
-    public class PayDeptPhaseController : MonoBehaviour , IPhaseController
+    public class PayDeptPhaseController : MonoBehaviour, IPhaseController
     {
         [SerializeField] private TMP_Text amountText;
+        [SerializeField] private TMP_Text currentBalanceText;
+        [SerializeField] private Button ConfirmButton;
+
+        private static readonly System.Globalization.CultureInfo deCulture = new("de-DE");
 
         private int _currentAmount = 0;
         private const int PriceStep = 1000;
 
         private int _maxAmount = 0;
+
         private void Start()
         {
             Utilities.GameManager.Instance.PhaseManager.CurrentPhaseController = this;
@@ -25,22 +31,30 @@ namespace Version1.Phases.PayDept.script
             amountText.text = "0";
 
             _maxAmount = PlayerData.PlayerData.Instance.Debt;
+            currentBalanceText.text =  "Current balance: " +FormatMoney(PlayerData.PlayerData.Instance.Balance);
         }
 
         public void StopPhase()
         {
-            throw new System.NotImplementedException();
         }
 
         public void IncreaseAmount()
         {
-            _currentAmount += PriceStep;
-            // TODO B.Nierop check what is max to take a loan
+            int newAmount = _currentAmount + PriceStep;
+
+            if (newAmount > PlayerData.PlayerData.Instance.Balance)
+                return;
+
+            _currentAmount = newAmount;
+
+            // TODO B.Nierop check if there is a max amount of loan.
+            /*// Clamp to max loan amount
             if (_currentAmount > _maxAmount)
-                _currentAmount = _maxAmount;
+                _currentAmount = _maxAmount;*/
 
             UpdateOverlay();
         }
+
 
         public void DecreaseAmount()
         {
@@ -53,7 +67,9 @@ namespace Version1.Phases.PayDept.script
 
         private void UpdateOverlay()
         {
-            amountText.text = _currentAmount.ToString("N0", new System.Globalization.CultureInfo("de-DE"));
+            amountText.text = FormatMoney(_currentAmount);
+            currentBalanceText.text =  "Current balance: " + FormatMoney(PlayerData.PlayerData.Instance.Balance - _currentAmount);
+            ConfirmButton.interactable = _currentAmount != 0;
         }
 
         public void Continue()
@@ -61,10 +77,14 @@ namespace Version1.Phases.PayDept.script
             SceneManager.LoadScene(Utilities.GameManager.LOADING);
         }
 
-        public void PayDeptButton()
+        public void PayDept()
         {
             PlayerData.PlayerData.Instance.Debt -= _currentAmount;
             PlayerData.PlayerData.Instance.Balance -= _currentAmount;
+
+            SceneManager.LoadScene(Utilities.GameManager.LOADING);
         }
+
+        private static string FormatMoney(int amount) => amount.ToString("N0", deCulture);
     }
 }

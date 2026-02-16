@@ -38,44 +38,114 @@ namespace Version1.Host.Scripts
 
             var cardsPerPlayer = CalculateCardsPerPlayer(players.Count);
 
+            // Pick bank player randomly
             PlayerListPrefab bankPlayer = null;
-
-            if (players.Count > 0)
+            if (players.Count > 0 && SessionData.Instance.CurrentMoneySystem == MoneySystems.DebtBased)
             {
                 bankPlayer = players.ElementAt(Random.Range(0, players.Count)).Value;
             }
 
+            int numPlayers = players.Count;
+            int[] playerDebts;
+
+            if (SessionData.Instance.CurrentMoneySystem == MoneySystems.DebtBased)
+            {
+                // Use debt sequence
+                playerDebts = DistributeDebt(numPlayers);
+            }
+            else
+            {
+                // Everyone gets 6000, bank maybe 0
+                playerDebts = new int[numPlayers];
+                for (int i = 0; i < numPlayers; i++)
+                {
+                    playerDebts[i] = (i == 0) ? 0 : 6000; // bank at index 0
+                }
+            }
+
+            int playerIndex = 0;
             foreach (var player in players)
             {
                 List<CardData> playerCards = TakeCards(cardsPerPlayer);
 
                 int[] handCards = new int[playerCards.Count];
-
                 for (int j = 0; j < playerCards.Count; j++)
                 {
                     handCards[j] = playerCards[j].ID;
                 }
 
-                StartGameMessage msg;
-                if (SessionData.Instance.InbalanceMode)
+                int debt = playerDebts[playerIndex];
+
+                if (bankPlayer != null && player.Value == bankPlayer)
                 {
-                    msg = new StartGameMessage(DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, -1,
-                        player.Key,
-                        CalculateBalancePerPlayer(player.Key), handCards, (int)SessionData.Instance.CurrentMoneySystem,
-                        bankPlayer.Name);
+                    debt = 0;
                 }
-                else
-                {
-                    msg = new StartGameMessage(DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, -1, player.Key, 6000,
-                        handCards,
-                        (int)SessionData.Instance.CurrentMoneySystem, bankPlayer.Name);
-                }
+
+                StartGameMessage msg = new StartGameMessage(
+                    DateTime.Now.ToString("o"),
+                    SessionData.Instance.LobbyCode,
+                    -1,
+                    player.Key,
+                    debt, // If player is bank player always give 0 balance / debt
+                    handCards,
+                    (int)SessionData.Instance.CurrentMoneySystem,
+                    bankPlayer?.Name ?? ""
+                );
 
                 Debug.Log($"sent cards, msg: {msg}");
 
                 Nats.NatsHost.C.Publish($"{SessionData.Instance.LobbyCode}", msg);
+
+                playerIndex++;
             }
         }
+
+
+        private int[] DistributeDebt(int numPlayers)
+        {
+            var debtArray = new int[numPlayers];
+
+            // Bank player (index 0) has no debt
+            debtArray[0] = 0;
+
+            // Create debt bag
+            int bagSize = (numPlayers - 1) * 3;
+            var debtBag = new List<int>(bagSize);
+
+            int[] debtSequence = new int[]
+            {
+                6000, 6000, 2000, 4000,
+                2000, 0, 4000, 2000,
+                0, 0, 0, 0
+            };
+
+            int sequenceLength = debtSequence.Length;
+
+            // Fill debt bag by repeating sequence
+            for (int i = 0; i < bagSize; i++)
+            {
+                int index = i % sequenceLength;
+                debtBag.Add(debtSequence[index]);
+            }
+
+            // Distribute debt to players (excluding bank at index 0)
+            for (int player = 1; player < numPlayers; player++)
+            {
+                int debt = 0;
+
+                for (int draw = 0; draw < 3; draw++)
+                {
+                    int tokenIndex = Random.Range(0, debtBag.Count);
+                    debt += debtBag[tokenIndex];
+                    debtBag.RemoveAt(tokenIndex);
+                }
+
+                debtArray[player] = debt;
+            }
+
+            return debtArray;
+        }
+
 
         private void FillDeck(int count)
         {
@@ -107,17 +177,6 @@ namespace Version1.Host.Scripts
             }
 
             Random.state = originalState;
-        }
-
-        private static int CalculateBalancePerPlayer(int playerNumber)
-        {
-            return (playerNumber % 4) switch
-            {
-                1 => 0,
-                2 or 3 => 6000,
-                0 => 14000,
-                _ => 0
-            };
         }
 
         private static int CalculateCardsPerPlayer(int numberOfPlayers)

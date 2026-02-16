@@ -105,6 +105,8 @@ namespace Version1.Utilities
             WebSocketClient.OnRejectBid += RejectBid;
             WebSocketClient.OnRejectCounterBid += RejectCounterBid;
 
+            WebSocketClient.OnPayInterestToBank += WebSocketClientOnOnPayInterestToBank;
+
 
             WebSocketClient.OnStartGame += NatsClientOnOnStartGame;
             WebSocketClient.OnStartRound += NatsClientOnOnStartRound;
@@ -125,6 +127,15 @@ namespace Version1.Utilities
             {
                 Debug.LogError($"Failed to connect: {ex.Message}\nStack: {ex.StackTrace}");
                 OnError?.Invoke(this, ex.Message);
+            }
+        }
+
+        private void WebSocketClientOnOnPayInterestToBank(object sender, PayInterestToBankMessage e)
+        {
+            if (PlayerData.PlayerData.Instance.IsBankPlayer())
+            {
+                // TODO B.Nierop add popup that money is recieved or something.
+                PlayerData.PlayerData.Instance.AddToBalance(e.Amount);
             }
         }
 
