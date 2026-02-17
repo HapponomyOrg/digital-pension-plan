@@ -3,6 +3,8 @@ using System.Reflection;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Version1.Phases;
+using Version1.Utilities;
 
 namespace Tests.Utilities
 {
@@ -187,6 +189,112 @@ namespace Tests.Utilities
 
             var value = property.GetValue(target);
             return value is T typedValue ? typedValue : default;
+        }
+
+        #endregion
+
+        #region PhaseManager / GameManager Helpers
+
+        private static MockPhaseManager _mockPhaseManager;
+
+        /// <summary>
+        /// Sets the current round number on the MockPhaseManager,
+        /// injecting it into GameManager if not already done.
+        /// </summary>
+        public static void SetRoundNumber(int number)
+        {
+            if (_mockPhaseManager == null)
+            {
+                _mockPhaseManager = new MockPhaseManager(number);
+                InjectPhaseManager(_mockPhaseManager);
+            }
+            else
+            {
+                _mockPhaseManager.SetRoundNumber(number);
+            }
+        }
+
+        /// <summary>
+        /// Resets the MockPhaseManager and the GameManager singleton.
+        /// Call this in TearDown to ensure a clean state between tests.
+        /// </summary>
+        public static void ClearMockPhaseManager()
+        {
+            _mockPhaseManager = null;
+            SetPrivateStaticField(typeof(GameManager), "instance", null);
+        }
+
+        /// <summary>
+        /// Uses reflection to inject an IPhaseManager into the GameManager singleton,
+        /// bypassing the private setter on PhaseManager.
+        /// </summary>
+        private static void InjectPhaseManager(IPhaseManager phaseManager)
+        {
+            var gameManager = GameManager.Instance;
+            var property = typeof(GameManager).GetProperty(
+                "PhaseManager",
+                BindingFlags.Public | BindingFlags.Instance
+            );
+
+            if (property == null)
+            {
+                Debug.LogError("Property 'PhaseManager' not found on GameManager.");
+                return;
+            }
+
+            property.SetValue(gameManager, phaseManager);
+        }
+
+        #endregion
+
+        #region NetworkManager Helpers
+
+        private static MockNetworkManager _mockNetworkManager;
+
+        /// <summary>
+        /// Injects a MockNetworkManager into NetworkManager.Instance via the backing field.
+        /// Requires NetworkManager.Instance to be typed as INetworkManager.
+        /// Call this in SetUp for any test that triggers a Publish or Subscribe call.
+        /// </summary>
+        public static MockNetworkManager InjectMockNetworkManager()
+        {
+            if (_mockNetworkManager == null)
+                _mockNetworkManager = new MockNetworkManager();
+            else
+                _mockNetworkManager.Reset();
+
+            // Target the compiler-generated backing field for the auto-property.
+            // The backing field name is "<Instance>k__BackingField" for auto-properties.
+            var backingField = typeof(NetworkManager).GetField(
+                "<Instance>k__BackingField",
+                BindingFlags.NonPublic | BindingFlags.Static
+            );
+
+            if (backingField == null)
+            {
+                Debug.LogError("Backing field for 'Instance' not found on NetworkManager. " +
+                               "Ensure NetworkManager.Instance is typed as INetworkManager.");
+                return null;
+            }
+
+            backingField.SetValue(null, _mockNetworkManager);
+            return _mockNetworkManager;
+        }
+
+        /// <summary>
+        /// Clears the MockNetworkManager and resets NetworkManager.Instance to null.
+        /// Call this in TearDown.
+        /// </summary>
+        public static void ClearMockNetworkManager()
+        {
+            _mockNetworkManager = null;
+
+            var backingField = typeof(NetworkManager).GetField(
+                "<Instance>k__BackingField",
+                BindingFlags.NonPublic | BindingFlags.Static
+            );
+
+            backingField?.SetValue(null, null);
         }
 
         #endregion

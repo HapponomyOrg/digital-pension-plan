@@ -125,7 +125,10 @@ namespace Version1.Websocket
 
                     if (innerData != null && !string.IsNullOrEmpty(innerData.Subject))
                     {
-                        Debug.LogWarning($"Parsed Subject: {innerData.Subject}");
+                        if (innerData.Subject != MessageSubject.HeartBeat)
+                        {
+                            Debug.LogWarning($"Parsed Subject: {innerData.Subject}");
+                        }
                         DispatchMessage(innerData.Subject, dataJson);
                     }
                 }
@@ -332,7 +335,7 @@ namespace Version1.Websocket
             // Manually wrap it in a JSON message
             string message = $"{{\"action\": \"publish\", \"subject\": \"{topic}\", \"data\": {serializedContent}}}";
 
-            if (topic != MessageSubject.HeartBeat)
+            if (!serializedContent.Contains(MessageSubject.HeartBeat))
             {
                 Debug.Log($"Publishing: {message}");
             }

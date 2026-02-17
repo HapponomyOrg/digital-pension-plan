@@ -10,6 +10,8 @@ namespace Version1.Host.Scripts
     {
         public DateTime LastPing;
 
+        private static readonly System.Globalization.CultureInfo deCulture = new("de-DE");
+
         public int ID { get; set; }
 
         private string _name;
@@ -40,7 +42,7 @@ namespace Version1.Host.Scripts
             get => _balance;
             set
             {
-                BalanceTextField.text = value.ToString();
+                BalanceTextField.text = FormatMoney(value);
                 _balance = value;
             }
         }
@@ -57,5 +59,7 @@ namespace Version1.Host.Scripts
             LastPing = now;
 
         }
+
+        private static string FormatMoney(int amount) => amount.ToString("N0", deCulture);
     }
 }

@@ -29,7 +29,6 @@ namespace Version1.Phases.Login.Scripts
         private int gender = -1;
         private int gameCode = -1;
 
-        private static NetworkManager NetworkManager => NetworkManager.Instance;
 
         private void OnEnable()
         {
@@ -39,9 +38,9 @@ namespace Version1.Phases.Login.Scripts
             gameCodeInput.onValueChanged.AddListener(OnGameCodeChanged);
             joinButton.onClick.AddListener(OnJoinButtonClicked);
 
-            if (NetworkManager == null) return;
-            NetworkManager.OnRejected += HandleRejected;
-            NetworkManager.OnError += HandleError;
+            if (NetworkManager.Instance == null) return;
+            NetworkManager.Instance.OnRejected += HandleRejected;
+            NetworkManager.Instance.OnError += HandleError;
         }
 
         private void OnDisable()
@@ -52,10 +51,10 @@ namespace Version1.Phases.Login.Scripts
             gameCodeInput.onValueChanged.RemoveListener(OnGameCodeChanged);
             joinButton.onClick.RemoveListener(OnJoinButtonClicked);
 
-            if (NetworkManager == null) return;
+            if (NetworkManager.Instance == null) return;
 
-            NetworkManager.OnRejected -= HandleRejected;
-            NetworkManager.OnError -= HandleError;
+            NetworkManager.Instance.OnRejected -= HandleRejected;
+            NetworkManager.Instance.OnError -= HandleError;
         }
 
         private void OnPlayerNameChanged(string value)
@@ -96,7 +95,7 @@ namespace Version1.Phases.Login.Scripts
 
         private void OnJoinButtonClicked()
         {
-            if (NetworkManager == null)
+            if (NetworkManager.Instance == null)
             {
                 Debug.LogError("NetworkManager not initialized!");
                 return;
@@ -119,8 +118,8 @@ namespace Version1.Phases.Login.Scripts
                 playerData.RequestID
             );
 
-            NetworkManager.Subscribe(gameCode.ToString());
-            NetworkManager.Publish(gameCode.ToString(), message);
+            NetworkManager.Instance.Subscribe(gameCode.ToString());
+            NetworkManager.Instance.Publish(gameCode.ToString(), message);
         }
 
         private void HandleError(object sender, string error)

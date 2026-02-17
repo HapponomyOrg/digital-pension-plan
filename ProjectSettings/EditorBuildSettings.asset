@@ -38,4 +38,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Version1/Phases/Explanation/Bank/scenes/BankExplanationScene.unity
     guid: e6e5919c0304bba47ab2748234e219e1
+  - enabled: 0
+    path: Assets/Version1/Phases/BankOverview/Scenes/BankOverviewScene.unity
+    guid: d8271121e809dca45a1aa6b809bfc5be
   m_configObjects: {}

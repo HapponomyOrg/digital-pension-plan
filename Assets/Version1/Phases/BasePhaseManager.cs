@@ -60,11 +60,22 @@ namespace Version1.Phases
             }
             else
             {
-                if (PlayerData.PlayerData.Instance.IsBankPlayer() && (name == PhaseLibrary.PayDebtPhase.Name || name == PhaseLibrary.TakeALoanPhase.Name || name == PhaseLibrary.MoneyCorrectionPhase.Name))
+                if (PlayerData.PlayerData.Instance.IsBankPlayer())
                 {
-                    if (SceneManager.GetActiveScene().name != PhaseLibrary.LoadingPhase.Name)
+                    if (name == PhaseLibrary.PayDebtPhase.Name || name == PhaseLibrary.TakeALoanPhase.Name)
                     {
-                        SceneManager.LoadScene(PhaseLibrary.LoadingPhase.Scene);
+                        if (SceneManager.GetActiveScene().name != PhaseLibrary.LoadingPhase.Name)
+                        {
+                            SceneManager.LoadScene(PhaseLibrary.LoadingPhase.Scene);
+                        }
+                    }
+                    else if (name == PhaseLibrary.MoneyCorrectionPhase.Name)
+                    {
+                        SceneManager.LoadScene(PhaseLibrary.BankOverview.Scene);
+                    }
+                    else
+                    {
+                        SceneManager.LoadScene(Phases[index].Scene);
                     }
                 }
                 else

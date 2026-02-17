@@ -12,7 +12,7 @@ namespace Version1.Utilities
 {
     public class NetworkManager :  MonoBehaviour , INetworkManager
     {
-        public static NetworkManager Instance { get; private set; }
+        public static INetworkManager  Instance { get; private set; }
 
         public int heartbeatInterval = 2;
         private Coroutine heartbeatCoroutine;
@@ -41,6 +41,11 @@ namespace Version1.Utilities
                 Debug.LogError($"Nats: Error during publishing: {ex.Message}");
                 OnError?.Invoke(this, "");
             }
+        }
+
+        public WebsocketClient GetWsContext()
+        {
+            return WebSocketClient;
         }
 
         public async void Subscribe(string sessionID)
@@ -107,7 +112,6 @@ namespace Version1.Utilities
 
             WebSocketClient.OnPayInterestToBank += WebSocketClientOnOnPayInterestToBank;
 
-
             WebSocketClient.OnStartGame += NatsClientOnOnStartGame;
             WebSocketClient.OnStartRound += NatsClientOnOnStartRound;
             WebSocketClient.OnStopRound += NatsClientOnOnStopRound;
@@ -132,11 +136,15 @@ namespace Version1.Utilities
 
         private void WebSocketClientOnOnPayInterestToBank(object sender, PayInterestToBankMessage e)
         {
-            if (PlayerData.PlayerData.Instance.IsBankPlayer())
+            if (!PlayerData.PlayerData.Instance.IsBankPlayer())
             {
-                // TODO B.Nierop add popup that money is recieved or something.
-                PlayerData.PlayerData.Instance.AddToBalance(e.Amount);
+                Debug.Log(PlayerData.PlayerData.Instance.bankPlayer);
+                Debug.Log(PlayerData.PlayerData.Instance.PlayerName);
+                Debug.Log("Player is not bank");
+                return;
             }
+
+            PlayerData.PlayerData.Instance.AddBankIncome(e.PlayerName, e.Amount);
         }
 
         private void NatsClientOnOpen(object sender, bool e)
@@ -263,7 +271,7 @@ namespace Version1.Utilities
             Debug.Log("Transfer to loading screen");
 
             PlayerData.PlayerData.Instance.PlayerId = e.LobbyPlayerID;
-            NetworkManager.Instance.WebSocketClient.clientID = e.LobbyPlayerID;
+            WebSocketClient.clientID = e.LobbyPlayerID;
             // TODO check this heartbeat thing
             //StartCoroutine(HeartbeatRoutine());
             SceneManager.LoadScene("Loading");

@@ -2,6 +2,7 @@
 using Version1.Nats.Messages;
 using Version1.Nats.Messages.Host;
 using Version1.Utilities;
+using Version1.Websocket;
 
 namespace Tests.Utilities
 {
@@ -29,6 +30,11 @@ namespace Tests.Utilities
             PublishCalled = true;
             LastPublishTopic = topic;
             LastPublishMessage = message;
+        }
+
+        public WebsocketClient GetWsContext()
+        {
+            throw new NotImplementedException();
         }
 
         // Test helpers to trigger events

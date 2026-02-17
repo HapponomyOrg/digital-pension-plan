@@ -235,8 +235,11 @@ namespace Version1.Host.Scripts
 
         private void Update()
         {
+            var codeStr = SessionData.Instance.LobbyCode.ToString();
+
             createSession.interactable = !(SessionData.Instance.HostName == "" ||
                                            SessionData.Instance.LobbyCode == 0 ||
+                                           codeStr.Length < 9 ||
                                            gameCodeError.activeSelf ||
                                            seedInputError.activeSelf);
 

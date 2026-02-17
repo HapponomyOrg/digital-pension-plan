@@ -8,7 +8,6 @@ using Version1.Nats.Messages.Host;
 
 namespace Version1.PlayerData
 {
-    // TODO when start looking at the money system set the debt to the balance.
     public class PlayerData : MonoBehaviour, IPlayerData
     {
         // Singleton instance
@@ -36,6 +35,8 @@ namespace Version1.PlayerData
         [SerializeField] private List<int> allPoints = new List<int>();
 
         [SerializeField] public string bankPlayer = "";
+        private Dictionary<string, int> bankIncome = new Dictionary<string, int>();
+
 
         [SerializeField] private MoneySystems currentMoneySystem = 0;
 
@@ -270,6 +271,22 @@ namespace Version1.PlayerData
             AddPoints(msg.Amount);
         }
 
+        public Dictionary<string, int> GetAllBankIncome()
+        {
+            return bankIncome;
+        }
+
+        public void AddBankIncome(string pName, int amount)
+        {
+            bankIncome[pName] = amount;
+            AddToBalance(amount);
+        }
+
+        public void ResetBankIncome()
+        {
+            bankIncome = new Dictionary<string, int>();
+        }
+
         public void ResetData()
         {
             debt = 0;
@@ -280,6 +297,7 @@ namespace Version1.PlayerData
             currentMoneySystem = 0;
             balance = 0;
             points = 0;
+            bankIncome = new Dictionary<string, int>();
 
             OnBalanceChange?.Invoke(this, balance);
             OnPointsChange?.Invoke(this, points);

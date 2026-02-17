@@ -1,6 +1,7 @@
 ﻿using System;
 using Version1.Nats.Messages;
 using Version1.Nats.Messages.Host;
+using Version1.Websocket;
 
 namespace Version1.Utilities
 {
@@ -10,5 +11,6 @@ namespace Version1.Utilities
         event EventHandler<RejectedMessage> OnRejected;
         void Subscribe(string topic);
         void Publish(string topic, BaseMessage message);
+        WebsocketClient GetWsContext();
     }
 }

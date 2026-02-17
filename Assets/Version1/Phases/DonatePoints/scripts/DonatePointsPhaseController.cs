@@ -150,7 +150,7 @@ namespace Version1.Phases.DonatePoints.scripts
         private System.Collections.IEnumerator WaitForWebSocketAndSubscribe()
         {
             // Wait until NetworkManager and WebSocketClient are ready
-            while (NetworkManager.Instance?.WebSocketClient == null)
+            while (NetworkManager.Instance?.GetWsContext() == null)
             {
                 yield return new WaitForSeconds(0.1f);
             }
@@ -158,18 +158,18 @@ namespace Version1.Phases.DonatePoints.scripts
             Debug.Log("WebSocket ready, subscribing to events");
 
             // Now subscribe to events
-            NetworkManager.Instance.WebSocketClient.OnDonatePoints += OnOnDonatePoints;
-            NetworkManager.Instance.WebSocketClient.OnHeartBeat += OnOnHeartBeat;
+            NetworkManager.Instance.GetWsContext().OnDonatePoints += OnOnDonatePoints;
+            NetworkManager.Instance.GetWsContext().OnHeartBeat += OnOnHeartBeat;
         }
 
         public void StopPhase()
         {
             CancelInvoke(nameof(CheckForStalePlayers));
 
-            if (NetworkManager.Instance?.WebSocketClient != null)
+            if (NetworkManager.Instance?.GetWsContext() != null)
             {
-                NetworkManager.Instance.WebSocketClient.OnDonatePoints -= OnOnDonatePoints;
-                NetworkManager.Instance.WebSocketClient.OnHeartBeat -= OnOnHeartBeat;
+                NetworkManager.Instance.GetWsContext().OnDonatePoints -= OnOnDonatePoints;
+                NetworkManager.Instance.GetWsContext().OnHeartBeat -= OnOnHeartBeat;
             }
         }
 

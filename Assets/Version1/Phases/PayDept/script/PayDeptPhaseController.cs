@@ -31,7 +31,8 @@ namespace Version1.Phases.PayDept.script
             amountText.text = "0";
 
             _maxAmount = PlayerData.PlayerData.Instance.Debt;
-            currentBalanceText.text =  "Current balance: " +FormatMoney(PlayerData.PlayerData.Instance.Balance);
+            currentBalanceText.text =  $"Current balance: €{FormatMoney(PlayerData.PlayerData.Instance.Balance)}\n" +
+                                       $"Current debt: €{FormatMoney(PlayerData.PlayerData.Instance.Debt)}";
         }
 
         public void StopPhase()
@@ -68,7 +69,8 @@ namespace Version1.Phases.PayDept.script
         private void UpdateOverlay()
         {
             amountText.text = FormatMoney(_currentAmount);
-            currentBalanceText.text =  "Current balance: " + FormatMoney(PlayerData.PlayerData.Instance.Balance - _currentAmount);
+            currentBalanceText.text =  $"Current balance: €{FormatMoney(PlayerData.PlayerData.Instance.Balance - _currentAmount)}\n" +
+                                       $"Current debt: €{FormatMoney(PlayerData.PlayerData.Instance.Debt - _currentAmount)}";
             ConfirmButton.interactable = _currentAmount != 0;
         }
 

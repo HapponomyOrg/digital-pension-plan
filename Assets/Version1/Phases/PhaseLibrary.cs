@@ -13,5 +13,6 @@ namespace Version1.Phases
         public static Phase TakeALoanPhase { get; } = new("TakeALoan", "TakeALoanScene");
         public static Phase EndPhase { get; } = new("End", "EndScene");
         public static Phase BankExplanation { get; } = new("BankExplanation", "BankExplanationScene");
+        public static Phase BankOverview { get; } = new("BankOverview", "BankOverviewScene");
     }
 }

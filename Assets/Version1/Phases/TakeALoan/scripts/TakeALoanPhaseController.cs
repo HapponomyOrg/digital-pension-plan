@@ -26,7 +26,8 @@ namespace Version1.Phases.TakeALoan.scripts
         public void StartPhase()
         {
             amountText.text = "0";
-            currentBalanceText.text = "Current balance: " + FormatMoney(PlayerData.PlayerData.Instance.Balance);
+            currentBalanceText.text =  $"Current balance: €{FormatMoney(PlayerData.PlayerData.Instance.Balance)}\n" +
+                                       $"Current debt: €{FormatMoney(PlayerData.PlayerData.Instance.Debt)}";
         }
 
         public void IncreaseAmount()
@@ -51,7 +52,8 @@ namespace Version1.Phases.TakeALoan.scripts
         private void UpdateOverlay()
         {
             amountText.text = FormatMoney(currentAmount);
-            currentBalanceText.text =  "Current balance: " + FormatMoney(PlayerData.PlayerData.Instance.Balance + currentAmount);
+            currentBalanceText.text =  $"Current balance: €{FormatMoney(PlayerData.PlayerData.Instance.Balance + currentAmount)}\n" +
+                                       $"Current debt: €{FormatMoney(PlayerData.PlayerData.Instance.Debt + currentAmount)}";
             confirmButton.interactable = currentAmount > 0;
         }
 

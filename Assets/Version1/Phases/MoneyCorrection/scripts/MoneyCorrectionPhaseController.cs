@@ -42,9 +42,9 @@ namespace Version1.Phases.MoneyCorrection.scripts
 
         private void HandleDebtBasedSystem()
         {
+            var oldRemainder = PlayerData.PlayerData.Instance.InterestRemainder; // Capture before update
             var newInterest = PlayerData.PlayerData.Instance.Debt * interestRate;
             var totalInterest = newInterest + PlayerData.PlayerData.Instance.InterestRemainder;
-
             int toPay;
 
             if (GameManager.Instance.PhaseManager.GetRoundNumber() == 12) // Last round
@@ -65,25 +65,66 @@ namespace Version1.Phases.MoneyCorrection.scripts
             PlayerData.PlayerData.Instance.Balance -= paid;
             PlayerData.PlayerData.Instance.Debt += unpaid;
 
-            var msg = new PayInterestToBankMessage(
-                DateTime.Now.ToString("o"),
-                PlayerData.PlayerData.Instance.LobbyID,
-                PlayerData.PlayerData.Instance.PlayerId,
-                PlayerData.PlayerData.Instance.bankPlayer,
-                paid
-            );
-            NetworkManager.Instance.Publish(PlayerData.PlayerData.Instance.LobbyID.ToString(), msg);
+            if (paid > 0)
+            {
+                var msg = new PayInterestToBankMessage(
+                    DateTime.Now.ToString("o"),
+                    PlayerData.PlayerData.Instance.LobbyID,
+                    PlayerData.PlayerData.Instance.PlayerId,
+                    PlayerData.PlayerData.Instance.bankPlayer,
+                    paid,
+                    PlayerData.PlayerData.Instance.PlayerName
+                );
+                NetworkManager.Instance.Publish(PlayerData.PlayerData.Instance.LobbyID.ToString(), msg);
+            }
 
-            // TODO B.Nierop check for last round what text should be and what we do (check slack).
-            var message = $"! Interest Payment !\n\n" +
+            string message;
+
+            if (GameManager.Instance.PhaseManager.GetRoundNumber() == 12) // Last round
+            {
+                int pointsDeducted = 0;
+                int debtPaid = 0;
+
+                if (PlayerData.PlayerData.Instance.Debt > 0)
+                {
+                    var affordableDebt = PlayerData.PlayerData.Instance.Balance / 1000 * 1000;
+                    debtPaid = Math.Min(affordableDebt, PlayerData.PlayerData.Instance.Debt);
+                    PlayerData.PlayerData.Instance.Balance -= debtPaid;
+                    PlayerData.PlayerData.Instance.Debt -= debtPaid;
+
+                    if (PlayerData.PlayerData.Instance.Debt > 0)
+                    {
+                        pointsDeducted = PlayerData.PlayerData.Instance.Debt / 1000;
+                        PlayerData.PlayerData.Instance.Points -= pointsDeducted;
+                        PlayerData.PlayerData.Instance.Debt = 0;
+                    }
+                }
+
+                message = $"! Final Interest Payment !\n\n" +
+                          (oldRemainder > 0 ? $"Previous interest remainder: €{FormatMoney(oldRemainder)}\n" : "") +
+                          $"Interest due this round: €{FormatMoney(toPay)}\n" +
+                          $"Amount paid to bank: €{FormatMoney(paid)}\n" +
+                          (unpaid > 0 ? $"Unpaid interest added to debt: €{FormatMoney(unpaid)}\n" : "") +
+                          (debtPaid > 0 ? $"Debt paid from remaining balance: €{FormatMoney(debtPaid)}\n" : "") +
+                          (pointsDeducted > 0 ? $"Points deducted for remaining debt: {pointsDeducted} points\n" : "") +
+                          $"Previous balance: €{FormatMoney(PlayerData.PlayerData.Instance.Balance + paid + debtPaid)}\n" +
+                          $"New balance: €{FormatMoney(PlayerData.PlayerData.Instance.Balance)}\n" +
+                          $"Final points: {PlayerData.PlayerData.Instance.Points}";
+            }
+            else
+            {
+                message = $"! Interest Payment !\n\n" +
                           $"Your debt: €{FormatMoney(PlayerData.PlayerData.Instance.Debt)}\n" +
+                          (oldRemainder > 0 ? $"Previous interest remainder: €{FormatMoney(oldRemainder)}\n" : "") +
                           $"Interest due this round: €{FormatMoney(toPay)}\n" +
                           $"Amount paid to bank: €{FormatMoney(paid)}\n" +
                           (unpaid > 0
                               ? $"Remaining unpaid interest added to your debt: €{FormatMoney(unpaid)}\n"
                               : "") +
+                          $"New interest remainder: €{FormatMoney(PlayerData.PlayerData.Instance.InterestRemainder)}\n" +
                           $"Previous balance: €{FormatMoney(PlayerData.PlayerData.Instance.Balance + paid)}\n" +
                           $"New balance: €{FormatMoney(PlayerData.PlayerData.Instance.Balance)}";
+            }
 
             StartCoroutine(DisplayTextLetterByLetter(message));
         }
