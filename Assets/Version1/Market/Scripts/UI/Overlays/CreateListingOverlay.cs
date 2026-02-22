@@ -1,15 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Reflection;
-using System.Security.Cryptography;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Version1.Utilities;
 
-namespace Version1.Market
+namespace Version1.Market.Scripts.UI.Overlays
 {
     public class CreateListingOverlay : MonoBehaviour
     {
@@ -45,7 +41,7 @@ namespace Version1.Market
 
             confirmButton.onClick.RemoveAllListeners();
             confirmButton.onClick.AddListener(() => { Confirm(); });
-            
+
             confirmButton.interactable = selectedCards.Count > 0;
 
             selectedCards.Clear();
@@ -62,11 +58,11 @@ namespace Version1.Market
         private void Confirm()
         {
             var listing = new Listing(
-                Guid.NewGuid(), 
+                Guid.NewGuid(),
                 PlayerData.PlayerData.Instance.PlayerId,
                 PlayerData.PlayerData.Instance.PlayerName,
-                DateTime.Now, 
-                price, 
+                DateTime.Now,
+                price,
                 selectedCards.ToArray());
 
             Utilities.GameManager.Instance.MarketServices.CreateListingService.CreateListingLocally(listing);

@@ -1,14 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Security.Cryptography;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Version1.Utilities;
 
-namespace Version1.Market
+namespace Version1.Market.Scripts.UI.Overlays
 {
     public class CreateBidOverlay : MonoBehaviour
     {
@@ -76,10 +73,10 @@ namespace Version1.Market
         private void Confirm(Guid listingId)
         {
             var bid = new Bid(
-                Guid.NewGuid(), 
+                Guid.NewGuid(),
                 PlayerData.PlayerData.Instance.PlayerId,
-                PlayerData.PlayerData.Instance.PlayerName, 
-                bidAmount, 
+                PlayerData.PlayerData.Instance.PlayerName,
+                bidAmount,
                 DateTime.Now);
 
             Utilities.GameManager.Instance.MarketServices.CreateBidService.CreateBidLocally(listingId, bid);

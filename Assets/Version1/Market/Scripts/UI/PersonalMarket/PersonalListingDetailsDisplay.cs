@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Reflection;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Version1.Utilities;
 
-namespace Version1.Market
+namespace Version1.Market.Scripts.UI.PersonalMarket
 {
     public class PersonalListingDetailsDisplay : MonoBehaviour
     {

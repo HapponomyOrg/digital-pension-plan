@@ -8,6 +8,7 @@ namespace Tests.Utilities
 {
     public class MockNetworkManager : INetworkManager
     {
+        public event EventHandler<ConfirmHandInMessage> OnConfirmHandIn;
         public event EventHandler<string> OnError;
         public event EventHandler<RejectedMessage> OnRejected;
 

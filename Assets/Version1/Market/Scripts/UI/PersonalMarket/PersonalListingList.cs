@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Version1.Market.Scripts.UI.PersonalMarket;
 using Version1.Utilities;
 
 namespace Version1.Market

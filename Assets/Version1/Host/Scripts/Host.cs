@@ -343,6 +343,8 @@ namespace Version1.Host.Scripts
             Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(),
                 new AbortSessionMessage(DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, -1));
 
+            // TODO B.Nierop maybe unsubscribe from messages here.
+
             SessionData.Instance.Reset(true);
             createScene.SetActive(true);
             gameObject.SetActive(false);

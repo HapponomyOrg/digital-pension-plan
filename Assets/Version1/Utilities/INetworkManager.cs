@@ -7,6 +7,7 @@ namespace Version1.Utilities
 {
     public interface INetworkManager
     {
+        event EventHandler<ConfirmHandInMessage> OnConfirmHandIn;
         event EventHandler<string> OnError;
         event EventHandler<RejectedMessage> OnRejected;
         void Subscribe(string topic);

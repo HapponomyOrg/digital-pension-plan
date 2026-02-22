@@ -1,18 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
-using System.Reflection;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Version1.Utilities;
 
-namespace Version1.Market
+namespace Version1.Market.Scripts.UI.PublicMarket
 {
     public class MarketOfferDetailsDisplay : MonoBehaviour
     {

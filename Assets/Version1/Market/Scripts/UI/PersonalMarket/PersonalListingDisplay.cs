@@ -4,9 +4,8 @@ using System.Globalization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Version1.Utilities;
 
-namespace Version1.Market
+namespace Version1.Market.Scripts.UI.PersonalMarket
 {
     public class PersonalListingDisplay : MonoBehaviour
     {

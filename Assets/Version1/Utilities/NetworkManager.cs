@@ -17,6 +17,7 @@ namespace Version1.Utilities
         public int heartbeatInterval = 2;
         private Coroutine heartbeatCoroutine;
 
+        public event EventHandler<ConfirmHandInMessage> OnConfirmHandIn;
         public event EventHandler<RejectedMessage> OnRejected;
         public event EventHandler<string> OnError;
 
@@ -155,13 +156,11 @@ namespace Version1.Utilities
 
         private void NatsClientOnOpen(object sender, bool e)
         {
-            Debug.Log($"Heartbeat coroutine is null: {heartbeatCoroutine == null}");
+            /*Debug.Log($"Heartbeat coroutine is null: {heartbeatCoroutine == null}");
 
             if (heartbeatCoroutine != null) return;
 
-            Debug.Log("About to start heartbeat coroutine...");
-            heartbeatCoroutine = StartCoroutine(HeartbeatRoutine());
-            Debug.Log($"Heartbeat started, coroutine reference: {heartbeatCoroutine != null}");
+            heartbeatCoroutine = StartCoroutine(HeartbeatRoutine());*/
         }
 
         private void WebSocketClientOnOnError(object sender, string e)
@@ -223,6 +222,8 @@ namespace Version1.Utilities
         private void NatsClientOnOnConfirmHandIn(object sender, ConfirmHandInMessage e)
         {
             PlayerData.PlayerData.Instance.ConfirmHandIn(e);
+
+            OnConfirmHandIn?.Invoke(sender,e);
         }
 
 /*        private void NatsClientOnOnConfirmCancelListing(object sender, ConfirmCancelListingMessage e)
@@ -261,6 +262,7 @@ namespace Version1.Utilities
         {
             PlayerData.PlayerData.Instance.ResetData();
             SceneManager.LoadScene(PhaseLibrary.LoadingPhase.Scene);
+            // TODO B.Nierop maybe stop heartbeat here, check if that breaks something.
         }
 
         private void NatsClientOnOnDonatePoints(object sender, DonatePointsMessage e)
@@ -278,8 +280,9 @@ namespace Version1.Utilities
 
             PlayerData.PlayerData.Instance.PlayerId = e.LobbyPlayerID;
             WebSocketClient.clientID = e.LobbyPlayerID;
-            // TODO check this heartbeat thing
-            //StartCoroutine(HeartbeatRoutine());
+
+            heartbeatCoroutine = StartCoroutine(HeartbeatRoutine());
+
             SceneManager.LoadScene("Loading");
         }
 
