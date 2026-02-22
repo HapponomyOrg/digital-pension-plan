@@ -24,8 +24,7 @@ namespace Version1.Utilities
 
         public NetworkManager()
         {
-            if (Instance != null) return;
-            Instance = this;
+
         }
 
         public WebsocketClient WebSocketClient;
@@ -66,6 +65,13 @@ namespace Version1.Utilities
 
         private async void Awake()
         {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(this);
+                return;
+            }
+
+            Instance = this;
             DontDestroyOnLoad(gameObject);
 
             Debug.Log("NetworkManager Awake started");
