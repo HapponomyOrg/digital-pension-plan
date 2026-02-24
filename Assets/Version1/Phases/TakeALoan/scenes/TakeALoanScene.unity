@@ -684,6 +684,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 73.80324
       objectReference: {fileID: 0}
+    - target: {fileID: 4171335049590619158, guid: 02290e7c5a93ef84c8b1b08cfc9a9c08, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 781.8534
+      objectReference: {fileID: 0}
+    - target: {fileID: 4171335049590619158, guid: 02290e7c5a93ef84c8b1b08cfc9a9c08, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 204.86635
+      objectReference: {fileID: 0}
     - target: {fileID: 5075100026572080306, guid: 02290e7c5a93ef84c8b1b08cfc9a9c08, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -0.000078595
@@ -735,6 +743,14 @@ PrefabInstance:
     - target: {fileID: 7598935341831181303, guid: 02290e7c5a93ef84c8b1b08cfc9a9c08, type: 3}
       propertyPath: m_Name
       value: TakeALoanOverlay
+      objectReference: {fileID: 0}
+    - target: {fileID: 7658965940992182386, guid: 02290e7c5a93ef84c8b1b08cfc9a9c08, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 418.0934
+      objectReference: {fileID: 0}
+    - target: {fileID: 7658965940992182386, guid: 02290e7c5a93ef84c8b1b08cfc9a9c08, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -395.10715
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -560,6 +560,14 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: Version1.Phases.MoneyCorrection.MoneyCorrectionPhaseController, Assembly-CSharp
       objectReference: {fileID: 0}
+    - target: {fileID: 2834074653144247345, guid: e87a537a461cfee4986922e873b39a0f, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 412.877
+      objectReference: {fileID: 0}
+    - target: {fileID: 2834074653144247345, guid: e87a537a461cfee4986922e873b39a0f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -392.49854
+      objectReference: {fileID: 0}
     - target: {fileID: 4881362918114507757, guid: e87a537a461cfee4986922e873b39a0f, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1
@@ -587,6 +595,14 @@ PrefabInstance:
     - target: {fileID: 4881362918114507757, guid: e87a537a461cfee4986922e873b39a0f, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4924816864538156936, guid: e87a537a461cfee4986922e873b39a0f, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 793.4079
+      objectReference: {fileID: 0}
+    - target: {fileID: 4924816864538156936, guid: e87a537a461cfee4986922e873b39a0f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 210.64394
       objectReference: {fileID: 0}
     - target: {fileID: 5702108641458191508, guid: e87a537a461cfee4986922e873b39a0f, type: 3}
       propertyPath: m_Pivot.x

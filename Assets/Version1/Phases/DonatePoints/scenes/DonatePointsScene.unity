@@ -167,6 +167,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: PointDonationOverlay
       objectReference: {fileID: 0}
+    - target: {fileID: 2636669237249487791, guid: ef002ba8055727040be19c60726400d3, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 412.94
+      objectReference: {fileID: 0}
+    - target: {fileID: 2636669237249487791, guid: ef002ba8055727040be19c60726400d3, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -392.53
+      objectReference: {fileID: 0}
+    - target: {fileID: 5421412452298401053, guid: ef002ba8055727040be19c60726400d3, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 792.2167
+      objectReference: {fileID: 0}
+    - target: {fileID: 5421412452298401053, guid: ef002ba8055727040be19c60726400d3, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 210.0483
+      objectReference: {fileID: 0}
     - target: {fileID: 7280637128180389536, guid: ef002ba8055727040be19c60726400d3, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

@@ -604,6 +604,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: BankExplanationOverlay
       objectReference: {fileID: 0}
+    - target: {fileID: 5688512024092847454, guid: 13e0f52914fac3640a1bb30c1077514a, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 784.7267
+      objectReference: {fileID: 0}
+    - target: {fileID: 5688512024092847454, guid: 13e0f52914fac3640a1bb30c1077514a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 206.30325
+      objectReference: {fileID: 0}
     - target: {fileID: 6025145113815744810, guid: 13e0f52914fac3640a1bb30c1077514a, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1
@@ -635,6 +643,14 @@ PrefabInstance:
     - target: {fileID: 6025145113815744810, guid: 13e0f52914fac3640a1bb30c1077514a, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -0.0004272461
+      objectReference: {fileID: 0}
+    - target: {fileID: 6994073966138662509, guid: 13e0f52914fac3640a1bb30c1077514a, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 417.4906
+      objectReference: {fileID: 0}
+    - target: {fileID: 6994073966138662509, guid: 13e0f52914fac3640a1bb30c1077514a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -394.80536
       objectReference: {fileID: 0}
     - target: {fileID: 8475912529555441696, guid: 13e0f52914fac3640a1bb30c1077514a, type: 3}
       propertyPath: continueButton
