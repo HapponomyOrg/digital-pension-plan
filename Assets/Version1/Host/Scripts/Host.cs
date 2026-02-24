@@ -28,6 +28,8 @@ namespace Version1.Host.Scripts
         private bool sessionIsActive = false;
         private float timeLeft = 300f;
 
+        private const float heartbeatTimeoutSeconds = 5;
+
         // Scenes
         [SerializeField] private GameObject createScene;
 
@@ -83,8 +85,40 @@ namespace Version1.Host.Scripts
             Debug.Log("WebSocket client found, setting up listeners");
             Nats.NatsHost.C.WebSocketClient.clientID = -1;
 
-            // Add WebSocket listeners once
             AddWebSocketListeners();
+
+            // Start the heartbeat timeout checker
+            StartCoroutine(CheckHeartbeatTimeouts());
+        }
+
+        /// <summary>
+        /// Periodically checks all connected players and removes any who have not
+        /// sent a heartbeat within <see cref="heartbeatTimeoutSeconds"/> seconds.
+        /// This also frees up their name so another player can rejoin.
+        /// </summary>
+        private IEnumerator CheckHeartbeatTimeouts()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(5f); // check every 5 seconds
+
+                if (players == null) continue;
+
+                var timedOut = players
+                    .Where(p => (DateTime.Now - p.Value.LastPing).TotalSeconds > heartbeatTimeoutSeconds)
+                    .Select(p => p.Key)
+                    .ToList();
+
+                foreach (var id in timedOut)
+                {
+                    if (players.TryGetValue(id, out var player))
+                    {
+                        Debug.Log($"Player {player.Name} (ID: {id}) timed out — removing from session.");
+                        Destroy(player.gameObject);
+                        players.Remove(id);
+                    }
+                }
+            }
         }
 
         private void OnEnable()
@@ -171,7 +205,6 @@ namespace Version1.Host.Scripts
 
         private void RemoveAllListeners()
         {
-            // Remove button listeners
             if (abortSession != null) abortSession.onClick.RemoveAllListeners();
             if (startSession != null) startSession.onClick.RemoveAllListeners();
             if (stopRound != null) stopRound.onClick.RemoveAllListeners();
@@ -181,7 +214,6 @@ namespace Version1.Host.Scripts
 
         private void AddAllListeners()
         {
-            // Add button listeners
             if (abortSession != null) abortSession.onClick.AddListener(AbortSessionOnClick);
             if (startSession != null) startSession.onClick.AddListener(StartSessionOnClick);
             if (stopRound != null) stopRound.onClick.AddListener(StopRoundOnClick);
@@ -233,29 +265,27 @@ namespace Version1.Host.Scripts
         {
             Debug.Log($"Join request received - PlayerID in message: {msg.PlayerID}, Assigning ID: {playerId}");
 
-
             if (currentRound > 0)
             {
-                RejectedMessage rejectedMessage = new RejectedMessage(
+                Nats.NatsHost.C.Publish(msg.LobbyID.ToString(), new RejectedMessage(
                     DateTime.Now.ToString("o"), msg.LobbyID, -1, msg.PlayerName,
                     "SessionAlreadyStarted",
-                    $"Sorry but the session you are trying to join has already started.",
-                    msg.RequestID);
-
-                Nats.NatsHost.C.Publish(msg.LobbyID.ToString(), rejectedMessage);
+                    "Sorry but the session you are trying to join has already started.",
+                    msg.RequestID));
                 return;
             }
 
-            if (players.Any(record =>
-                    string.Equals(record.Value.Name, msg.PlayerName, StringComparison.CurrentCultureIgnoreCase)))
+            // Check for duplicate name — but only among currently active (non-timed-out) players
+            bool nameIsTaken = players.Any(record =>
+                string.Equals(record.Value.Name, msg.PlayerName, StringComparison.CurrentCultureIgnoreCase));
+
+            if (nameIsTaken)
             {
-                RejectedMessage rejectedMessage = new RejectedMessage(
+                Nats.NatsHost.C.Publish(msg.LobbyID.ToString(), new RejectedMessage(
                     DateTime.Now.ToString("o"), msg.LobbyID, -1, msg.PlayerName,
                     "PlayerNameAlreadyTaken",
                     $"{msg.PlayerName} is already taken in the session you are trying to join. \n Please fill in another name and try again.",
-                    msg.RequestID);
-
-                Nats.NatsHost.C.Publish(msg.LobbyID.ToString(), rejectedMessage);
+                    msg.RequestID));
                 return;
             }
 
@@ -264,7 +294,6 @@ namespace Version1.Host.Scripts
                 DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, -1,
                 playerId, msg.PlayerName, msg.Age, msg.Gender, msg.RequestID));
 
-            // Create player UI
             CreatePlayerUI(msg, playerId);
             playerId++;
         }
@@ -330,6 +359,7 @@ namespace Version1.Host.Scripts
             }
             else
             {
+                // Refresh the timestamp so the timeout checker knows this player is still alive
                 players[e.PlayerID].LastPing = parsedDate;
                 players[e.PlayerID].Name = e.PlayerName;
                 players[e.PlayerID].Balance = e.Balance;
@@ -342,8 +372,6 @@ namespace Version1.Host.Scripts
         {
             Nats.NatsHost.C.Publish(SessionData.Instance.LobbyCode.ToString(),
                 new AbortSessionMessage(DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, -1));
-
-            // TODO B.Nierop maybe unsubscribe from messages here.
 
             SessionData.Instance.Reset(true);
             createScene.SetActive(true);

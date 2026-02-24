@@ -156,11 +156,6 @@ namespace Version1.Utilities
 
         private void NatsClientOnOpen(object sender, bool e)
         {
-            /*Debug.Log($"Heartbeat coroutine is null: {heartbeatCoroutine == null}");
-
-            if (heartbeatCoroutine != null) return;
-
-            heartbeatCoroutine = StartCoroutine(HeartbeatRoutine());*/
         }
 
         private void WebSocketClientOnOnError(object sender, string e)
