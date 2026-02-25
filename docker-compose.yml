@@ -10,3 +10,30 @@ services:
       - "4222:4222"
       - "6222:6222"
       - "8222:8222"
+
+  postgres:
+    image: postgres:17
+    container_name: pensionplan-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: pensionplan
+      POSTGRES_USER: pensionplan_user
+      POSTGRES_PASSWORD: pensionplan_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:8.8
+    container_name: pensionplan-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pension@plan.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports:
+      - "5050:80"
+    volumes:
+      - ./pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
