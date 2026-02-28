@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using Version1.Nats.Messages.Client;
 using Version1.Nats.Messages.Host;
 using Version1.Utilities;
+using Version1.Utilities.NetworkManager;
+using Version1.Utilities.PlayerData;
 
 namespace Version1.Phases.Login.Scripts
 {
@@ -100,7 +102,7 @@ namespace Version1.Phases.Login.Scripts
                 return;
             }
 
-            var playerData = PlayerData.PlayerData.Instance;
+            var playerData = PlayerData.Instance;
             playerData.PlayerName = playerName;
             playerData.Age = age;
             playerData.Gender = gender;
@@ -129,7 +131,7 @@ namespace Version1.Phases.Login.Scripts
 
         private void HandleRejected(object sender, RejectedMessage message)
         {
-            var player = PlayerData.PlayerData.Instance;
+            var player = PlayerData.Instance;
             if (message.TargetPlayer != player.PlayerName && message.RequestID != player.RequestID)
                 return;
 

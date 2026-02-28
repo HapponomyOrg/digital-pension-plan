@@ -6,8 +6,10 @@ using UnityEngine.UI;
 using Version1.Nats.Messages.Client;
 using Version1.UIComponents.Scripts;
 using Version1.Utilities;
+using Version1.Utilities.NetworkManager;
+using Version1.Utilities.PlayerData;
 
-namespace Version1.Donate.money.scripts
+namespace Version1.Phases.Trading.Prefabs.Donate.money.scripts
 {
     public class DonateMoney : MonoBehaviour
     {
@@ -29,7 +31,7 @@ namespace Version1.Donate.money.scripts
 
         private static readonly System.Globalization.CultureInfo de = new System.Globalization.CultureInfo("de-DE");
 
-        private int MaxDonation => PlayerData.PlayerData.Instance.Balance;
+        private int MaxDonation => PlayerData.Instance.Balance;
         private bool CanDonate => MaxDonation >= minDonation;
 
         public void OnEnable()
@@ -113,7 +115,7 @@ namespace Version1.Donate.money.scripts
             yield return StartCoroutine(OverlayAnimator.Punch(confirmButton.transform, 1.3f, 0.15f));
             yield return StartCoroutine(OverlayAnimator.Shake(panelRect, 0.2f, 4f));
 
-            PlayerData.PlayerData.Instance.Balance -= currentDonation;
+            PlayerData.Instance.Balance -= currentDonation;
             SendDonateMessage();
 
             yield return StartCoroutine(OverlayAnimator.Close(panelRect, canvasGroup, () => gameObject.SetActive(false)));
@@ -143,11 +145,11 @@ namespace Version1.Donate.money.scripts
 
         private void SendDonateMessage()
         {
-            var sessionId = PlayerData.PlayerData.Instance.LobbyID;
+            var sessionId = PlayerData.Instance.LobbyID;
             var msg = new DonateMoneyMessage(
                 DateTime.Now.ToString("o"),
                 sessionId,
-                PlayerData.PlayerData.Instance.PlayerId,
+                PlayerData.Instance.PlayerId,
                 currentDonation);
 
             NetworkManager.Instance.Publish(sessionId.ToString(), msg);

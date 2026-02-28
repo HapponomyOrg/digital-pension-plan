@@ -1,10 +1,15 @@
+using System;
 using System.Collections;
 using Assets.Version1.Phases;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Version1.Host.Scripts;
+using Version1.Nats.Messages.Client;
 using Version1.Utilities;
+using Version1.Utilities.NetworkManager;
+using Version1.Utilities.PlayerData;
 
 namespace Version1.Phases.Explanation.Bank.scripts
 {
@@ -25,10 +30,10 @@ namespace Version1.Phases.Explanation.Bank.scripts
             continueButton.interactable = false;
 
             StartCoroutine(DisplayTextLetterByLetter(
-                !PlayerData.PlayerData.Instance.IsBankPlayer()
+                !PlayerData.Instance.IsBankPlayer()
                     ? $"Welcome! You’re a Regular Player.\n\n" +
-                      $"You start the game with a debt of €{FormatMoney(PlayerData.PlayerData.Instance.Debt)} " +
-                      $"and a balance of €{FormatMoney(PlayerData.PlayerData.Instance.Balance)}, " +
+                      $"You start the game with a debt of €{FormatMoney(PlayerData.Instance.Debt)} " +
+                      $"and a balance of €{FormatMoney(PlayerData.Instance.Balance)}, " +
                       $"which you borrowed from the bank.\n\n" +
                       $"After each round, you owe 10% interest on your debt. " +
                       $"If the interest is less than €1,000, it carries over to the next round.\n\n" +
@@ -46,6 +51,8 @@ namespace Version1.Phases.Explanation.Bank.scripts
 
         public void Continue()
         {
+            NetworkManager.Instance.Publish(SessionData.Instance.LobbyCode.ToString(),
+                new ContinueMessage(DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, PlayerData.Instance.PlayerId, GameManager.Instance.PhaseManager.CurrentRound()));
             SceneManager.LoadScene(GameManager.LOADING);
         }
 

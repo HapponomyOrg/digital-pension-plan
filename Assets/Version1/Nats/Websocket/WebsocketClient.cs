@@ -7,6 +7,7 @@ using UnityEngine;
 using Version1.Nats.Messages;
 using Version1.Nats.Messages.Client;
 using Version1.Nats.Messages.Host;
+using Version1.Utilities.PlayerData;
 
 namespace Version1.Websocket
 {
@@ -149,7 +150,7 @@ namespace Version1.Websocket
             }
 
             var msg = JsonUtility.FromJson<BaseMessage>(jsonData);
-            if (msg.PlayerID == PlayerData.PlayerData.Instance.PlayerId)
+            if (msg.PlayerID == PlayerData.Instance.PlayerId)
                 return;
 
             try

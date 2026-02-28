@@ -1,6 +1,8 @@
 using System;
 using Version1.Nats.Messages.Client;
 using Version1.Utilities;
+using Version1.Utilities.NetworkManager;
+using Version1.Utilities.PlayerData;
 
 namespace Version1.Market
 {
@@ -10,7 +12,7 @@ namespace Version1.Market
 
         public void CancelListingLocally(Listing listing)
         {
-            PlayerData.PlayerData.Instance.AddCards(listing.Cards);
+            PlayerData.Instance.AddCards(listing.Cards);
             Utilities.GameManager.Instance.ListingRepository.RemoveListing(listing);
 
             CancelListing?.Invoke(this, new ListingEventArgs(listing));
@@ -18,7 +20,7 @@ namespace Version1.Market
 
             var message = new CancelListingMessage(
                 DateTime.Now.ToString("o"),
-                PlayerData.PlayerData.Instance.LobbyID,
+                PlayerData.Instance.LobbyID,
                 listing.Lister,
                 listing.ListingId.ToString()
                 );
@@ -35,12 +37,12 @@ namespace Version1.Market
 
         private void ReceivedCancelListing(Listing listing)
         {
-            var playerId = PlayerData.PlayerData.Instance.PlayerId;
+            var playerId = PlayerData.Instance.PlayerId;
 
             var lastBid = listing.BidRepository.GetLastBidBetweenPlayer(playerId);
 
             if (lastBid != null && lastBid.Bidder == playerId && lastBid.BidStatus == EBidStatus.Active) {
-                PlayerData.PlayerData.Instance.AddToBalance(lastBid.BidOffer);
+                PlayerData.Instance.AddToBalance(lastBid.BidOffer);
             }
 
             Utilities.GameManager.Instance.ListingRepository.RemoveListing(listing);

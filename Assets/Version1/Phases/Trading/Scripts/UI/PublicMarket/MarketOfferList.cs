@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Version1.Market.Scripts.UI.Overlays;
 using Version1.Market.Scripts.UI.PublicMarket;
+using Version1.Phases.Trading.Scripts.UI.Overlays;
 using Version1.Utilities;
 
 namespace Version1.Market

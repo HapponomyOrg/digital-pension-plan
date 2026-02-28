@@ -4,8 +4,11 @@ using System.Globalization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Version1.Market;
+using Version1.Market.Scripts.UI;
+using Version1.Utilities.PlayerData;
 
-namespace Version1.Market.Scripts.UI.PublicMarket
+namespace Version1.Phases.Trading.Scripts.UI.PublicMarket
 {
     public class OutgoingBidDisplay : MonoBehaviour
     {
@@ -29,7 +32,7 @@ namespace Version1.Market.Scripts.UI.PublicMarket
             if (listing == null)
                 return; // TODO Error handling
 
-            var bid = listing.BidRepository.GetBidBetweenPlayer(PlayerData.PlayerData.Instance.PlayerId, bidId);
+            var bid = listing.BidRepository.GetBidBetweenPlayer(PlayerData.Instance.PlayerId, bidId);
 
             if (bid == null)
                 return; // TODO Error handling

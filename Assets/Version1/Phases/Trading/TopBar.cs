@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using TMPro;
 using UnityEngine;
+using Version1.Utilities.PlayerData;
 
 namespace Version1.Phases.Trading
 {
@@ -24,26 +25,26 @@ namespace Version1.Phases.Trading
                 }
             };
 
-            points.text = PlayerData.PlayerData.Instance.Points.ToString();
-            balance.text = PlayerData.PlayerData.Instance.Balance.ToString("N0", customCulture);
+            points.text = PlayerData.Instance.Points.ToString();
+            balance.text = PlayerData.Instance.Balance.ToString("N0", customCulture);
 
             if (debt)
             {
-                debt.text = PlayerData.PlayerData.Instance.Debt.ToString("N0", customCulture);
+                debt.text = PlayerData.Instance.Debt.ToString("N0", customCulture);
             }
 
             if (remainder)
             {
-                remainder.text = PlayerData.PlayerData.Instance.InterestRemainder.ToString("N0", customCulture);
+                remainder.text = PlayerData.Instance.InterestRemainder.ToString("N0", customCulture);
             }
 
-            PlayerData.PlayerData.Instance.OnPointsChange += (sender, i) =>
+            PlayerData.Instance.OnPointsChange += (sender, i) =>
             {
-                points.text = PlayerData.PlayerData.Instance.Points.ToString();
+                points.text = PlayerData.Instance.Points.ToString();
             };
-            PlayerData.PlayerData.Instance.OnBalanceChange += (sender, i) =>
+            PlayerData.Instance.OnBalanceChange += (sender, i) =>
             {
-                balance.text = PlayerData.PlayerData.Instance.Balance.ToString("N0", customCulture);
+                balance.text = PlayerData.Instance.Balance.ToString("N0", customCulture);
             };
         }
 

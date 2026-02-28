@@ -4,6 +4,7 @@ using System.Globalization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Version1.Utilities.PlayerData;
 
 namespace Version1.Market.Scripts.UI.Overlays
 {
@@ -45,7 +46,7 @@ namespace Version1.Market.Scripts.UI.Overlays
             confirmButton.interactable = selectedCards.Count > 0;
 
             selectedCards.Clear();
-            remainingCards = PlayerData.PlayerData.Instance.Cards;
+            remainingCards = PlayerData.Instance.Cards;
 
             GenerateDisplays();
         }
@@ -59,8 +60,8 @@ namespace Version1.Market.Scripts.UI.Overlays
         {
             var listing = new Listing(
                 Guid.NewGuid(),
-                PlayerData.PlayerData.Instance.PlayerId,
-                PlayerData.PlayerData.Instance.PlayerName,
+                PlayerData.Instance.PlayerId,
+                PlayerData.Instance.PlayerName,
                 DateTime.Now,
                 price,
                 selectedCards.ToArray());

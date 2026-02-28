@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-using Version1.Utilities;
+﻿using UnityEngine;
+using Version1.Market;
+using Version1.Phases.Trading.Scripts.UI.PublicMarket;
+using Version1.Utilities.PlayerData;
 
-namespace Version1.Market
+namespace Version1.Phases.Trading.Scripts.UI
 {
     public class MarketView : MonoBehaviour
     {
@@ -63,7 +62,7 @@ namespace Version1.Market
 
         private void CreateListing(object sender, ListingEventArgs e)
         {
-            if (e.Listing.Lister == PlayerData.PlayerData.Instance.PlayerId)
+            if (e.Listing.Lister == PlayerData.Instance.PlayerId)
                 personalListingList.CreateDisplay(e.Listing.ListingId);
             else
                 marketOfferList.CreateDisplay(e.Listing.ListingId);
@@ -71,7 +70,7 @@ namespace Version1.Market
 
         private void BuyListing(object sender, ListingEventArgs e)
         {
-            if (e.Listing.Lister == PlayerData.PlayerData.Instance.PlayerId)
+            if (e.Listing.Lister == PlayerData.Instance.PlayerId)
             {
                 personalListingList.RemoveDisplay(e.Listing.ListingId);
 
@@ -90,7 +89,7 @@ namespace Version1.Market
 
         private void CancelListing(object sender, ListingEventArgs e)
         {
-            if (e.Listing.Lister == PlayerData.PlayerData.Instance.PlayerId)
+            if (e.Listing.Lister == PlayerData.Instance.PlayerId)
             {
                 personalListingList.RemoveDisplay(e.Listing.ListingId);
 
@@ -99,7 +98,7 @@ namespace Version1.Market
                     personalListingList.ReceivedBidsList.Clear();
             }
             else
-            { 
+            {
                 if (marketOfferList.ContainsListing(e.Listing.ListingId))
                     marketOfferList.RemoveDisplay(e.Listing.ListingId);
                 if (outgoingBidsList.ContainsListing(e.Listing.ListingId))
@@ -111,14 +110,14 @@ namespace Version1.Market
 
         private void CreateBid(object sender, BidEventArgs e)
         {
-            if (e.Listing.Lister == PlayerData.PlayerData.Instance.PlayerId)
-            { 
+            if (e.Listing.Lister == PlayerData.Instance.PlayerId)
+            {
                 personalListingList.UpdateDisplay(e.Listing.ListingId);
 
                 if (personalListingList.ReceivedBidsList.ActiveListing == e.Listing.ListingId)
                     personalListingList.ReceivedBidsList.CreateDisplay(e.Listing.ListingId, e.Bid.BidId);
             }
-            else if (e.Bid.Bidder == PlayerData.PlayerData.Instance.PlayerId)
+            else if (e.Bid.Bidder == PlayerData.Instance.PlayerId)
             {
                 marketOfferList.RemoveDisplay(e.Listing.ListingId);
                 outgoingBidsList.CreateDisplay(e.Listing.ListingId, e.Bid.BidId);
@@ -142,14 +141,14 @@ namespace Version1.Market
             // Add market listing display
             // Update personal listing display
 
-            if (e.Listing.Lister == PlayerData.PlayerData.Instance.PlayerId)
+            if (e.Listing.Lister == PlayerData.Instance.PlayerId)
             {
                 personalListingList.UpdateDisplay(e.Listing.ListingId);
 
                 if (personalListingList.ReceivedBidsList.ActiveListing == e.Listing.ListingId)
                     personalListingList.ReceivedBidsList.RemoveDisplay(e.Bid.BidId);
             }
-            else if (e.Bid.Bidder == PlayerData.PlayerData.Instance.PlayerId)
+            else if (e.Bid.Bidder == PlayerData.Instance.PlayerId)
             {
                 outgoingBidsList.RemoveDisplay(e.Listing.ListingId);
                 marketOfferList.CreateDisplay(e.Listing.ListingId);
@@ -162,7 +161,7 @@ namespace Version1.Market
             // Remove personal listing display
             // Clear bid list if necessary
 
-            if (e.Listing.Lister == PlayerData.PlayerData.Instance.PlayerId)
+            if (e.Listing.Lister == PlayerData.Instance.PlayerId)
             {
                 personalListingList.RemoveDisplay(e.Listing.ListingId);
 
@@ -170,7 +169,7 @@ namespace Version1.Market
                 if (personalListingList.ReceivedBidsList.ActiveListing == e.Listing.ListingId)
                     personalListingList.ReceivedBidsList.Clear();
             }
-            else if (e.Bid.Bidder == PlayerData.PlayerData.Instance.PlayerId)
+            else if (e.Bid.Bidder == PlayerData.Instance.PlayerId)
             {
                 outgoingBidsList.RemoveDisplay(e.Listing.ListingId);
             }
@@ -183,14 +182,14 @@ namespace Version1.Market
             // Update personal listing display
             // Update bid list if necessary
 
-            if (e.Bid.Bidder == PlayerData.PlayerData.Instance.PlayerId)
+            if (e.Bid.Bidder == PlayerData.Instance.PlayerId)
             {
                 outgoingBidsList.RemoveDisplay(e.Listing.ListingId);
                 marketOfferList.CreateDisplay(e.Listing.ListingId);
 
 
             }
-            else if (e.Listing.Lister == PlayerData.PlayerData.Instance.PlayerId)
+            else if (e.Listing.Lister == PlayerData.Instance.PlayerId)
             {
                 personalListingList.UpdateDisplay(e.Listing.ListingId);
 
@@ -202,7 +201,7 @@ namespace Version1.Market
 
         public void CreateListingDisplay(object sender, ListingEventArgs e)
         {
-            if (e.Listing.Lister == PlayerData.PlayerData.Instance.PlayerId)
+            if (e.Listing.Lister == PlayerData.Instance.PlayerId)
                 return;
             else
                 marketOfferList.CreateDisplay(e.Listing.ListingId);
@@ -210,7 +209,7 @@ namespace Version1.Market
 
         public void UpdateListingDisplay(object sender, ListingEventArgs e)
         {
-            if (e.Listing.Lister == PlayerData.PlayerData.Instance.PlayerId)
+            if (e.Listing.Lister == PlayerData.Instance.PlayerId)
                 return;
             else
                 marketOfferList.UpdateDisplay(e.Listing.ListingId);
@@ -218,7 +217,7 @@ namespace Version1.Market
 
         public void RemoveListingDisplay(object sender, ListingEventArgs e)
         {
-            if (e.Listing.Lister == PlayerData.PlayerData.Instance.PlayerId)
+            if (e.Listing.Lister == PlayerData.Instance.PlayerId)
                 return;
             else
                 marketOfferList.RemoveDisplay(e.Listing.ListingId);
@@ -226,7 +225,7 @@ namespace Version1.Market
 
         public void CreateBidDisplay(object sender, BidEventArgs e)
         {
-            if (e.Listing.Lister == PlayerData.PlayerData.Instance.PlayerId)
+            if (e.Listing.Lister == PlayerData.Instance.PlayerId)
                 return;
             else
                 outgoingBidsList.CreateDisplay(e.Listing.ListingId, e.Bid.BidId);
@@ -234,15 +233,15 @@ namespace Version1.Market
 
         public void UpdateBidDisplay(object sender, BidEventArgs e)
         {
-            if (e.Listing.Lister == PlayerData.PlayerData.Instance.PlayerId)
+            if (e.Listing.Lister == PlayerData.Instance.PlayerId)
                 return;
             else
                 outgoingBidsList.UpdateDisplay(e.Listing.ListingId, e.Bid.BidId);
         }
 
-        public void RemoveBidDisplay(object sender, BidEventArgs e) 
+        public void RemoveBidDisplay(object sender, BidEventArgs e)
         {
-            if (e.Listing.Lister == PlayerData.PlayerData.Instance.PlayerId)
+            if (e.Listing.Lister == PlayerData.Instance.PlayerId)
                 return;
             else
                 outgoingBidsList.RemoveDisplay(e.Listing.ListingId);

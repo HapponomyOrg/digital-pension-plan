@@ -8,6 +8,8 @@ namespace Version1.Phases
         IPhase[] Phases { get; set; }
         IPhaseController CurrentPhaseController { get; set; }
 
+        int CurrentRound();
+
         void StartPhases(StartGameMessage msg);
         void LoadPhase(int index, string name);
         public void LoadNextPhase();

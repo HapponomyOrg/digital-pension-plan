@@ -1,3 +1,6 @@
+using Version1.Phases.Trading.Scripts.Services.Bid;
+using Version1.Phases.Trading.Scripts.Services.Listing;
+
 namespace Version1.Market
 {
     public class MarketServices

@@ -5,7 +5,10 @@ using UnityEngine.UI;
 using Version1.Market.Scripts.UI;
 using Version1.Nats.Messages.Client;
 using Version1.Phases.Trading.CardHandIn.Scripts;
+using Version1.Phases.Trading.Prefabs.CardHandIn.Scripts;
 using Version1.Utilities;
+using Version1.Utilities.NetworkManager;
+using Version1.Utilities.PlayerData;
 
 namespace Version1.Phases.Trading
 {
@@ -25,7 +28,7 @@ namespace Version1.Phases.Trading
         {
             GenerateCardDisplays();
 
-            PlayerData.PlayerData.Instance.OnCardsChange += (sender, _) =>
+            PlayerData.Instance.OnCardsChange += (sender, _) =>
             {
                 generateDisplays = true;
             };
@@ -48,7 +51,7 @@ namespace Version1.Phases.Trading
                 Destroy(child.gameObject);
 
             var cardAmounts = new Dictionary<int, int>();
-            foreach (var cardId in PlayerData.PlayerData.Instance.Cards)
+            foreach (var cardId in PlayerData.Instance.Cards)
             {
                 cardAmounts[cardId] = cardAmounts.TryGetValue(cardId, out var amount)
                     ? amount + 1
@@ -81,25 +84,25 @@ namespace Version1.Phases.Trading
             var cardValue = cardData.Value;
 
             handInOverlay.gameObject.SetActive(true);
-            handInOverlay.Show(cardName, cardValue, () => HandInCards(cardId));
+            handInOverlay.Show(cardId, cardName, cardValue, () => HandInCards(cardId));
         }
 
         private void HandInCards(int cardId)
         {
             for (var i = 0; i < 4; i++)
-                PlayerData.PlayerData.Instance.RemoveCard(cardId);
+                PlayerData.Instance.RemoveCard(cardId);
 
             var cardData = Utilities.GameManager.Instance.CardLibrary.CardData(cardId);
-            PlayerData.PlayerData.Instance.AddPoints(cardData.Value);
+            PlayerData.Instance.AddPoints(cardData.Value);
 
             var msg = new CardHandInMessage(
                 DateTime.UtcNow.ToString("o"),
-                PlayerData.PlayerData.Instance.LobbyID,
-                PlayerData.PlayerData.Instance.PlayerId,
+                PlayerData.Instance.LobbyID,
+                PlayerData.Instance.PlayerId,
                 cardData.ID,
                 cardData.Value);
 
-            NetworkManager.Instance.Publish(PlayerData.PlayerData.Instance.LobbyID.ToString(), msg);
+            NetworkManager.Instance.Publish(PlayerData.Instance.LobbyID.ToString(), msg);
         }
     }
 }

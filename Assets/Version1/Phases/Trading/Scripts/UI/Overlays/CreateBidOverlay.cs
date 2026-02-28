@@ -4,8 +4,11 @@ using System.Globalization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Version1.Market;
+using Version1.Market.Scripts.UI;
+using Version1.Utilities.PlayerData;
 
-namespace Version1.Market.Scripts.UI.Overlays
+namespace Version1.Phases.Trading.Scripts.UI.Overlays
 {
     public class CreateBidOverlay : MonoBehaviour
     {
@@ -74,8 +77,8 @@ namespace Version1.Market.Scripts.UI.Overlays
         {
             var bid = new Bid(
                 Guid.NewGuid(),
-                PlayerData.PlayerData.Instance.PlayerId,
-                PlayerData.PlayerData.Instance.PlayerName,
+                PlayerData.Instance.PlayerId,
+                PlayerData.Instance.PlayerName,
                 bidAmount,
                 DateTime.Now);
 

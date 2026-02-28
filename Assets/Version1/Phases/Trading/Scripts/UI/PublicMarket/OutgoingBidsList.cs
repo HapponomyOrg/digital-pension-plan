@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Version1.Market.Scripts.UI.PublicMarket;
-using Version1.Utilities;
+using Version1.Market;
+using Version1.Utilities.PlayerData;
 
-namespace Version1.Market
+namespace Version1.Phases.Trading.Scripts.UI.PublicMarket
 {
     public class OutgoingBidsList : MonoBehaviour
     {
@@ -65,7 +65,7 @@ namespace Version1.Market
         {
             var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
 
-            var bid = listing.BidRepository.GetBidBetweenPlayer(PlayerData.PlayerData.Instance.PlayerId, bidId);
+            var bid = listing.BidRepository.GetBidBetweenPlayer(PlayerData.Instance.PlayerId, bidId);
 
             cancelBidOverlay.Open(listingId, bid);
         }

@@ -4,10 +4,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Version1.Nats.Messages.Host;
+using Version1.Phases.Trading.CardHandIn.Scripts;
 using Version1.UIComponents.Scripts;
 using Version1.Utilities;
+using Version1.Utilities.NetworkManager;
+using Version1.Utilities.PlayerData;
 
-namespace Version1.Phases.Trading.CardHandIn.Scripts
+namespace Version1.Phases.Trading.Prefabs.CardHandIn.Scripts
 {
     public class CardHandInOverlay : MonoBehaviour
     {
@@ -63,11 +66,13 @@ namespace Version1.Phases.Trading.CardHandIn.Scripts
                 NetworkManager.Instance.OnConfirmHandIn -= OnConfirmHandInReceived;
         }
 
-        public void Show(string cardName, int pointValue, Action msg)
+        public void Show(int cardId, string cardName, int pointValue, Action msg)
         {
             if (busy) return;
 
             onConfirm        = msg;
+
+            cardIconRect.GetComponent<CardScript>().SetDisplay(cardId,0,false);
 
             cardNameText.text = cardName;
             pointsText.text   = $"Worth <b>{pointValue}</b> {(pointValue == 1 ? "point" : "points")}";
@@ -81,7 +86,7 @@ namespace Version1.Phases.Trading.CardHandIn.Scripts
 
         private void OnConfirmHandInReceived(object sender, ConfirmHandInMessage msg)
         {
-            if (msg.Receiver != PlayerData.PlayerData.Instance.PlayerId) return;
+            if (msg.Receiver != PlayerData.Instance.PlayerId) return;
             StartCoroutine(ShowRewardSequence(msg.Cards));
         }
 

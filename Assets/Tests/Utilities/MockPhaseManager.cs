@@ -23,6 +23,11 @@ namespace Tests.Utilities
 
 
         // Unused in tests — left as no-ops
+        public int CurrentRound()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void StartPhases(StartGameMessage msg) { }
         public void LoadPhase(int index, string name) { }
         public void LoadNextPhase()

@@ -1,4 +1,4 @@
-﻿using Version1.PlayerData;
+﻿using Version1.Utilities.PlayerData;
 
 namespace Tests.Utilities
 {

@@ -1,23 +1,26 @@
 using System;
+using Version1.Market;
 using Version1.Nats.Messages.Client;
 using Version1.Utilities;
+using Version1.Utilities.NetworkManager;
+using Version1.Utilities.PlayerData;
 
-namespace Version1.Market
+namespace Version1.Phases.Trading.Scripts.Services.Bid
 {
     public class RejectBidService
     {
         public event EventHandler<BidEventArgs> RejectBid;
 
-        public void RejectBidLocally(Guid listingId, Bid bid)
+        public void RejectBidLocally(Guid listingId, Market.Bid bid)
         {
             var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
 
             if (listing == null)
                 return; // TODO Error handling
 
-            var originalBidder = listing.Lister == PlayerData.PlayerData.Instance.PlayerId 
-                ? bid.Bidder 
-                : PlayerData.PlayerData.Instance.PlayerId;
+            var originalBidder = listing.Lister == PlayerData.Instance.PlayerId
+                ? bid.Bidder
+                : PlayerData.Instance.PlayerId;
 
 
             listing.BidRepository.RemoveBidBetweenPlayer(originalBidder, bid.BidId);
@@ -27,8 +30,8 @@ namespace Version1.Market
 
             var message = new RejectBidMessage(
                 DateTime.Now.ToString("o"),
-                PlayerData.PlayerData.Instance.LobbyID,
-                PlayerData.PlayerData.Instance.PlayerId,
+                PlayerData.Instance.LobbyID,
+                PlayerData.Instance.PlayerId,
                 listing.ListingId.ToString(),
                 bid.BidId.ToString(),
                 bid.Bidder,
@@ -59,8 +62,8 @@ namespace Version1.Market
 
             listing.BidRepository.RemoveBidBetweenPlayer(originalBidder, bidId);
 
-            if (originalBidder == PlayerData.PlayerData.Instance.PlayerId && originalBidder != listing.Lister)
-                PlayerData.PlayerData.Instance.AddToBalance(bid.BidOffer);
+            if (originalBidder == PlayerData.Instance.PlayerId && originalBidder != listing.Lister)
+                PlayerData.Instance.AddToBalance(bid.BidOffer);
 
             RejectBid?.Invoke(this, new BidEventArgs(listing, bid));
         }

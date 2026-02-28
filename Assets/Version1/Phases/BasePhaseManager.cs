@@ -10,7 +10,8 @@ namespace Version1.Phases
     {
         private IPhaseController _currentPhaseController;
 
-        public int currentRound = 0;
+        private int currentRound = 0;
+        
         public IPhase[] Phases { get; set; }
 
         public IPhaseController CurrentPhaseController
@@ -24,6 +25,11 @@ namespace Version1.Phases
                     _currentPhaseController
                         .StartPhase(); // Starts the phase when the controller gets assigned. This is to avoid unity scene loading errors
             }
+        }
+
+        public int CurrentRound()
+        {
+            return currentRound;
         }
 
         public void StartPhases(StartGameMessage msg)
@@ -60,7 +66,7 @@ namespace Version1.Phases
             }
             else
             {
-                if (PlayerData.PlayerData.Instance.IsBankPlayer())
+                if (Utilities.PlayerData.PlayerData.Instance.IsBankPlayer())
                 {
                     if (name == PhaseLibrary.PayDebtPhase.Name || name == PhaseLibrary.TakeALoanPhase.Name)
                     {

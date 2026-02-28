@@ -3,8 +3,8 @@ using Assets.Version1.Phases;
 using UnityEngine;
 using Version1.Host.Scripts;
 using Version1.Market;
-using Version1.Nats.Messages.Host;
-using Version1.Utilities;
+using Version1.Phases.Trading.Scripts.UI;
+using Version1.Utilities.PlayerData;
 
 namespace Version1.Phases.Trading
 {
@@ -65,7 +65,7 @@ namespace Version1.Phases.Trading
         {
             var listingRepository = Utilities.GameManager.Instance.ListingRepository;
 
-            var listings = listingRepository.GetPersonalListings(PlayerData.PlayerData.Instance.PlayerId);
+            var listings = listingRepository.GetPersonalListings(PlayerData.Instance.PlayerId);
 
             foreach (var item in listings)
             {

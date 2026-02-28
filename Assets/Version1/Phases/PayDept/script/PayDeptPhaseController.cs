@@ -1,8 +1,14 @@
-﻿using Assets.Version1.Phases;
+﻿using System;
+using Assets.Version1.Phases;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Version1.Host.Scripts;
+using Version1.Nats.Messages.Client;
+using Version1.Utilities;
+using Version1.Utilities.NetworkManager;
+using Version1.Utilities.PlayerData;
 
 namespace Version1.Phases.PayDept.script
 {
@@ -24,12 +30,12 @@ namespace Version1.Phases.PayDept.script
 
         public void StartPhase()
         {
-            if (PlayerData.PlayerData.Instance.Debt <= 0) SceneManager.LoadScene(Utilities.GameManager.LOADING);
+            if (PlayerData.Instance.Debt <= 0) SceneManager.LoadScene(Utilities.GameManager.LOADING);
 
             amountText.text = "0";
 
-            currentBalanceText.text = $"Current balance: €{FormatMoney(PlayerData.PlayerData.Instance.Balance)}\n" +
-                                      $"Current debt: €{FormatMoney(PlayerData.PlayerData.Instance.Debt)}";
+            currentBalanceText.text = $"Current balance: €{FormatMoney(PlayerData.Instance.Balance)}\n" +
+                                      $"Current debt: €{FormatMoney(PlayerData.Instance.Debt)}";
         }
 
         public void StopPhase()
@@ -40,7 +46,7 @@ namespace Version1.Phases.PayDept.script
         {
             int newAmount = currentAmount + priceStep;
 
-            if (newAmount > PlayerData.PlayerData.Instance.Balance)
+            if (newAmount > PlayerData.Instance.Balance)
                 return;
 
             currentAmount = newAmount;
@@ -62,20 +68,22 @@ namespace Version1.Phases.PayDept.script
         {
             amountText.text = FormatMoney(currentAmount);
             currentBalanceText.text =
-                $"Current balance: €{FormatMoney(PlayerData.PlayerData.Instance.Balance - currentAmount)}\n" +
-                $"Current debt: €{FormatMoney(PlayerData.PlayerData.Instance.Debt - currentAmount)}";
+                $"Current balance: €{FormatMoney(PlayerData.Instance.Balance - currentAmount)}\n" +
+                $"Current debt: €{FormatMoney(PlayerData.Instance.Debt - currentAmount)}";
             confirmButton.interactable = currentAmount != 0;
         }
 
         public void Continue()
         {
+            NetworkManager.Instance.Publish(SessionData.Instance.LobbyCode.ToString(),
+                new ContinueMessage(DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, PlayerData.Instance.PlayerId, GameManager.Instance.PhaseManager.CurrentRound()));
             Utilities.GameManager.Instance.PhaseManager.LoadNextPhase();
         }
 
         public void PayDept()
         {
-            PlayerData.PlayerData.Instance.Debt -= currentAmount;
-            PlayerData.PlayerData.Instance.Balance -= currentAmount;
+            PlayerData.Instance.Debt -= currentAmount;
+            PlayerData.Instance.Balance -= currentAmount;
 
             Utilities.GameManager.Instance.PhaseManager.LoadNextPhase();
         }

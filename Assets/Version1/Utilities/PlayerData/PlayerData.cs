@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Version1.Host.Scripts;
 using Version1.Nats.Messages.Client;
 using Version1.Nats.Messages.Host;
 
-namespace Version1.PlayerData
+namespace Version1.Utilities.PlayerData
 {
     public class PlayerData : MonoBehaviour, IPlayerData
     {

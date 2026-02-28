@@ -8,7 +8,7 @@ using Version1.Nats.Messages.Host;
 using Version1.Phases;
 using Version1.Websocket;
 
-namespace Version1.Utilities
+namespace Version1.Utilities.NetworkManager
 {
     public class NetworkManager :  MonoBehaviour , INetworkManager
     {

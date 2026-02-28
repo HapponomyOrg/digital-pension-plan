@@ -1,30 +1,33 @@
 using System;
+using Version1.Market;
 using Version1.Nats.Messages.Client;
 using Version1.Utilities;
+using Version1.Utilities.NetworkManager;
+using Version1.Utilities.PlayerData;
 
-namespace Version1.Market
+namespace Version1.Phases.Trading.Scripts.Services.Bid
 {
     public class CounterBidService
     {
         public event EventHandler<BidEventArgs> CounterBid;
 
-        public void CounterBidLocally(Guid listingId, Bid bid)
+        public void CounterBidLocally(Guid listingId, Market.Bid bid)
         {
             var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
 
             if (listing == null)
                 return; // TODO Error handling
 
-            var originalBidder = listing.Lister == PlayerData.PlayerData.Instance.PlayerId
+            var originalBidder = listing.Lister == PlayerData.Instance.PlayerId
                 ? bid.Bidder
-                : PlayerData.PlayerData.Instance.PlayerId;
+                : PlayerData.Instance.PlayerId;
 
 
             var lastBid = listing.BidRepository.GetLastBidBetweenPlayer(originalBidder);
             lastBid.BidStatus = EBidStatus.Rejected;
 
-            if (PlayerData.PlayerData.Instance.PlayerId == originalBidder)
-                PlayerData.PlayerData.Instance.SubtractFromBalance(bid.BidOffer);
+            if (PlayerData.Instance.PlayerId == originalBidder)
+                PlayerData.Instance.SubtractFromBalance(bid.BidOffer);
 
 
             CounterBid?.Invoke(this, new BidEventArgs(listing, bid));
@@ -32,8 +35,8 @@ namespace Version1.Market
 
             var message = new CounterBidMessage(
                 DateTime.Now.ToString("o"),
-                PlayerData.PlayerData.Instance.LobbyID,
-                PlayerData.PlayerData.Instance.PlayerId,
+                PlayerData.Instance.LobbyID,
+                PlayerData.Instance.PlayerId,
                 listing.ListingId.ToString(),
                 bid.BidId.ToString(),
                 originalBidder,
@@ -44,7 +47,7 @@ namespace Version1.Market
 
             NetworkManager.Instance.Publish(message.LobbyID.ToString(), message);
 
-            listing.BidRepository.AddBid(PlayerData.PlayerData.Instance.PlayerId, bid);
+            listing.BidRepository.AddBid(PlayerData.Instance.PlayerId, bid);
         }
 
         public void CounterBidHandler(CounterBidMessage message)
@@ -54,7 +57,7 @@ namespace Version1.Market
             if (listing == null)
                 return; // TODO Error handling
 
-            var bid = new Bid(
+            var bid = new Market.Bid(
                 Guid.Parse(message.BidID),
                 message.PlayerID,
                 message.PlayerName,
@@ -66,13 +69,13 @@ namespace Version1.Market
         }
 
 
-        private void ReceivedCounterBid(Listing listing, int originalBidder, Bid bid)
+        private void ReceivedCounterBid(Market.Listing listing, int originalBidder, Market.Bid bid)
         {
             var lastBid = listing.BidRepository.GetLastBidBetweenPlayer(originalBidder);
             lastBid.BidStatus = EBidStatus.Rejected;
 
             if (lastBid.Bidder == originalBidder)
-                PlayerData.PlayerData.Instance.AddToBalance(bid.BidOffer);
+                PlayerData.Instance.AddToBalance(bid.BidOffer);
 
             listing.BidRepository.AddBid(originalBidder, bid);
             CounterBid?.Invoke(this, new BidEventArgs(listing, bid));

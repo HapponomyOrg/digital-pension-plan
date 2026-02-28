@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using Version1.Utilities.PlayerData;
 using Random = UnityEngine.Random;
 
 namespace Version1.Cards.Scripts
@@ -24,7 +25,7 @@ namespace Version1.Cards.Scripts
         {
             cardList = new List<UiCard>();
 
-            PlayerData.PlayerData.Instance.OnCardsChange += PlayerDataOnOnCardsChange;
+            PlayerData.Instance.OnCardsChange += PlayerDataOnOnCardsChange;
         }
 
         private void PlayerDataOnOnCardsChange(object sender, List<int> updatedCards)

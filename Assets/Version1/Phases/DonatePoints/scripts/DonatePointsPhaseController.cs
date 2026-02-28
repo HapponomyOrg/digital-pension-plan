@@ -8,6 +8,8 @@ using UnityEngine.UI;
 using Version1.Host.Scripts;
 using Version1.Nats.Messages.Client;
 using Version1.Utilities;
+using Version1.Utilities.NetworkManager;
+using Version1.Utilities.PlayerData;
 
 namespace Version1.Phases.DonatePoints.scripts
 {
@@ -25,7 +27,7 @@ namespace Version1.Phases.DonatePoints.scripts
 
         private int _pointsToDonate;
 
-        private PlayerData.PlayerData _otherPlayer = new PlayerData.PlayerData();
+        private PlayerData _otherPlayer = new PlayerData();
 
         private Dictionary<int, PlayerListPrefab> _players;
         [SerializeField] private Transform playerListPrefab;
@@ -43,7 +45,7 @@ namespace Version1.Phases.DonatePoints.scripts
             {
                 _ownPoints = value;
                 ownPointsTMP.text = _ownPoints.ToString();
-                increaseButton.interactable = PlayerData.PlayerData.Instance.Points > 0;
+                increaseButton.interactable = PlayerData.Instance.Points > 0;
             }
         }
 
@@ -108,7 +110,7 @@ namespace Version1.Phases.DonatePoints.scripts
             otherNameTMP.text = "";
             otherPointsTMP.text = "0";
 
-            OwnPoints = PlayerData.PlayerData.Instance.Points;
+            OwnPoints = PlayerData.Instance.Points;
 
             descriptionText.text = OwnPoints >= 1
                 ? "Please click on another player if you want to donate your point?"
@@ -176,8 +178,8 @@ namespace Version1.Phases.DonatePoints.scripts
 
         private void OnOnDonatePoints(object sender, DonatePointsMessage e)
         {
-            var myId = PlayerData.PlayerData.Instance.PlayerId;
-            var myName = PlayerData.PlayerData.Instance.PlayerName;
+            var myId = PlayerData.Instance.PlayerId;
+            var myName = PlayerData.Instance.PlayerName;
 
             Debug.LogWarning($"[{myName} (ID:{myId})] Received DonatePoints - From: {e.PlayerName} (ID:{e.PlayerID}), To: Receiver ID:{e.Receiver}, Amount: {e.Amount}");
 
@@ -191,7 +193,7 @@ namespace Version1.Phases.DonatePoints.scripts
             Debug.LogWarning($"[{myName}] I AM the receiver! Adding {e.Amount} points");
 
             OwnPoints += e.Amount;
-            PlayerData.PlayerData.Instance.Points = OwnPoints;
+            PlayerData.Instance.Points = OwnPoints;
 
             var toaster = Instantiate(ToasterPrefab, ToasterList);
             toaster.GetComponent<ToasterScript>().toasterText.text =
@@ -202,11 +204,11 @@ namespace Version1.Phases.DonatePoints.scripts
         {
             if (_pointsToDonate <= 0) return;
 
-            PlayerData.PlayerData.Instance.Points = OwnPoints;
+            PlayerData.Instance.Points = OwnPoints;
 
-            NetworkManager.Instance.Publish(PlayerData.PlayerData.Instance.LobbyID.ToString(),
-                new DonatePointsMessage(DateTime.Now.ToString("o"), PlayerData.PlayerData.Instance.LobbyID,
-                    PlayerData.PlayerData.Instance.PlayerId, PlayerData.PlayerData.Instance.PlayerName, _otherPlayer.PlayerId, _pointsToDonate));
+            NetworkManager.Instance.Publish(PlayerData.Instance.LobbyID.ToString(),
+                new DonatePointsMessage(DateTime.Now.ToString("o"), PlayerData.Instance.LobbyID,
+                    PlayerData.Instance.PlayerId, PlayerData.Instance.PlayerName, _otherPlayer.PlayerId, _pointsToDonate));
 
             if (OwnPoints == 0)
             {
@@ -222,7 +224,7 @@ namespace Version1.Phases.DonatePoints.scripts
             }
 
             otherNameTMP.text = "";
-            OwnPoints = PlayerData.PlayerData.Instance.Points;
+            OwnPoints = PlayerData.Instance.Points;
             OtherName = "";
             OtherPoints = 0;
             _pointsToDonate = 0;
@@ -306,6 +308,8 @@ namespace Version1.Phases.DonatePoints.scripts
 
         public void SkipDonation()
         {
+            NetworkManager.Instance.Publish(SessionData.Instance.LobbyCode.ToString(),
+                new ContinueMessage(DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, PlayerData.Instance.PlayerId, GameManager.Instance.PhaseManager.CurrentRound()));
             SceneManager.LoadScene(Utilities.GameManager.LOADING);
         }
 

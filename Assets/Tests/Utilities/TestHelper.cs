@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Version1.Phases;
 using Version1.Utilities;
+using Version1.Utilities.NetworkManager;
 
 namespace Tests.Utilities
 {

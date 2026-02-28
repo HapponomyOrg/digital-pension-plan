@@ -8,6 +8,8 @@ using UnityEngine.UIElements;
 using Version1.Host.Scripts;
 using Version1.Nats.Messages.Client;
 using Version1.Utilities;
+using Version1.Utilities.NetworkManager;
+using Version1.Utilities.PlayerData;
 
 namespace Version1.Phases.BankOverview.Scripts
 {
@@ -37,7 +39,7 @@ namespace Version1.Phases.BankOverview.Scripts
             item.Name = e.PlayerName;
             item.Balance = e.Amount;
 
-            var income = PlayerData.PlayerData.Instance.GetAllBankIncome();
+            var income = PlayerData.Instance.GetAllBankIncome();
 
             incomeAmount += e.Amount;
 
@@ -50,7 +52,7 @@ namespace Version1.Phases.BankOverview.Scripts
 
             incomeAmount = 0;
 
-            var income = PlayerData.PlayerData.Instance.GetAllBankIncome();
+            var income = PlayerData.Instance.GetAllBankIncome();
 
             foreach (Transform child in list)
             {
@@ -72,13 +74,15 @@ namespace Version1.Phases.BankOverview.Scripts
 
         public void Continue()
         {
-            PlayerData.PlayerData.Instance.ResetBankIncome();
+            PlayerData.Instance.ResetBankIncome();
+            NetworkManager.Instance.Publish(SessionData.Instance.LobbyCode.ToString(),
+                new ContinueMessage(DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, PlayerData.Instance.PlayerId, GameManager.Instance.PhaseManager.CurrentRound()));
             SceneManager.LoadScene(PhaseLibrary.LoadingPhase.Scene);
         }
 
         public void StopPhase()
         {
-            PlayerData.PlayerData.Instance.ResetBankIncome();
+            PlayerData.Instance.ResetBankIncome();
             NetworkManager.Instance.GetWsContext().OnPayInterestToBank -= OnOnPayInterestToBank;
 
         }

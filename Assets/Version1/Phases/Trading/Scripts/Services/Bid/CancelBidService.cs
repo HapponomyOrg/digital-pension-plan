@@ -1,6 +1,8 @@
 using System;
 using Version1.Nats.Messages.Client;
 using Version1.Utilities;
+using Version1.Utilities.NetworkManager;
+using Version1.Utilities.PlayerData;
 
 namespace Version1.Market
 {
@@ -15,13 +17,13 @@ namespace Version1.Market
             if (listing == null)
                 return; // TODO Error handling
 
-            var originalBidder = listing.Lister == PlayerData.PlayerData.Instance.PlayerId
+            var originalBidder = listing.Lister == PlayerData.Instance.PlayerId
                 ? bid.Bidder
-                : PlayerData.PlayerData.Instance.PlayerId;
+                : PlayerData.Instance.PlayerId;
 
 
-            if (PlayerData.PlayerData.Instance.PlayerId == originalBidder)
-                PlayerData.PlayerData.Instance.AddToBalance(bid.BidOffer);
+            if (PlayerData.Instance.PlayerId == originalBidder)
+                PlayerData.Instance.AddToBalance(bid.BidOffer);
 
             listing.BidRepository.RemoveBidBetweenPlayer(originalBidder, bid.BidId);
 
@@ -30,8 +32,8 @@ namespace Version1.Market
 
             var message = new CancelBidMessage(
                 DateTime.Now.ToString("o"),
-                PlayerData.PlayerData.Instance.LobbyID,
-                PlayerData.PlayerData.Instance.PlayerId,
+                PlayerData.Instance.LobbyID,
+                PlayerData.Instance.PlayerId,
                 listing.ListingId.ToString(),
                 bid.BidId.ToString(),
                 originalBidder

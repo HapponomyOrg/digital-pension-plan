@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Version1;
 using Version1.Phases.MoneyCorrection.scripts;
-using Version1.PlayerData;
+using Version1.Utilities.PlayerData;
 
 namespace Tests.Phases.MoneyCorrection.System
 {

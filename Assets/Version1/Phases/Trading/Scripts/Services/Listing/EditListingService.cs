@@ -10,16 +10,16 @@ namespace Version1.Market
         public void EditListingLocally(Listing listing)
         {
             throw new NotImplementedException();
-            //PlayerData.PlayerData.Instance.RemoveCards(listing.Cards);
+            //PlayerData.Instance.RemoveCards(listing.Cards);
             //Utilities.GameManager.Instance.ListingRepository.AddListing(listing);
 
             //CreateListing?.Invoke(this, new EditListingEventArgs(listing));
 
             //var message = new ListCardsmessage(
             //    DateTime.Now.ToString("o"),
-            //    PlayerData.PlayerData.Instance.LobbyID,
-            //    PlayerData.PlayerData.Instance.PlayerId,
-            //    PlayerData.PlayerData.Instance.PlayerName,
+            //    PlayerData.Instance.LobbyID,
+            //    PlayerData.Instance.PlayerId,
+            //    PlayerData.Instance.PlayerName,
             //    listing.ListingId.ToString(),
             //    listing.Cards,
             //    listing.Price

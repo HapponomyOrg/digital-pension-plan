@@ -11,10 +11,10 @@ namespace Version1.Nats
     public class NatsClient : Connection
     {
         public static NatsClient C { get; private set; }
-        
+
         // Make EventsReceived public so NatsWrapper can add messages to it
         public Queue<BaseMessage> EventsReceived { get; private set; }
-        
+
         public NatsClient()
         {
             if (C != null) return;
@@ -22,7 +22,7 @@ namespace Version1.Nats
             C = this;
             EventsReceived = new Queue<BaseMessage>();
         }
-        
+
         public event EventHandler<ListCardsmessage> OnListCards;
         public event EventHandler<BuyCardsRequestMessage> OnBuyCards;
         public event EventHandler<CancelListingMessage> OnCancelListing;
@@ -51,25 +51,25 @@ namespace Version1.Nats
         public event EventHandler<AcceptCounterBiddingMessage> OnAcceptCounterBidding;
         public event EventHandler<AbortSessionMessage> OnAbortSession;
         public event EventHandler<SkipRoundMessage> OnSkipRound;
-        
+
 
         protected override void Subscribe()
         {
         }
-        
+
         public void HandleMessages()
         {
             if (EventsReceived.Count < 1) return;
-            
+
 
             var message = EventsReceived.Dequeue();
-            if (message == null || message.PlayerID == PlayerData.PlayerData.Instance.PlayerId) return;
+            if (message == null || message.PlayerID == PlayerData.Instance.PlayerId) return;
 
             if (message.Subject != MessageSubject.HeartBeat)
             {
                 Debug.Log($"Handled message: {message}");
             }
-            
+
             DispatchMessage(message);
             Debug.Log("messages processed");
 
@@ -161,11 +161,11 @@ namespace Version1.Nats
                     break;
                 case MessageSubject.AbortSession:
                     OnAbortSession?.Invoke(this, (AbortSessionMessage)message);
-                    break;                
+                    break;
                 case MessageSubject.SkipRounds:
                     OnSkipRound?.Invoke(this, (SkipRoundMessage)message);
                     break;
-                
+
                 default:
                     Debug.LogWarning($"Unknown message subject: {message.Subject}");
                     break;

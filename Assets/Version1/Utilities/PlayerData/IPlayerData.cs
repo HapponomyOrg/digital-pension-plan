@@ -1,4 +1,4 @@
-﻿namespace Version1.PlayerData
+﻿namespace Version1.Utilities.PlayerData
 {
     public interface IPlayerData
     {
