@@ -69,6 +69,7 @@ namespace Version1.Host.Scripts
         [SerializeField] private TMP_Text nextPhaseTMP;
 
         private bool roundStarted = false;
+        private HashSet<int> readyPlayers = new HashSet<int>();
 
         private void Start()
         {
@@ -100,7 +101,7 @@ namespace Version1.Host.Scripts
         {
             while (true)
             {
-                yield return new WaitForSeconds(5f); // check every 5 seconds
+                yield return new WaitForSeconds(20f); // check every 20 seconds
 
                 if (players == null) continue;
 
@@ -244,7 +245,26 @@ namespace Version1.Host.Scripts
         // WebSocket Event Handlers
         private void OnContinue(object sender, ContinueMessage e)
         {
-            // TODO check round number and check for every player to be ready, maybe 80% and then continue.
+            if (!players.ContainsKey(e.PlayerID)) return;
+
+            readyPlayers.Add(e.PlayerID);
+
+            Debug.Log($"Player {e.PlayerID} is ready. ({readyPlayers.Count}/{players.Count})");
+
+            bool allPlayersReady = players.Keys.All(id => readyPlayers.Contains(id));
+
+            if (!allPlayersReady) return;
+
+            Debug.Log("All players ready — advancing to next phase.");
+            readyPlayers.Clear();
+
+            StopRoundOnClick();
+
+            // Only auto-start if there's a next phase to go to
+            if (currentRound < currentPhases.Length)
+            {
+                StartRoundOnClick();
+            }
         }
 
         private void OnCardHandIn(object sender, CardHandInMessage msg)
@@ -406,6 +426,7 @@ namespace Version1.Host.Scripts
 
         private void StartRoundOnClick()
         {
+            readyPlayers.Clear();
             progressionCards[currentRound].Status.text = "Current";
 
             currentPhaseTMP.text = currentPhases[currentRound].Name;

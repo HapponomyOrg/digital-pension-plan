@@ -10,6 +10,7 @@ namespace Version1.Phases
 
         void StartPhases(StartGameMessage msg);
         void LoadPhase(int index, string name);
+        public void LoadNextPhase();
         void EndPhases();
 
         int GetRoundNumber();

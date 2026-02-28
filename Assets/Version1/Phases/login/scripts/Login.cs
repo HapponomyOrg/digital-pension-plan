@@ -29,7 +29,6 @@ namespace Version1.Phases.Login.Scripts
         private int gender = -1;
         private int gameCode = -1;
 
-
         private void OnEnable()
         {
             playerNameInput.onValueChanged.AddListener(OnPlayerNameChanged);

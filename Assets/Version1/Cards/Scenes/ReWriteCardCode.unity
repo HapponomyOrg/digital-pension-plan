@@ -248,11 +248,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerName: 
   age: 0
-  gender: 
+  gender: 0
   playerId: 456
-  dept: 0
+  debt: 0
+  interestRemainder: 0
   cards: 
   allPoints: 
+  bankPlayer: 
+  currentMoneySystem: 0
+  balance: 0
+  points: 0
+  lobbyID: 0
+  RequestID: 
 --- !u!4 &476940118
 Transform:
   m_ObjectHideFlags: 0

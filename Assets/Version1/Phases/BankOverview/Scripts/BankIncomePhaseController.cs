@@ -78,6 +78,7 @@ namespace Version1.Phases.BankOverview.Scripts
 
         public void StopPhase()
         {
+            PlayerData.PlayerData.Instance.ResetBankIncome();
             NetworkManager.Instance.GetWsContext().OnPayInterestToBank -= OnOnPayInterestToBank;
 
         }

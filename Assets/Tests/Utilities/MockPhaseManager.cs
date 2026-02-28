@@ -21,9 +21,15 @@ namespace Tests.Utilities
 
         public int GetRoundNumber() => _roundNumber;
 
+
         // Unused in tests — left as no-ops
         public void StartPhases(StartGameMessage msg) { }
         public void LoadPhase(int index, string name) { }
+        public void LoadNextPhase()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void EndPhases() { }
     }
 }

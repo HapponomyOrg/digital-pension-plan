@@ -1,6 +1,7 @@
 ﻿using System;
 using Assets.Version1.Phases;
 using UnityEngine;
+using Version1.Host.Scripts;
 using Version1.Market;
 using Version1.Nats.Messages.Host;
 using Version1.Utilities;
@@ -11,14 +12,29 @@ namespace Version1.Phases.Trading
     {
         [SerializeField] private Timer timer;
         [SerializeField] private CardBar cardBar;
-        [SerializeField] private TopBar topBar;
+        [SerializeField] private TopBar topBarSus;
+        [SerializeField] private TopBar topBarDebt;
         [SerializeField] private MarketView marketView;
 
         private void Start()
         {
             timer.Init(300);
             cardBar.Init();
-            topBar.Init();
+            switch (SessionData.Instance.CurrentMoneySystem)
+            {
+                case MoneySystems.Sustainable:
+                    topBarSus.gameObject.SetActive(true);
+                    topBarDebt.gameObject.SetActive(false);
+                    topBarSus.Init();
+                    break;
+                case MoneySystems.DebtBased:
+                    topBarSus.gameObject.SetActive(false);
+                    topBarDebt.gameObject.SetActive(true);
+                    topBarDebt.Init();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
             marketView.Clear();
 
             // Start the phase

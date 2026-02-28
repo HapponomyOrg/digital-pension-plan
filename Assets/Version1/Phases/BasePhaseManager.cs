@@ -85,6 +85,32 @@ namespace Version1.Phases
             }
         }
 
+        public void LoadNextPhase()
+        {
+            if (Phases == null)
+            {
+                Debug.LogError("Phases have not been initialized.");
+                return;
+            }
+
+            if (Phases.Length == 0)
+            {
+                Debug.LogError("Phases array is empty.");
+                return;
+            }
+
+            int nextRound = currentRound + 1;
+
+            if (nextRound >= Phases.Length)
+            {
+                Debug.Log("No more phases available. Ending phases.");
+                SceneManager.LoadScene(PhaseLibrary.LoadingPhase.Scene);
+                return;
+            }
+
+            LoadPhase(nextRound, Phases[nextRound].Name);
+        }
+
         public void EndPhases()
         {
             throw new NotImplementedException();

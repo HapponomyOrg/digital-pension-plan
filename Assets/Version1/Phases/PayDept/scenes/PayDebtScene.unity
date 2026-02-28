@@ -625,6 +625,10 @@ PrefabInstance:
 
         Current Debt : 123456678'
       objectReference: {fileID: 0}
+    - target: {fileID: 5037241109964986141, guid: 66f6a405ae5f411448aafe561e8a6b30, type: 3}
+      propertyPath: confirmButton
+      value: 
+      objectReference: {fileID: 1663046597}
     - target: {fileID: 6069971675557217153, guid: 66f6a405ae5f411448aafe561e8a6b30, type: 3}
       propertyPath: m_Name
       value: PayDeptOverlay
@@ -695,6 +699,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4298453554369138593, guid: 66f6a405ae5f411448aafe561e8a6b30, type: 3}
   m_PrefabInstance: {fileID: 1663046595}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1663046597 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2065852362797603725, guid: 66f6a405ae5f411448aafe561e8a6b30, type: 3}
+  m_PrefabInstance: {fileID: 1663046595}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

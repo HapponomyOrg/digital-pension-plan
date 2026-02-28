@@ -4,6 +4,7 @@ namespace Version1.Phases
 {
     public static class PhaseLibrary
     {
+        public static Phase Login { get; } = new("Login", "LoginScene");
         public static Phase MarketPhase { get; } = new("Market", "MarketScene");
         public static Phase LoadingPhase { get; } = new("Loading", "Loading");
         public static Phase MoneyCorrectionPhase { get; } = new("MoneyCorrection", "MoneyCorrectionScene");

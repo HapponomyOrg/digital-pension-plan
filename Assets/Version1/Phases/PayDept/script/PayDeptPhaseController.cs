@@ -10,14 +10,12 @@ namespace Version1.Phases.PayDept.script
     {
         [SerializeField] private TMP_Text amountText;
         [SerializeField] private TMP_Text currentBalanceText;
-        [SerializeField] private Button ConfirmButton;
+        [SerializeField] private Button confirmButton;
 
         private static readonly System.Globalization.CultureInfo deCulture = new("de-DE");
 
-        private int _currentAmount = 0;
-        private const int PriceStep = 1000;
-
-        private int _maxAmount = 0;
+        private int currentAmount;
+        private const int priceStep = 1000;
 
         private void Start()
         {
@@ -30,9 +28,8 @@ namespace Version1.Phases.PayDept.script
 
             amountText.text = "0";
 
-            _maxAmount = PlayerData.PlayerData.Instance.Debt;
-            currentBalanceText.text =  $"Current balance: €{FormatMoney(PlayerData.PlayerData.Instance.Balance)}\n" +
-                                       $"Current debt: €{FormatMoney(PlayerData.PlayerData.Instance.Debt)}";
+            currentBalanceText.text = $"Current balance: €{FormatMoney(PlayerData.PlayerData.Instance.Balance)}\n" +
+                                      $"Current debt: €{FormatMoney(PlayerData.PlayerData.Instance.Debt)}";
         }
 
         public void StopPhase()
@@ -41,17 +38,12 @@ namespace Version1.Phases.PayDept.script
 
         public void IncreaseAmount()
         {
-            int newAmount = _currentAmount + PriceStep;
+            int newAmount = currentAmount + priceStep;
 
             if (newAmount > PlayerData.PlayerData.Instance.Balance)
                 return;
 
-            _currentAmount = newAmount;
-
-            // TODO B.Nierop check if there is a max amount of loan.
-            /*// Clamp to max loan amount
-            if (_currentAmount > _maxAmount)
-                _currentAmount = _maxAmount;*/
+            currentAmount = newAmount;
 
             UpdateOverlay();
         }
@@ -59,32 +51,33 @@ namespace Version1.Phases.PayDept.script
 
         public void DecreaseAmount()
         {
-            _currentAmount -= PriceStep;
-            if (_currentAmount < 0)
-                _currentAmount = 0;
+            currentAmount -= priceStep;
+            if (currentAmount < 0)
+                currentAmount = 0;
 
             UpdateOverlay();
         }
 
         private void UpdateOverlay()
         {
-            amountText.text = FormatMoney(_currentAmount);
-            currentBalanceText.text =  $"Current balance: €{FormatMoney(PlayerData.PlayerData.Instance.Balance - _currentAmount)}\n" +
-                                       $"Current debt: €{FormatMoney(PlayerData.PlayerData.Instance.Debt - _currentAmount)}";
-            ConfirmButton.interactable = _currentAmount != 0;
+            amountText.text = FormatMoney(currentAmount);
+            currentBalanceText.text =
+                $"Current balance: €{FormatMoney(PlayerData.PlayerData.Instance.Balance - currentAmount)}\n" +
+                $"Current debt: €{FormatMoney(PlayerData.PlayerData.Instance.Debt - currentAmount)}";
+            confirmButton.interactable = currentAmount != 0;
         }
 
         public void Continue()
         {
-            SceneManager.LoadScene(Utilities.GameManager.LOADING);
+            Utilities.GameManager.Instance.PhaseManager.LoadNextPhase();
         }
 
         public void PayDept()
         {
-            PlayerData.PlayerData.Instance.Debt -= _currentAmount;
-            PlayerData.PlayerData.Instance.Balance -= _currentAmount;
+            PlayerData.PlayerData.Instance.Debt -= currentAmount;
+            PlayerData.PlayerData.Instance.Balance -= currentAmount;
 
-            SceneManager.LoadScene(Utilities.GameManager.LOADING);
+            Utilities.GameManager.Instance.PhaseManager.LoadNextPhase();
         }
 
         private static string FormatMoney(int amount) => amount.ToString("N0", deCulture);

@@ -1,10 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
 using Assets.Version1.Phases;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-namespace Version1.Phases.EndScreen
+namespace Version1.Phases.End.script
 {
     public class EndScreenPhaseController : MonoBehaviour, IPhaseController
     {
@@ -56,11 +56,11 @@ namespace Version1.Phases.EndScreen
 
             var message = PlayerData.PlayerData.Instance.Points switch
             {
-                < 0 => "Suffering: You’re totally out of luck. Not only do you have nothing, you owe people!",
+                < 0 => "Suffering: Youï¿½re totally out of luck. Not only do you have nothing, you owe people!",
                 < 2 and >= 0 =>
-                    "Bankrupt. You just don’t have the resources to sustain yourself. You live out on the street.",
-                < 5 and >= 2 => "Surviving. It’s not a life of luxury but you get by.",
-                < 10 and >= 5 => "Comfortable. Retirement is a happy time and you don’t have to worry about anything.",
+                    "Bankrupt. You just donï¿½t have the resources to sustain yourself. You live out on the street.",
+                < 5 and >= 2 => "Surviving. Itï¿½s not a life of luxury but you get by.",
+                < 10 and >= 5 => "Comfortable. Retirement is a happy time and you donï¿½t have to worry about anything.",
                 >= 10 => "Luxurious. You have everything you want and then some!"
             };
 
@@ -85,6 +85,11 @@ namespace Version1.Phases.EndScreen
         public void OnDestroy()
         {
             Utilities.GameManager.Instance.PhaseManager.CurrentPhaseController = null;
+        }
+
+        public void Continue()
+        {
+            SceneManager.LoadScene(PhaseLibrary.LoadingPhase.Scene);
         }
     }
 }

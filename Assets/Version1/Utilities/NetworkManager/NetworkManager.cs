@@ -126,6 +126,7 @@ namespace Version1.Utilities
             WebSocketClient.OnConfirmHandIn += NatsClientOnOnConfirmHandIn;
             WebSocketClient.OnEndOfRounds += NatsClientOnOnEndOfRounds;
             WebSocketClient.OnOpen += NatsClientOnOpen;
+            WebSocketClient.OnAbortSession += NatsClientOnAbortSession;
 
             Debug.Log("All events subscribed");
 
@@ -139,6 +140,12 @@ namespace Version1.Utilities
                 Debug.LogError($"Failed to connect: {ex.Message}\nStack: {ex.StackTrace}");
                 OnError?.Invoke(this, ex.Message);
             }
+        }
+
+        private void NatsClientOnAbortSession(object sender, AbortSessionMessage e)
+        {
+            PlayerData.PlayerData.Instance.ResetData();
+            SceneManager.LoadScene(PhaseLibrary.Login.Scene);
         }
 
         private void WebSocketClientOnOnPayInterestToBank(object sender, PayInterestToBankMessage e)

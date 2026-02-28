@@ -47,17 +47,27 @@ namespace Version1.Host.Scripts
             }
         }
 
+        private int currentRound;
+
+        public int CurrentRound
+        {
+            get => currentRound;
+            set =>
+                // TODO here can set in ui.
+                currentRound = value;
+        }
+
         [SerializeField] private TMP_Text NameTextField;
         [SerializeField] private TMP_Text PointsTextField;
         [SerializeField] private TMP_Text BalanceTextField;
 
-        public PlayerListPrefab(string PlayerName, int playerId, int points, DateTime now)
+        public PlayerListPrefab(string PlayerName, int playerId, int points, DateTime now, int currentRound)
         {
             Name = PlayerName;
             ID = playerId;
             Points = points;
             LastPing = now;
-
+            CurrentRound = currentRound;
         }
 
         private static string FormatMoney(int amount) => amount.ToString("N0", deCulture);

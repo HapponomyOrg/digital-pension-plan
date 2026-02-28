@@ -491,6 +491,34 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -0.0004272461
       objectReference: {fileID: 0}
+    - target: {fileID: 5717981166412091641, guid: b815d2ca69431d847a793a4013102818, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5717981166412091641, guid: b815d2ca69431d847a793a4013102818, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5717981166412091641, guid: b815d2ca69431d847a793a4013102818, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 685820503}
+    - target: {fileID: 5717981166412091641, guid: b815d2ca69431d847a793a4013102818, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5717981166412091641, guid: b815d2ca69431d847a793a4013102818, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Continue
+      objectReference: {fileID: 0}
+    - target: {fileID: 5717981166412091641, guid: b815d2ca69431d847a793a4013102818, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Version1.Phases.End.script.EndScreenPhaseController, Version1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5717981166412091641, guid: b815d2ca69431d847a793a4013102818, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 7558443694659390724, guid: b815d2ca69431d847a793a4013102818, type: 3}
       propertyPath: m_SizeDelta.y
       value: 784.6399

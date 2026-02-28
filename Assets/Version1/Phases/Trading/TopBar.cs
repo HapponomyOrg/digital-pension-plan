@@ -9,6 +9,8 @@ namespace Version1.Phases.Trading
     {
         [SerializeField] private TMP_Text points;
         [SerializeField] private TMP_Text balance;
+        [SerializeField] private TMP_Text debt;
+        [SerializeField] private TMP_Text remainder;
 
         [SerializeField] private GameObject donateOverlay;
 
@@ -25,8 +27,24 @@ namespace Version1.Phases.Trading
             points.text = PlayerData.PlayerData.Instance.Points.ToString();
             balance.text = PlayerData.PlayerData.Instance.Balance.ToString("N0", customCulture);
 
-            PlayerData.PlayerData.Instance.OnPointsChange += (sender, i) => { points.text = PlayerData.PlayerData.Instance.Points.ToString(); };
-            PlayerData.PlayerData.Instance.OnBalanceChange += (sender, i) => { balance.text = PlayerData.PlayerData.Instance.Balance.ToString("N0", customCulture); };
+            if (debt)
+            {
+                debt.text = PlayerData.PlayerData.Instance.Debt.ToString("N0", customCulture);
+            }
+
+            if (remainder)
+            {
+                remainder.text = PlayerData.PlayerData.Instance.InterestRemainder.ToString("N0", customCulture);
+            }
+
+            PlayerData.PlayerData.Instance.OnPointsChange += (sender, i) =>
+            {
+                points.text = PlayerData.PlayerData.Instance.Points.ToString();
+            };
+            PlayerData.PlayerData.Instance.OnBalanceChange += (sender, i) =>
+            {
+                balance.text = PlayerData.PlayerData.Instance.Balance.ToString("N0", customCulture);
+            };
         }
 
         public void OpenDonateOverlay()

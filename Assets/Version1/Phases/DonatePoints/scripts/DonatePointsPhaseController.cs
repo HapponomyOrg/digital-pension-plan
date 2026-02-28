@@ -43,6 +43,7 @@ namespace Version1.Phases.DonatePoints.scripts
             {
                 _ownPoints = value;
                 ownPointsTMP.text = _ownPoints.ToString();
+                increaseButton.interactable = PlayerData.PlayerData.Instance.Points > 0;
             }
         }
 
@@ -84,7 +85,7 @@ namespace Version1.Phases.DonatePoints.scripts
 
             foreach (var player in _players)
             {
-                if (DateTime.Now - TimeSpan.FromSeconds(5) > player.Value.LastPing)
+                if (DateTime.Now - TimeSpan.FromSeconds(20) > player.Value.LastPing)
                 {
                     Destroy(player.Value.gameObject);
                     keysToRemove.Add(player.Key);
