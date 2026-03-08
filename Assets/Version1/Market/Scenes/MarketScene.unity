@@ -947,7 +947,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   marketOfferDisplayPrefab: {fileID: 1642182310382471839, guid: e3f6115362504234b91cf2ce7d0b3394, type: 3}
-  marketOfferDetailsDisplayPrefab: {fileID: 1859095815}
+  <DetailsDisplay>k__BackingField: {fileID: 1859095815}
   buyListingOverlay: {fileID: 1281317353}
   createBidOverlay: {fileID: 1112474651}
 --- !u!1 &102526671
@@ -4792,7 +4792,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4763845987772266310, guid: 3cfcb29edfa3d5048bbd8efe028350e9, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4763845987772266310, guid: 3cfcb29edfa3d5048bbd8efe028350e9, type: 3}
       propertyPath: m_AnchorMin.x
@@ -4800,7 +4800,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4763845987772266310, guid: 3cfcb29edfa3d5048bbd8efe028350e9, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4763845987772266310, guid: 3cfcb29edfa3d5048bbd8efe028350e9, type: 3}
       propertyPath: m_SizeDelta.x
@@ -4840,11 +4840,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4763845987772266310, guid: 3cfcb29edfa3d5048bbd8efe028350e9, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 212.5
       objectReference: {fileID: 0}
     - target: {fileID: 4763845987772266310, guid: 3cfcb29edfa3d5048bbd8efe028350e9, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -50
       objectReference: {fileID: 0}
     - target: {fileID: 4763845987772266310, guid: 3cfcb29edfa3d5048bbd8efe028350e9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -5222,7 +5222,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 551452896}
   m_OnClick:
     m_PersistentCalls:
@@ -9736,7 +9736,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4763845987772266310, guid: 090d8413f3022f64db28bb966da8706a, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4763845987772266310, guid: 090d8413f3022f64db28bb966da8706a, type: 3}
       propertyPath: m_AnchorMin.x
@@ -9744,11 +9744,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4763845987772266310, guid: 090d8413f3022f64db28bb966da8706a, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4763845987772266310, guid: 090d8413f3022f64db28bb966da8706a, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 340
+      value: 365
       objectReference: {fileID: 0}
     - target: {fileID: 4763845987772266310, guid: 090d8413f3022f64db28bb966da8706a, type: 3}
       propertyPath: m_SizeDelta.y
@@ -9784,11 +9784,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4763845987772266310, guid: 090d8413f3022f64db28bb966da8706a, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 187.5
       objectReference: {fileID: 0}
     - target: {fileID: 4763845987772266310, guid: 090d8413f3022f64db28bb966da8706a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -50
       objectReference: {fileID: 0}
     - target: {fileID: 4763845987772266310, guid: 090d8413f3022f64db28bb966da8706a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -13836,7 +13836,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1505893447}
   m_OnClick:
     m_PersistentCalls:

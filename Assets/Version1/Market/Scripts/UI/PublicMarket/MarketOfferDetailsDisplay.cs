@@ -6,13 +6,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using Version1.Utilities;
 
-#nullable enable
 namespace Version1.Market.Scripts.UI.PublicMarket
 {
     public class MarketOfferDetailsDisplay : MonoBehaviour
     {
         [SerializeField] private MarketOfferList marketOfferList;
-        private Listing? listing;
+        public Listing? Listing { get; private set; }
 
         [SerializeField] private TMP_Text sellerDisplay;
         [SerializeField] private TMP_Text priceDisplay;
@@ -32,18 +31,26 @@ namespace Version1.Market.Scripts.UI.PublicMarket
 
         public void SetDisplay(Listing listing)
         {
-            this.listing = listing;
+            Listing = listing;
 
-            if (listing == null)
+            if (Listing == null)
                 return; // TODO Error handling
 
-            sellerDisplay.text = listing.ListerName;
-            priceDisplay.text = listing.Price.ToString("N0", numberFormatter);
+            sellerDisplay.text = Listing.ListerName;
+            priceDisplay.text = Listing.Price.ToString("N0", numberFormatter);
 
-            _buyButton.Init(BuyListing, CanBuyListing, SubscribeCommonEvents);
-            _bidButton.Init(BidOnListing, CanBidOnListing, SubscribeCommonEvents);
+            var playerData = PlayerData.PlayerData.Instance;
+            var updateOnBalanceChange = new Func<Action, Action>(refresh => EventExtensions.SubscribeIgnoringParameters<int>(h => playerData.OnBalanceChange += h, h => playerData.OnBalanceChange -= h, refresh));
 
-            GenerateCardDisplays(listing.Cards);
+            var market = GameManager.Instance.MarketServices;
+            var updateOnListingBought = new Func<Action, Action>(refresh => EventExtensions.SubscribeIgnoringParameters<ListingEventArgs>(h => market.BuyListingService.BuyListing += h, h => market.BuyListingService.BuyListing -= h, refresh));
+            var updateOnListingCanceled = new Func<Action, Action>(refresh => EventExtensions.SubscribeIgnoringParameters<ListingEventArgs>(h => market.CancelListingService.CancelListing += h, h => market.CancelListingService.CancelListing -= h, refresh));
+            var updateOnBidAccepted = new Func<Action, Action>(refresh => EventExtensions.SubscribeIgnoringParameters<BidEventArgs>(h => market.AcceptBidService.AcceptBid += h, h => market.AcceptBidService.AcceptBid -= h, refresh));
+
+            _buyButton.Init(BuyListing, CanBuyListing, updateOnBalanceChange, updateOnListingBought, updateOnListingCanceled, updateOnBidAccepted);
+            _bidButton.Init(BidOnListing, CanBidOnListing, updateOnBalanceChange, updateOnListingBought, updateOnListingCanceled, updateOnBidAccepted);
+
+            GenerateCardDisplays(Listing.Cards);
         }
 
         private void GenerateCardDisplays(int[] cards)
@@ -69,8 +76,9 @@ namespace Version1.Market.Scripts.UI.PublicMarket
 
         public void Clear()
         {
+            sellerDisplay.text = string.Empty;
             priceDisplay.text = string.Empty;
-            listing = null;
+            Listing = null;
 
             foreach (Transform child in cardList)
                 Destroy(child.gameObject);
@@ -78,14 +86,14 @@ namespace Version1.Market.Scripts.UI.PublicMarket
 
         private void BuyListing()
         {
-            marketOfferList.OpenBuyListingOverlay(listing);
+            marketOfferList.OpenBuyListingOverlay(Listing);
         }
 
         private bool CanBuyListing()
         {
-            if (listing == null)
+            if (Listing == null)
                 return false;
-            if (PlayerData.PlayerData.Instance.Balance < listing.Price)
+            if (PlayerData.PlayerData.Instance.Balance < Listing.Price)
                 return false;
 
             return true;
@@ -93,31 +101,19 @@ namespace Version1.Market.Scripts.UI.PublicMarket
 
         private void BidOnListing()
         {
-            marketOfferList.OpenCreateBidOverlay(listing);
+            marketOfferList.OpenCreateBidOverlay(Listing);
         }
 
         private bool CanBidOnListing()
         {
-            if (listing == null)
+            if (Listing == null)
                 return false;
             if (PlayerData.PlayerData.Instance.Balance <= 0)
                 return false;
-            if (listing.Price < minListingPriceForBids)
+            if (Listing.Price < minListingPriceForBids)
                 return false;
 
             return true;
-        }
-
-        private void SubscribeCommonEvents(Delegate handler)
-        {
-            // Player balance changes
-            PlayerData.PlayerData.Instance.OnBalanceChange += (EventHandler<int>)handler;
-
-            //// Market events
-            //var market = GameManager.Instance.MarketServices;
-            //market.BuyListingService.BuyListing += (EventHandler<ListingEventArgs>)handler;
-            //market.CancelListingService.CancelListing += (EventHandler<ListingEventArgs>)handler;
-            //market.AcceptBidService.AcceptBid += (EventHandler<BidEventArgs>)handler;
         }
     }
 }

@@ -12,12 +12,14 @@ public class ButtonCommand : MonoBehaviour
     private Action _execute;
     private Func<bool> _canExecute;
 
+    private readonly List<Action> _unsubscribeActions = new List<Action>();
+
     private void Awake()
     {
         _button = GetComponent<Button>();
     }
 
-    public void Init(Action execute, Func<bool> canExecute = null, Action<Delegate> subscribeToUpdateEvent = null)
+    public void Init(Action execute, Func<bool> canExecute = null, params Func<Action, Action>[] subscribeToUpdateEvents)
     {
         _execute = execute;
         _canExecute = canExecute ?? (() => true);
@@ -25,8 +27,15 @@ public class ButtonCommand : MonoBehaviour
         _button.onClick.RemoveAllListeners();
         _button.onClick.AddListener(Execute);
 
-        subscribeToUpdateEvent?.Invoke((Action)Refresh);
-
+        if (subscribeToUpdateEvents != null)
+        {
+            foreach (var subscribe in subscribeToUpdateEvents)
+            {
+                var unsubscribe = subscribe.Invoke(Refresh);
+                if (unsubscribe != null)
+                    _unsubscribeActions.Add(unsubscribe);
+            }
+        }
         Refresh();
     }
 
@@ -46,5 +55,12 @@ public class ButtonCommand : MonoBehaviour
     {
         if (_canExecute != null)
             _button.interactable = _canExecute();
+    }
+
+    private void OnDestroy()
+    {
+        foreach (var unsub in _unsubscribeActions)
+            unsub.Invoke();
+        _unsubscribeActions.Clear();
     }
 }

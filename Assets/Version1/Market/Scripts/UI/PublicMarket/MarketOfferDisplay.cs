@@ -41,8 +41,12 @@ namespace Version1.Market.Scripts.UI.PublicMarket
             sellerDisplay.text = listing.ListerName;
             priceDisplay.text = listing.Price.ToString("N0", numberFormatter);
 
-            _buyButton.Init(BuyListing, CanBuyListing, h => PlayerData.PlayerData.Instance.OnBalanceChange += (EventHandler<int>)h);
-            _bidButton.Init(BidOnListing, CanBidOnListing, h => PlayerData.PlayerData.Instance.OnBalanceChange += (EventHandler<int>)h);
+            var playerData = PlayerData.PlayerData.Instance;
+            var updateOnBalanceChange = new Func<Action, Action>(refresh => EventExtensions.SubscribeIgnoringParameters<int>(h => playerData.OnBalanceChange += h, h => playerData.OnBalanceChange -= h, refresh));
+
+            _buyButton.Init(BuyListing, CanBuyListing, updateOnBalanceChange);
+            _bidButton.Init(BidOnListing, CanBidOnListing, updateOnBalanceChange);
+
             _selectButton.Init(SelectListing);
 
             GenerateCardDisplays(listing.Cards);

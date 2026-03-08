@@ -1,5 +1,4 @@
-﻿using Codice.Client.BaseCommands.BranchExplorer.Layout;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Version1.Market.Scripts.UI.Overlays;
@@ -13,7 +12,7 @@ namespace Version1.Market
         private readonly Dictionary<Guid, MarketOfferDisplay> marketOffers = new();
         [SerializeField] private MarketOfferDisplay marketOfferDisplayPrefab;
 
-        [SerializeField] private MarketOfferDetailsDisplay marketOfferDetailsDisplayPrefab;
+        [field: SerializeField] public MarketOfferDetailsDisplay DetailsDisplay { get; private set; }
 
         [Header("Overlays")]
         [SerializeField] private BuyListingOverlay buyListingOverlay;
@@ -24,7 +23,7 @@ namespace Version1.Market
             foreach (Transform child in transform)
                 Destroy(child.gameObject);
 
-            marketOfferDetailsDisplayPrefab.Clear();
+            DetailsDisplay.Clear();
             marketOffers.Clear();
         }
 
@@ -73,12 +72,12 @@ namespace Version1.Market
 
         public void OpenCreateBidOverlay(Listing listing)
         {
-            buyListingOverlay.Open(listing);
+            createBidOverlay.Open(listing);
         }
 
         public void SetDetailsDisplay(Listing listing)
         {
-            marketOfferDetailsDisplayPrefab.SetDisplay(listing);
+            DetailsDisplay.SetDisplay(listing);
         }
     }
 }
