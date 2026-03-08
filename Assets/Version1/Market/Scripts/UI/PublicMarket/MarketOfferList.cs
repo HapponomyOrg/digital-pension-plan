@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Codice.Client.BaseCommands.BranchExplorer.Layout;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Version1.Market.Scripts.UI.Overlays;
@@ -29,16 +30,17 @@ namespace Version1.Market
 
         public void CreateDisplay(Guid listingId)
         {
+            var listing = GameManager.Instance.ListingRepository.GetListing(listingId);
+
+            if (listing == null)
+            {
+                // TODO Error handling
+                return;
+            }
+
             var display = Instantiate(marketOfferDisplayPrefab, transform);
 
-            var displayActions = new Dictionary<EListingAction, Action>
-            {
-                { EListingAction.Buy, () => { BuyAction(listingId); } },
-                { EListingAction.Bid, () => { BidAction(listingId); } },
-                { EListingAction.Select, () => { SelectAction(listingId); } }
-            };
-
-            display.SetDisplay(listingId, displayActions);
+            display.SetDisplay(this, listing);
             marketOffers.Add(listingId, display);
         }
 
@@ -50,15 +52,9 @@ namespace Version1.Market
         public void UpdateDisplay(Guid listingId)
         {
             var display = marketOffers[listingId];
+            var listing = GameManager.Instance.ListingRepository.GetListing(listingId);
 
-            var displayActions = new Dictionary<EListingAction, Action>
-            {
-                { EListingAction.Buy, () => { BuyAction(listingId); } },
-                { EListingAction.Bid, () => { BidAction(listingId); } },
-                { EListingAction.Select, () => { SelectAction(listingId); } }
-            };
-
-            display.SetDisplay(listingId, displayActions);
+            display.SetDisplay(this, listing);
             Destroy(display.gameObject);
         }
 
@@ -70,27 +66,19 @@ namespace Version1.Market
             Destroy(display.gameObject);
         }
 
-        private void BuyAction(Guid listingId)
+        public void OpenBuyListingOverlay(Listing listing)
         {
-            var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
             buyListingOverlay.Open(listing);
         }
 
-        private void BidAction(Guid listingId)
+        public void OpenCreateBidOverlay(Listing listing)
         {
-            var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
-            createBidOverlay.Open(listing);
+            buyListingOverlay.Open(listing);
         }
 
-        private void SelectAction(Guid listingId)
+        public void SetDetailsDisplay(Listing listing)
         {
-            var displayActions = new Dictionary<EListingAction, Action>
-            {
-                { EListingAction.Buy, () => { BuyAction(listingId); } },
-                { EListingAction.Bid, () => { BidAction(listingId); } }
-            };
-
-            marketOfferDetailsDisplayPrefab.SetDisplay(listingId, displayActions);
+            marketOfferDetailsDisplayPrefab.SetDisplay(listing);
         }
     }
 }

@@ -4,28 +4,35 @@ using System.Globalization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Version1.Utilities;
 
+#nullable enable
 namespace Version1.Market.Scripts.UI.PublicMarket
 {
     public class MarketOfferDetailsDisplay : MonoBehaviour
     {
+        [SerializeField] private MarketOfferList marketOfferList;
+        private Listing? listing;
+
         [SerializeField] private TMP_Text sellerDisplay;
         [SerializeField] private TMP_Text priceDisplay;
 
-        [SerializeField] private Button buyButton;
-        [SerializeField] private Button bidButton;
+        [SerializeField] private ButtonCommand _buyButton;
+        [SerializeField] private ButtonCommand _bidButton;
 
         [SerializeField] private Transform cardList;
         [SerializeField] private CardAmountDisplay cardAmountPrefab;
+
+        private const int minListingPriceForBids = 2000;
 
         private readonly CultureInfo numberFormatter = new("en-US")
         {
             NumberFormat = { NumberGroupSeparator = "." }
         };
 
-        public void SetDisplay(Guid listingId, Dictionary<EListingAction, Action> listingActions)
+        public void SetDisplay(Listing listing)
         {
-            var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
+            this.listing = listing;
 
             if (listing == null)
                 return; // TODO Error handling
@@ -33,13 +40,8 @@ namespace Version1.Market.Scripts.UI.PublicMarket
             sellerDisplay.text = listing.ListerName;
             priceDisplay.text = listing.Price.ToString("N0", numberFormatter);
 
-            buyButton.onClick.RemoveAllListeners();
-            bidButton.onClick.RemoveAllListeners();
-
-            if (listingActions.ContainsKey(EListingAction.Buy))
-                buyButton.onClick.AddListener(listingActions[EListingAction.Buy].Invoke);
-            if (listingActions.ContainsKey(EListingAction.Bid))
-                bidButton.onClick.AddListener(listingActions[EListingAction.Bid].Invoke);
+            _buyButton.Init(BuyListing, CanBuyListing, SubscribeCommonEvents);
+            _bidButton.Init(BidOnListing, CanBidOnListing, SubscribeCommonEvents);
 
             GenerateCardDisplays(listing.Cards);
         }
@@ -68,12 +70,54 @@ namespace Version1.Market.Scripts.UI.PublicMarket
         public void Clear()
         {
             priceDisplay.text = string.Empty;
-
-            buyButton.onClick.RemoveAllListeners();
-            bidButton.onClick.RemoveAllListeners();
+            listing = null;
 
             foreach (Transform child in cardList)
                 Destroy(child.gameObject);
+        }
+
+        private void BuyListing()
+        {
+            marketOfferList.OpenBuyListingOverlay(listing);
+        }
+
+        private bool CanBuyListing()
+        {
+            if (listing == null)
+                return false;
+            if (PlayerData.PlayerData.Instance.Balance < listing.Price)
+                return false;
+
+            return true;
+        }
+
+        private void BidOnListing()
+        {
+            marketOfferList.OpenCreateBidOverlay(listing);
+        }
+
+        private bool CanBidOnListing()
+        {
+            if (listing == null)
+                return false;
+            if (PlayerData.PlayerData.Instance.Balance <= 0)
+                return false;
+            if (listing.Price < minListingPriceForBids)
+                return false;
+
+            return true;
+        }
+
+        private void SubscribeCommonEvents(Delegate handler)
+        {
+            // Player balance changes
+            PlayerData.PlayerData.Instance.OnBalanceChange += (EventHandler<int>)handler;
+
+            //// Market events
+            //var market = GameManager.Instance.MarketServices;
+            //market.BuyListingService.BuyListing += (EventHandler<ListingEventArgs>)handler;
+            //market.CancelListingService.CancelListing += (EventHandler<ListingEventArgs>)handler;
+            //market.AcceptBidService.AcceptBid += (EventHandler<BidEventArgs>)handler;
         }
     }
 }
