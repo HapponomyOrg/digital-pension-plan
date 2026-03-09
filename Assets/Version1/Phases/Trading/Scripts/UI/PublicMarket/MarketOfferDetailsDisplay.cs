@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Version1.Utilities;
+using Version1.Utilities.PlayerData;
 
 namespace Version1.Market.Scripts.UI.PublicMarket
 {
@@ -39,8 +40,7 @@ namespace Version1.Market.Scripts.UI.PublicMarket
             sellerDisplay.text = Listing.ListerName;
             priceDisplay.text = Listing.Price.ToString("N0", numberFormatter);
 
-            var playerData = PlayerData.PlayerData.Instance;
-            var updateOnBalanceChange = new Func<Action, Action>(refresh => EventExtensions.SubscribeIgnoringParameters<int>(h => playerData.OnBalanceChange += h, h => playerData.OnBalanceChange -= h, refresh));
+            var updateOnBalanceChange = new Func<Action, Action>(refresh => EventExtensions.SubscribeIgnoringParameters<int>(h => PlayerData.Instance.OnBalanceChange += h, h => PlayerData.Instance.OnBalanceChange -= h, refresh));
 
             var market = GameManager.Instance.MarketServices;
             var updateOnListingBought = new Func<Action, Action>(refresh => EventExtensions.SubscribeIgnoringParameters<ListingEventArgs>(h => market.BuyListingService.BuyListing += h, h => market.BuyListingService.BuyListing -= h, refresh));
@@ -93,7 +93,7 @@ namespace Version1.Market.Scripts.UI.PublicMarket
         {
             if (Listing == null)
                 return false;
-            if (PlayerData.PlayerData.Instance.Balance < Listing.Price)
+            if (PlayerData.Instance.Balance < Listing.Price)
                 return false;
 
             return true;
@@ -108,7 +108,7 @@ namespace Version1.Market.Scripts.UI.PublicMarket
         {
             if (Listing == null)
                 return false;
-            if (PlayerData.PlayerData.Instance.Balance <= 0)
+            if (PlayerData.Instance.Balance <= 0)
                 return false;
             if (Listing.Price < minListingPriceForBids)
                 return false;

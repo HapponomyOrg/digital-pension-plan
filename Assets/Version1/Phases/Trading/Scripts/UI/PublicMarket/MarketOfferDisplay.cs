@@ -4,6 +4,7 @@ using System.Globalization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Version1.Utilities.PlayerData;
 
 namespace Version1.Market.Scripts.UI.PublicMarket
 {
@@ -41,8 +42,7 @@ namespace Version1.Market.Scripts.UI.PublicMarket
             sellerDisplay.text = listing.ListerName;
             priceDisplay.text = listing.Price.ToString("N0", numberFormatter);
 
-            var playerData = PlayerData.PlayerData.Instance;
-            var updateOnBalanceChange = new Func<Action, Action>(refresh => EventExtensions.SubscribeIgnoringParameters<int>(h => playerData.OnBalanceChange += h, h => playerData.OnBalanceChange -= h, refresh));
+            var updateOnBalanceChange = new Func<Action, Action>(refresh => EventExtensions.SubscribeIgnoringParameters<int>(h => PlayerData.Instance.OnBalanceChange += h, h => PlayerData.Instance.OnBalanceChange -= h, refresh));
 
             _buyButton.Init(BuyListing, CanBuyListing, updateOnBalanceChange);
             _bidButton.Init(BidOnListing, CanBidOnListing, updateOnBalanceChange);
@@ -59,7 +59,7 @@ namespace Version1.Market.Scripts.UI.PublicMarket
 
         private bool CanBuyListing()
         {
-            if (PlayerData.PlayerData.Instance.Balance < listing.Price)
+            if (PlayerData.Instance.Balance < listing.Price)
                 return false;
 
             return true;
@@ -72,7 +72,7 @@ namespace Version1.Market.Scripts.UI.PublicMarket
 
         private bool CanBidOnListing()
         {
-            if (PlayerData.PlayerData.Instance.Balance <= 0)
+            if (PlayerData.Instance.Balance <= 0)
                 return false;
             if (listing.Price < minListingPriceForBids)
                 return false;
@@ -89,7 +89,6 @@ namespace Version1.Market.Scripts.UI.PublicMarket
         {
             foreach (Transform child in cardList)
                 Destroy(child.gameObject);
-
 
             var cardAmounts = new Dictionary<int, int>();
             foreach (var cardId in cards)
