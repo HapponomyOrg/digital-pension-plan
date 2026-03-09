@@ -9,12 +9,16 @@ namespace Version1.Market.Scripts.UI.PublicMarket
 {
     public class MarketOfferDisplay : MonoBehaviour
     {
+        private MarketOfferList marketOfferList;
+        private Listing listing;
+
         [SerializeField] private TMP_Text sellerDisplay;
         [SerializeField] private TMP_Text priceDisplay;
 
-        [SerializeField] private Button buyButton;
-        [SerializeField] private Button bidButton;
-        [SerializeField] private Button selectButton;
+        [SerializeField] private ButtonCommand _buyButton;
+        [SerializeField] private ButtonCommand _bidButton;
+        [SerializeField] private ButtonCommand _selectButton;
+
 
         [SerializeField] private Transform cardList;
         [SerializeField] private CardAmountDisplay cardIconPrefab;
@@ -26,9 +30,10 @@ namespace Version1.Market.Scripts.UI.PublicMarket
             NumberFormat = { NumberGroupSeparator = "." }
         };
 
-        public void SetDisplay(Guid listingId, Dictionary<EListingAction, Action> listingActions)
+        public void SetDisplay(MarketOfferList marketOfferList, Listing listing)
         {
-            var listing = Utilities.GameManager.Instance.ListingRepository.GetListing(listingId);
+            this.marketOfferList = marketOfferList;
+            this.listing = listing;
 
             if (listing == null)
                 return; // TODO Error handling
@@ -36,21 +41,48 @@ namespace Version1.Market.Scripts.UI.PublicMarket
             sellerDisplay.text = listing.ListerName;
             priceDisplay.text = listing.Price.ToString("N0", numberFormatter);
 
-            buyButton.onClick.RemoveAllListeners();
-            bidButton.onClick.RemoveAllListeners();
-            selectButton.onClick.RemoveAllListeners();
+            var playerData = PlayerData.PlayerData.Instance;
+            var updateOnBalanceChange = new Func<Action, Action>(refresh => EventExtensions.SubscribeIgnoringParameters<int>(h => playerData.OnBalanceChange += h, h => playerData.OnBalanceChange -= h, refresh));
 
-            bidButton.interactable = listing.Price >= minListingPriceForBids;
+            _buyButton.Init(BuyListing, CanBuyListing, updateOnBalanceChange);
+            _bidButton.Init(BidOnListing, CanBidOnListing, updateOnBalanceChange);
 
-
-            if (listingActions.ContainsKey(EListingAction.Buy))
-                buyButton.onClick.AddListener(listingActions[EListingAction.Buy].Invoke);
-            if (listingActions.ContainsKey(EListingAction.Bid))
-                bidButton.onClick.AddListener(listingActions[EListingAction.Bid].Invoke);
-            if (listingActions.ContainsKey(EListingAction.Select))
-                selectButton.onClick.AddListener(listingActions[EListingAction.Select].Invoke);
+            _selectButton.Init(SelectListing);
 
             GenerateCardDisplays(listing.Cards);
+        }
+
+        private void BuyListing()
+        {
+            marketOfferList.OpenBuyListingOverlay(listing);
+        }
+
+        private bool CanBuyListing()
+        {
+            if (PlayerData.PlayerData.Instance.Balance < listing.Price)
+                return false;
+
+            return true;
+        }
+
+        private void BidOnListing()
+        {
+            marketOfferList.OpenCreateBidOverlay(listing);
+        }
+
+        private bool CanBidOnListing()
+        {
+            if (PlayerData.PlayerData.Instance.Balance <= 0)
+                return false;
+            if (listing.Price < minListingPriceForBids)
+                return false;
+
+            return true;
+        }
+
+        private void SelectListing()
+        {
+            marketOfferList.SetDetailsDisplay(listing);
         }
 
         private void GenerateCardDisplays(int[] cards)

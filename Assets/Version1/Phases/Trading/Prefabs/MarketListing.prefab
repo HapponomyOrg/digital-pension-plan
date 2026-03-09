@@ -146,6 +146,7 @@ GameObject:
   - component: {fileID: 3900551156740082107}
   - component: {fileID: 8959596319313420876}
   - component: {fileID: 6763809916522896857}
+  - component: {fileID: 8228377254715294517}
   m_Layer: 5
   m_Name: Bid
   m_TagString: Untagged
@@ -250,11 +251,23 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 8959596319313420876}
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8228377254715294517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1053993914046233831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ee85ccf4993ebf42936e7a8ed7d0238, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1941461543457244754
 GameObject:
   m_ObjectHideFlags: 0
@@ -344,6 +357,7 @@ GameObject:
   - component: {fileID: 2059206371515240743}
   - component: {fileID: 2675182015113949596}
   - component: {fileID: 8852460987027918344}
+  - component: {fileID: 3716626466508398209}
   m_Layer: 5
   m_Name: Buy
   m_TagString: Untagged
@@ -448,11 +462,23 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 2675182015113949596}
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &3716626466508398209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2360205920484251315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ee85ccf4993ebf42936e7a8ed7d0238, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2416783742413185789
 GameObject:
   m_ObjectHideFlags: 0
@@ -1124,6 +1150,7 @@ GameObject:
   - component: {fileID: 4302670786083133375}
   - component: {fileID: 8179896063940809603}
   - component: {fileID: 1642182310382471839}
+  - component: {fileID: 7291056054169825820}
   m_Layer: 5
   m_Name: MarketListing
   m_TagString: Untagged
@@ -1252,11 +1279,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sellerDisplay: {fileID: 7557313517630891050}
   priceDisplay: {fileID: 4115620162186576855}
-  buyButton: {fileID: 8852460987027918344}
-  bidButton: {fileID: 6763809916522896857}
-  selectButton: {fileID: 8179896063940809603}
+  _buyButton: {fileID: 3716626466508398209}
+  _bidButton: {fileID: 8228377254715294517}
+  _selectButton: {fileID: 7291056054169825820}
   cardList: {fileID: 9019215804966928246}
   cardIconPrefab: {fileID: -8222426205000192782, guid: 7dfe49bc7665d2c4180e9331ff23187b, type: 3}
+--- !u!114 &7291056054169825820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8327157911286953465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ee85ccf4993ebf42936e7a8ed7d0238, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8601148411218913907
 GameObject:
   m_ObjectHideFlags: 0

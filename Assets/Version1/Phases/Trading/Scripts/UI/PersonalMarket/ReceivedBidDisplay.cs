@@ -42,7 +42,7 @@ namespace Version1.Market
             offerDisplay.text = bid.BidOffer.ToString("N0", numberFormatter);
 
             acceptButton.interactable = bid.BidStatus == EBidStatus.Active;
-            counterButton.interactable = bid.BidStatus == EBidStatus.Active;
+            counterButton.interactable = false;
             rejectButton.interactable = bid.BidStatus == EBidStatus.Active;
 
 

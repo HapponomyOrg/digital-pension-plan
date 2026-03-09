@@ -84,6 +84,9 @@ namespace Version1.Phases.Trading.Scripts.UI
                     marketOfferList.RemoveDisplay(e.Listing.ListingId);
                 if (outgoingBidsList.ContainsListing(e.Listing.ListingId))
                     outgoingBidsList.RemoveDisplay(e.Listing.ListingId);
+                var currentDetails = marketOfferList.DetailsDisplay.Listing;
+                if (currentDetails != null && currentDetails.ListingId == e.Listing.ListingId)
+                    marketOfferList.DetailsDisplay.Clear();
             }
         }
 
@@ -103,6 +106,10 @@ namespace Version1.Phases.Trading.Scripts.UI
                     marketOfferList.RemoveDisplay(e.Listing.ListingId);
                 if (outgoingBidsList.ContainsListing(e.Listing.ListingId))
                     outgoingBidsList.RemoveDisplay(e.Listing.ListingId);
+
+                var currentDetails = marketOfferList.DetailsDisplay.Listing;
+                if (currentDetails != null && currentDetails.ListingId == e.Listing.ListingId)
+                    marketOfferList.DetailsDisplay.Clear();
             }
         }
 
@@ -121,6 +128,10 @@ namespace Version1.Phases.Trading.Scripts.UI
             {
                 marketOfferList.RemoveDisplay(e.Listing.ListingId);
                 outgoingBidsList.CreateDisplay(e.Listing.ListingId, e.Bid.BidId);
+
+                var currentDetails = marketOfferList.DetailsDisplay.Listing;
+                if (currentDetails != null && currentDetails.ListingId == e.Listing.ListingId)
+                    marketOfferList.DetailsDisplay.Clear();
             }
 
 
@@ -172,6 +183,20 @@ namespace Version1.Phases.Trading.Scripts.UI
             else if (e.Bid.Bidder == PlayerData.Instance.PlayerId)
             {
                 outgoingBidsList.RemoveDisplay(e.Listing.ListingId);
+                var currentDetails = marketOfferList.DetailsDisplay.Listing;
+                if (currentDetails != null && currentDetails.ListingId == e.Listing.ListingId)
+                    marketOfferList.DetailsDisplay.Clear();
+            }
+            else
+            {
+                if (marketOfferList.ContainsListing(e.Listing.ListingId))
+                    marketOfferList.RemoveDisplay(e.Listing.ListingId);
+                if (outgoingBidsList.ContainsListing(e.Listing.ListingId))
+                    outgoingBidsList.RemoveDisplay(e.Listing.ListingId);
+
+                var currentDetails = marketOfferList.DetailsDisplay.Listing;
+                if (currentDetails != null && currentDetails.ListingId == e.Listing.ListingId)
+                    marketOfferList.DetailsDisplay.Clear();
             }
         }
 
