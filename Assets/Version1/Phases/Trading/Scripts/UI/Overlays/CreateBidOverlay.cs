@@ -14,16 +14,29 @@ namespace Version1.Phases.Trading.Scripts.UI.Overlays
     {
         [SerializeField] private TMP_Text originalAmountDisplay;
         [SerializeField] private TMP_Text bidAmountDisplay;
-        [SerializeField] private Button confirmButton;
+
+        [SerializeField] private ButtonCommand _confirmButton;
 
         [SerializeField] private Transform cardList;
         [SerializeField] private CardAmountDisplay cardAmountPrefab;
 
+        private event EventHandler<int> _bidOfferChanged;
+        private Listing? _listing;
 
         private const int minBidAmount = 1000;
         private int maxBidAmount;
 
-        private int bidAmount;
+        private int _bidAmount;
+        private int BidAmount
+        {
+            get => _bidAmount;
+            set
+            {
+                _bidAmount = value;
+                _bidOfferChanged?.Invoke(this, _bidAmount);
+            }
+        }
+
         [SerializeField] private int priceStep = 1000;
 
 
@@ -36,16 +49,21 @@ namespace Version1.Phases.Trading.Scripts.UI.Overlays
         public void Open(Listing listing)
         {
             gameObject.SetActive(true);
+            _listing = listing;
 
-            originalAmountDisplay.text = listing.Price.ToString("N0", numberFormatter);
+            originalAmountDisplay.text = _listing.Price.ToString("N0", numberFormatter);
             bidAmountDisplay.text = minBidAmount.ToString("N0", numberFormatter);
-            bidAmount = minBidAmount;
-            maxBidAmount = listing.Price - priceStep;
+            BidAmount = minBidAmount;
 
-            confirmButton.onClick.RemoveAllListeners();
-            confirmButton.onClick.AddListener(() => { Confirm(listing.ListingId); });
+            maxBidAmount = _listing.Price - priceStep;
+            if (maxBidAmount > PlayerData.Instance.Balance)
+                maxBidAmount = PlayerData.Instance.Balance;
 
-            GenerateCards(listing.Cards);
+
+            var updateOnOfferChange = new Func<Action, Action>(refresh => EventExtensions.SubscribeIgnoringParameters<int>(h => _bidOfferChanged += h, h => _bidOfferChanged -= h, refresh));
+            _confirmButton.Init(CreateBid, CanCreateBid, updateOnOfferChange);
+
+            GenerateCards(_listing.Cards);
         }
 
         private void GenerateCards(int[] cards)
@@ -73,37 +91,47 @@ namespace Version1.Phases.Trading.Scripts.UI.Overlays
             gameObject.SetActive(false);
         }
 
-        private void Confirm(Guid listingId)
+        public void IncreasePrice()
+        {
+            BidAmount += priceStep;
+
+            if (BidAmount > maxBidAmount)
+                BidAmount = maxBidAmount;
+
+            bidAmountDisplay.text = BidAmount.ToString("N0", numberFormatter);
+        }
+
+        public void DecreasePrice()
+        {
+            BidAmount -= priceStep;
+
+            if (BidAmount < minBidAmount)
+                BidAmount = minBidAmount;
+
+            bidAmountDisplay.text = BidAmount.ToString("N0", numberFormatter);
+        }
+
+        private void CreateBid()
         {
             var bid = new Bid(
                 Guid.NewGuid(),
                 PlayerData.Instance.PlayerId,
                 PlayerData.Instance.PlayerName,
-                bidAmount,
+                BidAmount,
                 DateTime.Now);
 
-            Utilities.GameManager.Instance.MarketServices.CreateBidService.CreateBidLocally(listingId, bid);
+            Utilities.GameManager.Instance.MarketServices.CreateBidService.CreateBidLocally(_listing.ListingId, bid);
             Close();
         }
 
-        public void IncreasePrice()
+        private bool CanCreateBid()
         {
-            bidAmount += priceStep;
+            if (_listing == null)
+                return false;
+            if (PlayerData.Instance.Balance < BidAmount)
+                return false;
 
-            if (bidAmount > maxBidAmount)
-                bidAmount = maxBidAmount;
-
-            bidAmountDisplay.text = bidAmount.ToString("N0", numberFormatter);
-        }
-
-        public void DecreasePrice()
-        {
-            bidAmount -= priceStep;
-
-            if (bidAmount < minBidAmount)
-                bidAmount = minBidAmount;
-
-            bidAmountDisplay.text = bidAmount.ToString("N0", numberFormatter);
+            return true;
         }
     }
 }
