@@ -11,14 +11,16 @@ namespace Version1.Market.Scripts.UI.Overlays
     public class CreateListingOverlay : MonoBehaviour
     {
         [SerializeField] private TMP_Text priceDisplay;
-        [SerializeField] private Button confirmButton;
+        [SerializeField] private ButtonCommand _createListing;
 
         [SerializeField] private Transform selectedCardList;
         [SerializeField] private Transform remainingCardList;
         [SerializeField] private CardAmountDisplay cardDisplay;
 
-        private List<int> selectedCards = new List<int>();
-        private List<int> remainingCards = new List<int>();
+
+        private event EventHandler<List<int>> _selectedCardsChanged;
+        private List<int> selectedCards = new();
+        private List<int> remainingCards = new();
 
         private const int minPrice = 1000;
         private const int maxPrice = 25000;
@@ -40,10 +42,8 @@ namespace Version1.Market.Scripts.UI.Overlays
             price = defaultPrice;
             priceDisplay.text = price.ToString("N0", numberFormatter);
 
-            confirmButton.onClick.RemoveAllListeners();
-            confirmButton.onClick.AddListener(() => { Confirm(); });
-
-            confirmButton.interactable = selectedCards.Count > 0;
+            var updateOnSelectedChange = new Func<Action, Action>(refresh => EventExtensions.SubscribeIgnoringParameters<List<int>>(h => _selectedCardsChanged += h, h => _selectedCardsChanged -= h, refresh));
+            _createListing.Init(CreateListing, CanCreateListing, updateOnSelectedChange);
 
             selectedCards.Clear();
             remainingCards = PlayerData.Instance.Cards;
@@ -56,7 +56,7 @@ namespace Version1.Market.Scripts.UI.Overlays
             gameObject.SetActive(false);
         }
 
-        private void Confirm()
+        private void CreateListing()
         {
             var listing = new Listing(
                 Guid.NewGuid(),
@@ -67,7 +67,15 @@ namespace Version1.Market.Scripts.UI.Overlays
                 selectedCards.ToArray());
 
             Utilities.GameManager.Instance.MarketServices.CreateListingService.CreateListingLocally(listing);
+            selectedCards.Clear();
+            remainingCards.Clear();
+
             Close();
+        }
+
+        private bool CanCreateListing()
+        {
+            return selectedCards.Count > 0;
         }
 
         private void SelectCard(int id)
@@ -75,8 +83,7 @@ namespace Version1.Market.Scripts.UI.Overlays
             selectedCards.Add(id);
             remainingCards.Remove(id);
 
-            confirmButton.interactable = selectedCards.Count > 0;
-
+            _selectedCardsChanged?.Invoke(this, selectedCards);
             GenerateDisplays();
         }
 
@@ -85,8 +92,7 @@ namespace Version1.Market.Scripts.UI.Overlays
             remainingCards.Add(id);
             selectedCards.Remove(id);
 
-            confirmButton.interactable = selectedCards.Count > 0;
-
+            _selectedCardsChanged?.Invoke(this, selectedCards);
             GenerateDisplays();
         }
 
