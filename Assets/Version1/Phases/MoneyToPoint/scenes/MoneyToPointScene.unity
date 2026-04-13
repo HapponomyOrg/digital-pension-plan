@@ -490,7 +490,7 @@ PrefabInstance:
     - target: {fileID: 4305379785459045616, guid: 187bfd307d894c74c9a88a3cae524081, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1725865122}
+      objectReference: {fileID: 269821929}
     - target: {fileID: 4305379785459045616, guid: 187bfd307d894c74c9a88a3cae524081, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
@@ -501,7 +501,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4305379785459045616, guid: 187bfd307d894c74c9a88a3cae524081, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: Version1.Phases.MoneyToPoint.scripts.MoneyToPoints, Assembly-CSharp
+      value: Version1.Phases.MoneyToPoint.scripts.MoneyToPointPhaseController, Version1
       objectReference: {fileID: 0}
     - target: {fileID: 4305379785459045616, guid: 187bfd307d894c74c9a88a3cae524081, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -597,17 +597,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5538786277525678349, guid: 187bfd307d894c74c9a88a3cae524081, type: 3}
   m_PrefabInstance: {fileID: 1725865120}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1725865122 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7066990527171957439, guid: 187bfd307d894c74c9a88a3cae524081, type: 3}
-  m_PrefabInstance: {fileID: 1725865120}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 41fe048336058164483f141c1b956b20, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1725865123 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3657265104629371840, guid: 187bfd307d894c74c9a88a3cae524081, type: 3}

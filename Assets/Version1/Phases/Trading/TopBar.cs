@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using Version1.Utilities.PlayerData;
 
 namespace Version1.Phases.Trading
@@ -14,10 +15,13 @@ namespace Version1.Phases.Trading
         [SerializeField] private TMP_Text remainder;
 
         [SerializeField] private GameObject donateOverlay;
+        [SerializeField] private Button donateButton;
 
-        public void Init()
+        private CultureInfo customCulture;
+
+        private void Awake()
         {
-            var customCulture = new CultureInfo("en-US")
+            customCulture = new CultureInfo("en-US")
             {
                 NumberFormat =
                 {
@@ -25,6 +29,37 @@ namespace Version1.Phases.Trading
                 }
             };
 
+            PlayerData.Instance.OnPointsChange += OnPointsChanged;
+            PlayerData.Instance.OnBalanceChange += OnBalanceChanged;
+        }
+
+        private void OnDestroy()
+        {
+            if (PlayerData.Instance != null)
+            {
+                PlayerData.Instance.OnPointsChange -= OnPointsChanged;
+                PlayerData.Instance.OnBalanceChange -= OnBalanceChanged;
+            }
+        }
+
+        public void Init()
+        {
+            UpdateUI();
+        }
+
+        private void OnPointsChanged(object sender, int newPoints)
+        {
+            points.text = newPoints.ToString();
+        }
+
+        private void OnBalanceChanged(object sender, int newBalance)
+        {
+            balance.text = newBalance.ToString("N0", customCulture);
+            UpdateDonateButtonState();
+        }
+
+        private void UpdateUI()
+        {
             points.text = PlayerData.Instance.Points.ToString();
             balance.text = PlayerData.Instance.Balance.ToString("N0", customCulture);
 
@@ -38,18 +73,25 @@ namespace Version1.Phases.Trading
                 remainder.text = PlayerData.Instance.InterestRemainder.ToString("N0", customCulture);
             }
 
-            PlayerData.Instance.OnPointsChange += (sender, i) =>
+            UpdateDonateButtonState();
+        }
+
+        private void UpdateDonateButtonState()
+        {
+            if (donateButton != null)
             {
-                points.text = PlayerData.Instance.Points.ToString();
-            };
-            PlayerData.Instance.OnBalanceChange += (sender, i) =>
-            {
-                balance.text = PlayerData.Instance.Balance.ToString("N0", customCulture);
-            };
+                donateButton.interactable = PlayerData.Instance.Balance >= 1000;
+            }
         }
 
         public void OpenDonateOverlay()
         {
+            if (PlayerData.Instance.Balance < 1000)
+            {
+                Debug.LogWarning("Cannot donate - balance is less than 1000");
+                return;
+            }
+
             donateOverlay.SetActive(true);
         }
     }

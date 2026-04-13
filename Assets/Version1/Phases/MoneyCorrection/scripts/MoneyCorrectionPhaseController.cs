@@ -132,7 +132,6 @@ namespace Version1.Phases.MoneyCorrection.scripts
             StartCoroutine(DisplayTextLetterByLetter(message));
         }
 
-
         private void HandleSustainableSystem()
         {
             var balance = PlayerData.Instance.Balance;
@@ -183,7 +182,8 @@ namespace Version1.Phases.MoneyCorrection.scripts
         {
             continueButton.interactable = false;
             NetworkManager.Instance.Publish(SessionData.Instance.LobbyCode.ToString(),
-                new ContinueMessage(DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode, PlayerData.Instance.PlayerId, GameManager.Instance.PhaseManager.CurrentRound()));
+                new ContinueMessage(DateTime.Now.ToString("o"), SessionData.Instance.LobbyCode,
+                    PlayerData.Instance.PlayerId, GameManager.Instance.PhaseManager.CurrentRound()));
             SceneManager.LoadScene(GameManager.LOADING);
         }
 

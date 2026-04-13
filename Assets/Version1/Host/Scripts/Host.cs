@@ -269,10 +269,18 @@ namespace Version1.Host.Scripts
 
         private void OnCardHandIn(object sender, CardHandInMessage msg)
         {
-            var cards = cardManager.TakeCards(4);
-            var intArray = new int[4];
+            cardManager.ReturnCards(new int[] { msg.CardID, msg.CardID, msg.CardID, msg.CardID });
 
-            for (int i = 0; i < cards.Count && i < 4; i++)
+            var cards = cardManager.TakeCards(4);
+
+            if (cards == null || cards.Count < 4)
+            {
+                Debug.LogError($"OnCardHandIn: not enough cards in deck for player {msg.PlayerID}. Had {cards?.Count ?? 0}.");
+                return;
+            }
+
+            int[] intArray = new int[4];
+            for (int i = 0; i < 4; i++)
             {
                 intArray[i] = cards[i].ID;
             }
@@ -291,20 +299,6 @@ namespace Version1.Host.Scripts
                     DateTime.Now.ToString("o"), msg.LobbyID, -1, msg.PlayerName,
                     "SessionAlreadyStarted",
                     "Sorry but the session you are trying to join has already started.",
-                    msg.RequestID));
-                return;
-            }
-
-            // Check for duplicate name — but only among currently active (non-timed-out) players
-            bool nameIsTaken = players.Any(record =>
-                string.Equals(record.Value.Name, msg.PlayerName, StringComparison.CurrentCultureIgnoreCase));
-
-            if (nameIsTaken)
-            {
-                Nats.NatsHost.C.Publish(msg.LobbyID.ToString(), new RejectedMessage(
-                    DateTime.Now.ToString("o"), msg.LobbyID, -1, msg.PlayerName,
-                    "PlayerNameAlreadyTaken",
-                    $"{msg.PlayerName} is already taken in the session you are trying to join. \n Please fill in another name and try again.",
                     msg.RequestID));
                 return;
             }

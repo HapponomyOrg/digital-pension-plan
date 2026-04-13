@@ -13,17 +13,14 @@ namespace Version1.Phases.Trading.Prefabs.Donate.money.scripts
 {
     public class DonateMoney : MonoBehaviour
     {
-        [Header("Animation")]
-        [SerializeField] private RectTransform panelRect;
+        [Header("Animation")] [SerializeField] private RectTransform panelRect;
         [SerializeField] private CanvasGroup canvasGroup;
 
-        [Header("Controls")]
-        [SerializeField] private Button confirmButton;
+        [Header("Controls")] [SerializeField] private Button confirmButton;
         [SerializeField] private Button cancelButton;
         [SerializeField] private TMP_Text donationAmountDisplay;
 
-        [Header("Settings")]
-        [SerializeField] private int priceStep = 1000;
+        [Header("Settings")] [SerializeField] private int priceStep = 1000;
 
         private int currentDonation;
         private int minDonation;
@@ -33,6 +30,9 @@ namespace Version1.Phases.Trading.Prefabs.Donate.money.scripts
 
         private int MaxDonation => PlayerData.Instance.Balance;
         private bool CanDonate => MaxDonation >= minDonation;
+
+        private Coroutine countCoroutine;
+        private Coroutine punchCoroutine;
 
         public void OnEnable()
         {
@@ -62,31 +62,40 @@ namespace Version1.Phases.Trading.Prefabs.Donate.money.scripts
         public void IncreaseDonation()
         {
             if (busy) return;
-
-            // Guard: nothing to donate at all
             if (!CanDonate) return;
 
             int prev = currentDonation;
             currentDonation = Mathf.Min(currentDonation + priceStep, MaxDonation);
 
-            if (currentDonation != prev) RefreshDisplay(animated: true, from: prev);
+            if (currentDonation != prev)
+            {
+                RefreshDisplay(animated: true, from: prev);
+
+                // Stop the previous punch before starting a new one
+                if (punchCoroutine != null) StopCoroutine(punchCoroutine);
+                punchCoroutine = StartCoroutine(OverlayAnimator.Punch(confirmButton.transform));
+            }
+
             UpdateConfirmButton();
-            StartCoroutine(OverlayAnimator.Punch(confirmButton.transform));
         }
 
         public void DecreaseDonation()
         {
             if (busy) return;
-
-            // Guard: nothing to donate at all
             if (!CanDonate) return;
 
             int prev = currentDonation;
             currentDonation = Mathf.Max(currentDonation - priceStep, minDonation);
 
-            if (currentDonation != prev) RefreshDisplay(animated: true, from: prev);
+            if (currentDonation != prev)
+            {
+                RefreshDisplay(animated: true, from: prev);
+
+                if (punchCoroutine != null) StopCoroutine(punchCoroutine);
+                punchCoroutine = StartCoroutine(OverlayAnimator.Punch(confirmButton.transform));
+            }
+
             UpdateConfirmButton();
-            StartCoroutine(OverlayAnimator.Punch(confirmButton.transform));
         }
 
         private void UpdateConfirmButton()
@@ -118,14 +127,13 @@ namespace Version1.Phases.Trading.Prefabs.Donate.money.scripts
             PlayerData.Instance.Balance -= currentDonation;
             SendDonateMessage();
 
-            yield return StartCoroutine(OverlayAnimator.Close(panelRect, canvasGroup, () => gameObject.SetActive(false)));
+            yield return StartCoroutine(
+                OverlayAnimator.Close(panelRect, canvasGroup, () => gameObject.SetActive(false)));
 
             confirmButton.interactable = true;
             cancelButton.interactable = true;
             busy = false;
         }
-
-        private Coroutine countCoroutine;
 
         private void RefreshDisplay(bool animated, int from = 0)
         {

@@ -296,7 +296,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Waiting for the host to start the game
+  m_text: Waiting for the host to continue the game
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a86fd7d74f5ceed4c8616472fd30f046, type: 2}
   m_sharedMaterial: {fileID: 7351462720148478914, guid: a86fd7d74f5ceed4c8616472fd30f046, type: 2}

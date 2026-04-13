@@ -210,11 +210,27 @@ namespace Version1.Host.Scripts
 
             return takenCards;
         }
+
+        public void ReturnCards(int[] cardIds)
+        {
+            foreach (int id in cardIds)
+            {
+                CardData card = _cardLibrary.cards.FirstOrDefault(c => c.ID == id);
+                if (card != null)
+                {
+                    int insertAt = Random.Range(0, _cardDeck.Count + 1);
+                    _cardDeck.Insert(insertAt, card);
+                }
+                else
+                {
+                    Debug.LogWarning($"ReturnCards: unknown card ID {id}, skipping.");
+                }
+            }
+        }
     }
 
     internal class CardGame
     {
-
         public Cards.Scripts.CardLibrary cardLibrary;
 
         private static readonly Dictionary<CardRarity, double> CardsPerPlayer = new()
@@ -295,21 +311,19 @@ namespace Version1.Host.Scripts
         {
             int points = 0;
 
-            foreach (var card in cardLibrary.cards)
-            {
-                /*if (card.Value == )
-                {
+            // Filter eerst op de juiste rarity
+            var rarityCards = cardLibrary.cards
+                .Where(c => c.Rarity == rarity)
+                .ToArray();
 
-                }*/
-            }
+            if (rarityCards.Length == 0) return 0;
 
-            /*List<string> cards = CardCategories[rarity];*/
             int curIndex = curIndices[rarity];
 
             for (int i = 0; i < numSets; i++)
             {
-                if (curIndex >= cardLibrary.cards.Length) curIndex = 0;
-                deck[cardLibrary.cards[curIndex]] += 4;
+                if (curIndex >= rarityCards.Length) curIndex = 0;
+                deck[rarityCards[curIndex]] += 4;
                 points += CardPoints[rarity];
                 curIndex++;
             }

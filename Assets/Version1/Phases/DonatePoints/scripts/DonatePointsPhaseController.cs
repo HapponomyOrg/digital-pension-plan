@@ -147,7 +147,30 @@ namespace Version1.Phases.DonatePoints.scripts
             foreach (var key in keysToRemove)
             {
                 _players.Remove(key);
+
+                if (_otherPlayer.PlayerId == key)
+                {
+                    ResetSelection();
+                }
             }
+        }
+
+        private void ResetSelection()
+        {
+            OwnPoints += _pointsToDonate;
+            _pointsToDonate = 0;
+
+            _otherPlayer = new PlayerData();
+            OtherName = "";
+            OtherPoints = 0;
+
+            increaseButton.interactable = false;
+            decreaseButton.interactable = false;
+            donateButton.interactable = false;
+
+            descriptionText.text = OwnPoints >= 1
+                ? "Please click on another player if you want to donate your point?"
+                : "Please click on another player if you want to donate one of your points?";
         }
 
         private System.Collections.IEnumerator WaitForWebSocketAndSubscribe()
