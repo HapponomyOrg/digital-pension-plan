@@ -1,6 +1,6 @@
-using Assets.Version1.Phases;
 using TMPro;
 using UnityEngine;
+using Version1.Utilities;
 
 namespace Version1.Phases.Loading.scripts
 {
@@ -15,7 +15,7 @@ namespace Version1.Phases.Loading.scripts
         private void Start()
         {
             // Start the phase
-            Utilities.GameManager.Instance.PhaseManager.CurrentPhaseController = this;
+            GameManager.Instance.PhaseManager.CurrentPhaseController = this;
         }
 
         public void StartPhase()
@@ -43,7 +43,7 @@ namespace Version1.Phases.Loading.scripts
 
         public void OnDestroy()
         {
-            Utilities.GameManager.Instance.PhaseManager.CurrentPhaseController = null;
+            GameManager.Instance.PhaseManager.CurrentPhaseController = null;
         }
     }
 }

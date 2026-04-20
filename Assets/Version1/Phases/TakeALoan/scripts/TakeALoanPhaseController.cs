@@ -1,5 +1,4 @@
 ﻿using System;
-using Assets.Version1.Phases;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;

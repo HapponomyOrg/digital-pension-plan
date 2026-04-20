@@ -31,6 +31,12 @@ namespace Version1.Phases.Login.Scripts
         private int gender = -1;
         private int gameCode = -1;
 
+        private void Start()
+        {
+            // TODO B.Nierop fix this.
+            GameManager.Instance.Setup();
+        }
+
         private void OnEnable()
         {
             playerNameInput.onValueChanged.AddListener(OnPlayerNameChanged);

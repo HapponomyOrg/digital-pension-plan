@@ -1,9 +1,7 @@
 using System;
-using UnityEngine;
 using UnityEngine.SceneManagement;
-using Version1.Phases.tmp;
 
-namespace Version1.Phases.BalanceModification
+namespace Version1.Phases.tmp.BalanceModification
 {
     public class BalanceModificationPhase : Phase
     {

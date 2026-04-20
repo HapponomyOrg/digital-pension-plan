@@ -1,6 +1,4 @@
-﻿using Assets.Version1.Phases;
-
-namespace Version1.Phases
+﻿namespace Version1.Phases
 {
     public static class GameModes
     {

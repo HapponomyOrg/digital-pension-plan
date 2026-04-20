@@ -1,4 +1,3 @@
-using Assets.Version1.Phases;
 using UnityEngine;
 using Version1.Market;
 using Version1.Phases;
@@ -24,10 +23,14 @@ namespace Version1.Utilities
         private GameManager()
         {
             CardLibrary = Resources.Load<Cards.Scripts.CardLibrary>("CardList");
-            CardLibrary.FillCardList();
 
             ListingRepository = new ListingRepository();
             MarketServices = new MarketServices();
+        }
+
+        public void Setup()
+        {
+            CardLibrary.FillCardList();
         }
     }
 }

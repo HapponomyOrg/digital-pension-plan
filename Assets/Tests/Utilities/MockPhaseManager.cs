@@ -1,5 +1,4 @@
-﻿using Assets.Version1.Phases;
-using Version1.Nats.Messages.Host;
+﻿using Version1.Nats.Messages.Host;
 using Version1.Phases;
 
 namespace Tests.Utilities

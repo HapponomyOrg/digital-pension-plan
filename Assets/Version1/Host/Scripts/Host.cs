@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Assets.Version1.Phases;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
