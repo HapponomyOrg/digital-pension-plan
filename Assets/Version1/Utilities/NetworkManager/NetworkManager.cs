@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -25,7 +25,10 @@ namespace Version1.Utilities.NetworkManager
 
         public NetworkManager()
         {
-
+            if (Instance == null)
+            {
+                Instance = this;
+            }
         }
 
         public WebsocketClient WebSocketClient;
@@ -34,6 +37,12 @@ namespace Version1.Utilities.NetworkManager
         {
             try
             {
+                if (WebSocketClient == null)
+                {
+                    Debug.LogError("WebSocketClient is null - NetworkManager may not be initialized");
+                    OnError?.Invoke(this, "WebSocketClient not initialized");
+                    return;
+                }
                 await WebSocketClient.Publish(sessionID, baseMessage);
             }
             catch (Exception ex)
@@ -45,6 +54,10 @@ namespace Version1.Utilities.NetworkManager
 
         public WebsocketClient GetWsContext()
         {
+            if (WebSocketClient == null)
+            {
+                Debug.LogError("WebSocketClient is null");
+            }
             return WebSocketClient;
         }
 
@@ -55,6 +68,12 @@ namespace Version1.Utilities.NetworkManager
 
             try
             {
+                if (WebSocketClient == null)
+                {
+                    Debug.LogError("WebSocketClient is null - NetworkManager may not be initialized");
+                    OnError?.Invoke(this, "WebSocketClient not initialized");
+                    return;
+                }
                 await WebSocketClient.Subscribe(sessionID);
             }
             catch (Exception ex)
@@ -77,6 +96,8 @@ namespace Version1.Utilities.NetworkManager
 
             Debug.Log("NetworkManager Awake started");
 
+            try
+            {
 #if UNITY_WEBGL && !UNITY_EDITOR
     // Dynamically get the host from the current URL
     string url = Application.absoluteURL;
@@ -88,50 +109,53 @@ namespace Version1.Utilities.NetworkManager
     Debug.Log($"Connecting to WebSocket at: {wsUrl}");
     WebSocketClient = new WebsocketClient(wsUrl);
 #else
-            // For testing in Unity Editor
-            WebSocketClient = new WebsocketClient("ws://localhost:8080/ws");
+                // For testing in Unity Editor
+                WebSocketClient = new WebsocketClient("ws://localhost:8080/ws");
 #endif
 
+                if (WebSocketClient == null)
+                {
+                    Debug.LogError("Failed to create WebSocketClient");
+                    return;
+                }
 
-            Debug.Log("WebSocketClient created");
+                Debug.Log("WebSocketClient created");
 
-            // IMPORTANT: Subscribe to ALL events BEFORE connecting
-            // Subscribe to NatsClient events
-            WebSocketClient.OnRejected += NatsClientOnOnRejected;
-            //WebSocketClient.OnConfirmBuy += NatsClientOnOnConfirmBuy;
-            WebSocketClient.OnConfirmJoin += NatsClientOnOnConfirmJoin;
-            WebSocketClient.OnDonatePoints += NatsClientOnOnDonatePoints;
-            WebSocketClient.OnEndGame += NatsClientOnOnEndGame;
+                // IMPORTANT: Subscribe to ALL events BEFORE connecting
+                // Subscribe to NatsClient events
+                WebSocketClient.OnRejected += NatsClientOnOnRejected;
+                //WebSocketClient.OnConfirmBuy += NatsClientOnOnConfirmBuy;
+                WebSocketClient.OnConfirmJoin += NatsClientOnOnConfirmJoin;
+                WebSocketClient.OnDonatePoints += NatsClientOnOnDonatePoints;
+                WebSocketClient.OnEndGame += NatsClientOnOnEndGame;
 
-            // Listings
-            WebSocketClient.OnCreateListing += CreateListing;
-            WebSocketClient.OnCancelListing += CancelListing;
-            WebSocketClient.OnBuyListing += BuyListing;
+                // Listings
+                WebSocketClient.OnCreateListing += CreateListing;
+                WebSocketClient.OnCancelListing += CancelListing;
+                WebSocketClient.OnBuyListing += BuyListing;
 
-            // Bids
-            WebSocketClient.OnCreateBid += CreateBid;
-            WebSocketClient.OnCancelBid += CancelBid;
-            WebSocketClient.OnAcceptBid += AcceptBid;
-            WebSocketClient.OnAcceptCounterBid += AcceptCounterBid;
-            WebSocketClient.OnCounterBid += CounterBid;
-            WebSocketClient.OnRejectBid += RejectBid;
-            WebSocketClient.OnRejectCounterBid += RejectCounterBid;
+                // Bids
+                WebSocketClient.OnCreateBid += CreateBid;
+                WebSocketClient.OnCancelBid += CancelBid;
+                WebSocketClient.OnAcceptBid += AcceptBid;
+                WebSocketClient.OnAcceptCounterBid += AcceptCounterBid;
+                WebSocketClient.OnCounterBid += CounterBid;
+                WebSocketClient.OnRejectBid += RejectBid;
+                WebSocketClient.OnRejectCounterBid += RejectCounterBid;
 
-            WebSocketClient.OnPayInterestToBank += WebSocketClientOnOnPayInterestToBank;
+                WebSocketClient.OnPayInterestToBank += WebSocketClientOnOnPayInterestToBank;
 
-            WebSocketClient.OnStartGame += NatsClientOnOnStartGame;
-            WebSocketClient.OnStartRound += NatsClientOnOnStartRound;
-            WebSocketClient.OnStopRound += NatsClientOnOnStopRound;
-            //WebSocketClient.OnConfirmCancelListing += NatsClientOnOnConfirmCancelListing;
-            WebSocketClient.OnConfirmHandIn += NatsClientOnOnConfirmHandIn;
-            WebSocketClient.OnEndOfRounds += NatsClientOnOnEndOfRounds;
-            WebSocketClient.OnOpen += NatsClientOnOpen;
-            WebSocketClient.OnAbortSession += NatsClientOnAbortSession;
+                WebSocketClient.OnStartGame += NatsClientOnOnStartGame;
+                WebSocketClient.OnStartRound += NatsClientOnOnStartRound;
+                WebSocketClient.OnStopRound += NatsClientOnOnStopRound;
+                //WebSocketClient.OnConfirmCancelListing += NatsClientOnOnConfirmCancelListing;
+                WebSocketClient.OnConfirmHandIn += NatsClientOnOnConfirmHandIn;
+                WebSocketClient.OnEndOfRounds += NatsClientOnOnEndOfRounds;
+                WebSocketClient.OnOpen += NatsClientOnOpen;
+                WebSocketClient.OnAbortSession += NatsClientOnAbortSession;
 
-            Debug.Log("All events subscribed");
+                Debug.Log("All events subscribed");
 
-            try
-            {
                 Debug.Log("Attempting to connect to WebSocket...");
                 await WebSocketClient.Connect();
             }

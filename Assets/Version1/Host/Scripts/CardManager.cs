@@ -24,6 +24,13 @@ namespace Version1.Host.Scripts
             StartGame(new Dictionary<int, PlayerListPrefab>());
         }
 
+        // Parameterless constructor for serialization
+        public CardManager()
+        {
+            _cardLibrary = null;
+        }
+
+        // Constructor with parameters for runtime instantiation
         public CardManager(Cards.Scripts.CardLibrary cardLibrary)
         {
             _cardLibrary = cardLibrary;

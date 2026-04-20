@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Version1.Nats.Messages.Host;
-using Version1.Websocket;
 using Random = UnityEngine.Random;
 
 namespace Version1.Host.Scripts
@@ -20,14 +18,11 @@ namespace Version1.Host.Scripts
         [SerializeField] private Sprite checkMarkSprite;
         [SerializeField] private Sprite penSprite;
         [SerializeField] private TMP_InputField hostInputField;
-        [SerializeField] private Button editButton;
         [SerializeField] private Button editGameCodeButton;
-        [SerializeField] private TMP_InputField seedInputField;
         [SerializeField] private TMP_Dropdown gameModeDropDown;
         [SerializeField] private Button regenerateButton;
         [SerializeField] private TMP_InputField gameCodeInputField;
         [SerializeField] private Button createSession;
-        [SerializeField] private GameObject seedInputError;
         [SerializeField] private GameObject gameCodeError;
 
         private int oldCode;
@@ -40,91 +35,98 @@ namespace Version1.Host.Scripts
         private void OnEnable()
         {
             ResetUI();
-            RemoveAllListeners();
             AddAllListeners();
         }
 
         private void OnDisable()
         {
-            RemoveAllListeners();
+            // Skip RemoveAllListeners for now - causes IL2CPP crash
+            // Listeners will be cleaned up on next OnEnable
         }
 
         private void ResetUI()
         {
-            // Handle game code editing state
-            if (oldCode != SessionData.Instance.LobbyCode)
+            try
             {
-                gameCodeInputField.interactable = true;
-                regenerateButton.gameObject.SetActive(true);
-                editGameCodeButton.gameObject.SetActive(false);
+                // Handle game code editing state
+                if (oldCode != SessionData.Instance.LobbyCode)
+                {
+                    if (gameCodeInputField != null) gameCodeInputField.interactable = true;
+                    if (regenerateButton != null) regenerateButton.gameObject.SetActive(true);
+                    if (editGameCodeButton != null) editGameCodeButton.gameObject.SetActive(false);
+                }
+
+                SessionData.Instance.Reset(false);
+
+                // Set input field values without triggering listeners
+                if (hostInputField != null) hostInputField.SetTextWithoutNotify(SessionData.Instance.HostName);
+
+                var code = SessionData.Instance.LobbyCode.ToString();
+                if (code.Length == 9)
+                {
+                    if (gameCodeInputField != null)
+                        gameCodeInputField.SetTextWithoutNotify(
+                            $"{code.Substring(0, 3)} {code.Substring(3, 3)} {code.Substring(6, 3)}");
+                }
+
+                // Handle locked game code state
+                if (SessionData.Instance.LobbyCode == oldCode)
+                {
+                    if (gameCodeInputField != null) gameCodeInputField.interactable = false;
+                    if (regenerateButton != null) regenerateButton.gameObject.SetActive(false);
+                    if (editGameCodeButton != null) editGameCodeButton.gameObject.SetActive(true);
+                }
             }
-
-            SessionData.Instance.Reset(false);
-
-            // Set input field values without triggering listeners
-            hostInputField.SetTextWithoutNotify(SessionData.Instance.HostName);
-            seedInputField.SetTextWithoutNotify(SessionData.Instance.Seed.ToString());
-
-            var code = SessionData.Instance.LobbyCode.ToString();
-            if (code.Length == 9)
+            catch (System.Exception ex)
             {
-                gameCodeInputField.SetTextWithoutNotify(
-                    $"{code.Substring(0, 3)} {code.Substring(3, 3)} {code.Substring(6, 3)}");
-            }
-
-            // Handle locked game code state
-            if (SessionData.Instance.LobbyCode == oldCode)
-            {
-                gameCodeInputField.interactable = false;
-                regenerateButton.gameObject.SetActive(false);
-                editGameCodeButton.gameObject.SetActive(true);
+                Debug.LogWarning($"Error resetting UI: {ex.Message}");
             }
         }
 
         private void SetupGameModeDropdown()
         {
+            if (gameModeDropDown == null)
+            {
+                Debug.LogError("gameModeDropDown is not assigned in the inspector!");
+                return;
+            }
+
             gameModeDropDown.ClearOptions();
             var options = (from MoneySystems system in Enum.GetValues(typeof(MoneySystems))
                 select FormatEnumForDisplay(system.ToString())
                 into displayName
                 select new TMP_Dropdown.OptionData(displayName)).ToList();
 
-            gameModeDropDown.options = options;
-            gameModeDropDown.RefreshShownValue();
-        }
-
-        private void RemoveAllListeners()
-        {
-            // Remove button listeners
-            editButton.onClick.RemoveAllListeners();
-            editGameCodeButton.onClick.RemoveAllListeners();
-            regenerateButton.onClick.RemoveAllListeners();
-            createSession.onClick.RemoveAllListeners();
-
-            // Remove input field listeners
-            hostInputField.onValueChanged.RemoveAllListeners();
-            seedInputField.onValueChanged.RemoveAllListeners();
-            gameCodeInputField.onValueChanged.RemoveAllListeners();
-
-            // Remove dropdown listener
-            gameModeDropDown.onValueChanged.RemoveAllListeners();
+            if (options.Count > 0)
+            {
+                gameModeDropDown.options = options;
+                gameModeDropDown.RefreshShownValue();
+            }
+            else
+            {
+                Debug.LogError("Failed to populate dropdown options");
+            }
         }
 
         private void AddAllListeners()
         {
             // Button listeners
-            editButton.onClick.AddListener(EditButtonOnClick);
-            editGameCodeButton.onClick.AddListener(EditGameCodeOnClick);
-            regenerateButton.onClick.AddListener(RegenerateButtonOnClick);
-            createSession.onClick.AddListener(CreateSessionOnClick);
+            if (editGameCodeButton != null)
+                editGameCodeButton.onClick.AddListener(EditGameCodeOnClick);
+            if (regenerateButton != null)
+                regenerateButton.onClick.AddListener(RegenerateButtonOnClick);
+            if (createSession != null)
+                createSession.onClick.AddListener(CreateSessionOnClick);
 
             // Input field listeners
-            hostInputField.onValueChanged.AddListener(OnHostNameChanged);
-            seedInputField.onValueChanged.AddListener(OnSeedChanged);
-            gameCodeInputField.onValueChanged.AddListener(OnGameCodeChanged);
+            if (hostInputField != null)
+                hostInputField.onValueChanged.AddListener(OnHostNameChanged);
+            if (gameCodeInputField != null)
+                gameCodeInputField.onValueChanged.AddListener(OnGameCodeChanged);
 
             // Dropdown listener
-            gameModeDropDown.onValueChanged.AddListener(OnGameModeChanged);
+            if (gameModeDropDown != null)
+                gameModeDropDown.onValueChanged.AddListener(OnGameModeChanged);
         }
 
         private void OnHostNameChanged(string val)
@@ -132,18 +134,7 @@ namespace Version1.Host.Scripts
             SessionData.Instance.HostName = val;
         }
 
-        private void OnSeedChanged(string val)
-        {
-            if (int.TryParse(val, out int result))
-            {
-                SessionData.Instance.Seed = result;
-                seedInputError.SetActive(false);
-            }
-            else
-            {
-                seedInputError.SetActive(true);
-            }
-        }
+
 
         private void OnGameCodeChanged(string val)
         {
@@ -182,27 +173,45 @@ namespace Version1.Host.Scripts
             }
         }
 
-        private void EditButtonOnClick()
-        {
-            editButton.image.sprite = editButton.image.sprite == penSprite ? checkMarkSprite : penSprite;
-            seedInputField.interactable = !seedInputField.interactable;
-        }
-
         private void EditGameCodeOnClick()
         {
-            editGameCodeButton.image.sprite =
-                editGameCodeButton.image.sprite == penSprite ? checkMarkSprite : penSprite;
-            gameCodeInputField.interactable = !gameCodeInputField.interactable;
+            try
+            {
+                if (editGameCodeButton != null && editGameCodeButton.image != null)
+                {
+                    editGameCodeButton.image.sprite =
+                        editGameCodeButton.image.sprite == penSprite ? checkMarkSprite : penSprite;
+                }
+
+                if (gameCodeInputField != null)
+                {
+                    gameCodeInputField.interactable = !gameCodeInputField.interactable;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogWarning($"Error in EditGameCodeOnClick: {ex.Message}");
+            }
         }
 
         private void RegenerateButtonOnClick()
         {
-            SessionData.Instance.LobbyCode = Random.Range(100000000, 999999999);
+            try
+            {
+                SessionData.Instance.LobbyCode = Random.Range(100000000, 999999999);
 
-            gameCodeInputField.SetTextWithoutNotify(
-                $"{SessionData.Instance.LobbyCode.ToString().Substring(0, 3)} " +
-                $"{SessionData.Instance.LobbyCode.ToString().Substring(3, 3)} " +
-                $"{SessionData.Instance.LobbyCode.ToString().Substring(6, 3)}");
+                if (gameCodeInputField != null)
+                {
+                    gameCodeInputField.SetTextWithoutNotify(
+                        $"{SessionData.Instance.LobbyCode.ToString().Substring(0, 3)} " +
+                        $"{SessionData.Instance.LobbyCode.ToString().Substring(3, 3)} " +
+                        $"{SessionData.Instance.LobbyCode.ToString().Substring(6, 3)}");
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogWarning($"Error in RegenerateButtonOnClick: {ex.Message}");
+            }
         }
 
         private void CreateSessionOnClick()
@@ -240,8 +249,7 @@ namespace Version1.Host.Scripts
             createSession.interactable = !(SessionData.Instance.HostName == "" ||
                                            SessionData.Instance.LobbyCode == 0 ||
                                            codeStr.Length < 9 ||
-                                           gameCodeError.activeSelf ||
-                                           seedInputError.activeSelf);
+                                           gameCodeError.activeSelf);
 
             Nats.NatsHost.C.HandleMessages();
         }

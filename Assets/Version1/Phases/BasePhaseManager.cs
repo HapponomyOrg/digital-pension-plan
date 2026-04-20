@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using Assets.Version1.Phases;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,7 +11,7 @@ namespace Version1.Phases
         private IPhaseController _currentPhaseController;
 
         private int currentRound = 0;
-        
+
         public IPhase[] Phases { get; set; }
 
         public IPhaseController CurrentPhaseController
@@ -53,6 +53,12 @@ namespace Version1.Phases
         public void LoadPhase(int index, string name)
         {
             currentRound = index;
+
+            if (Phases == null)
+            {
+                Debug.LogError("Phases have not been initialized. LoadPhase called before StartPhases was invoked.");
+                return;
+            }
 
             if (index >= Phases.Length)
                 throw new ArgumentOutOfRangeException("Phase number doesn't exist in phasemanager");

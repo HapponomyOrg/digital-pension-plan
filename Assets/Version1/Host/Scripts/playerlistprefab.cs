@@ -20,7 +20,10 @@ namespace Version1.Host.Scripts
             get => _name;
             set
             {
-                NameTextField.text = value;
+                if (NameTextField != null)
+                {
+                    NameTextField.text = value;
+                }
                 _name = value;
             }
         }
@@ -31,7 +34,10 @@ namespace Version1.Host.Scripts
             get => _points;
             set
             {
-                PointsTextField.text = value.ToString();
+                if (PointsTextField != null)
+                {
+                    PointsTextField.text = value.ToString();
+                }
                 _points = value;
             }
         }
@@ -42,7 +48,10 @@ namespace Version1.Host.Scripts
             get => _balance;
             set
             {
-                BalanceTextField.text = FormatMoney(value);
+                if (BalanceTextField != null)
+                {
+                    BalanceTextField.text = FormatMoney(value);
+                }
                 _balance = value;
             }
         }
@@ -61,13 +70,25 @@ namespace Version1.Host.Scripts
         [SerializeField] private TMP_Text PointsTextField;
         [SerializeField] private TMP_Text BalanceTextField;
 
-        public PlayerListPrefab(string PlayerName, int playerId, int points, DateTime now, int currentRound)
+        // Parameterless constructor for serialization
+        public PlayerListPrefab()
+        {
+            _name = "";
+            _points = 0;
+            _balance = 0;
+            currentRound = 0;
+            ID = 0;
+            LastPing = DateTime.MinValue;
+        }
+
+        // Constructor with parameters for runtime instantiation
+        public PlayerListPrefab(string PlayerName, int playerId, int points, DateTime now, int currentRoundValue)
         {
             Name = PlayerName;
             ID = playerId;
             Points = points;
             LastPing = now;
-            CurrentRound = currentRound;
+            CurrentRound = currentRoundValue;
         }
 
         private static string FormatMoney(int amount) => amount.ToString("N0", deCulture);
