@@ -25,7 +25,7 @@ services:
       - ./pg_data:/var/lib/postgresql/data
 
   pgadmin:
-    image: dpage/pgadmin4:8.8
+    image: dpage/pgadmin4:9.13
     container_name: pensionplan-pgadmin
     restart: unless-stopped
     environment:
