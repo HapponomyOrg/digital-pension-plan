@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Version1.Market;
+using Version1.Phases.Trading.Scripts.UI.PersonalMarket;
 using Version1.Phases.Trading.Scripts.UI.PublicMarket;
 using Version1.Utilities.PlayerData;
 

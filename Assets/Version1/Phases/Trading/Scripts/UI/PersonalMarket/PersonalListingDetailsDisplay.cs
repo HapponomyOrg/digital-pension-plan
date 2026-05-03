@@ -5,7 +5,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Version1.Market.Scripts.UI.PersonalMarket
+namespace Version1.Phases.Trading.Scripts.UI.PersonalMarket
+
 {
     public class PersonalListingDetailsDisplay : MonoBehaviour
     {

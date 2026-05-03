@@ -85,7 +85,7 @@ namespace Version1.Utilities.NetworkManager
 
         private async void Awake()
         {
-            if (Instance != null && Instance != this)
+            if (Instance != null && !Instance.Equals(this))
             {
                 Destroy(this);
                 return;

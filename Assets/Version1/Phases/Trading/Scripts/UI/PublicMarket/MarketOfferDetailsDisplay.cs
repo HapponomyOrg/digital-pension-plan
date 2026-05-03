@@ -4,10 +4,11 @@ using System.Globalization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Version1.Market;
 using Version1.Utilities;
 using Version1.Utilities.PlayerData;
 
-namespace Version1.Market.Scripts.UI.PublicMarket
+namespace Version1.Phases.Trading.Scripts.UI.PublicMarket
 {
     public class MarketOfferDetailsDisplay : MonoBehaviour
     {

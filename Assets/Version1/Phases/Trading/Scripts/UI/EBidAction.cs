@@ -1,5 +1,5 @@
 ﻿
-namespace Version1.Market
+namespace Version1.Phases.Trading.Scripts.UI
 {
     public enum EBidAction
     {

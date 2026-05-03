@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Version1.Market.Scripts.UI
+namespace Version1.Phases.Trading.Scripts.UI
 {
     public class CardAmountDisplay : MonoBehaviour
     {

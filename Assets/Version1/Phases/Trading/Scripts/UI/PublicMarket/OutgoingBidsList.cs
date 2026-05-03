@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Version1.Market;
+using Version1.Phases.Trading.Scripts.UI.Overlays;
 using Version1.Utilities.PlayerData;
 
 namespace Version1.Phases.Trading.Scripts.UI.PublicMarket

@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Version1.Market;
 using Version1.Utilities;
 
-namespace Version1.Market
+namespace Version1.Phases.Trading.Scripts.UI.Overlays
 {
     public class CancelListingOverlay : MonoBehaviour
     {

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Version1.Market.Scripts.UI.PersonalMarket;
+using Version1.Phases.Trading.Scripts.UI.Overlays;
 using Version1.Utilities;
 
-namespace Version1.Market
+namespace Version1.Phases.Trading.Scripts.UI.PersonalMarket
 {
     public class PersonalListingList : MonoBehaviour
     {
@@ -40,6 +40,8 @@ namespace Version1.Market
 
             display.SetDisplay(listingId, displayActions);
             listingDisplays.Add(listingId, display);
+
+            OrderList();
         }
 
         public void UpdateDisplay(Guid listingId)
@@ -61,6 +63,8 @@ namespace Version1.Market
 
             listingDisplays.Remove(listingId);
             Destroy(display.gameObject);
+
+            OrderList();
         }
 
         private void CancelAction(Guid listingId)
@@ -94,6 +98,24 @@ namespace Version1.Market
 
             ReceivedBidsList.InitializeData(listingId, uniqueBids);
             Console.WriteLine("SelectAction");
+        }
+
+        private void OrderList()
+        {
+            var ordered = listingDisplays
+                .Select(kvp => new
+                {
+                    Display = kvp.Value,
+                    Listing = GameManager.Instance.ListingRepository.GetListing(kvp.Key)
+                })
+                .Where(x => x.Listing != null)
+                .OrderByDescending(x => x.Listing.GetHighestCard())
+                .ToList();
+
+            for (int i = 0; i < ordered.Count; i++)
+            {
+                ordered[i].Display.transform.SetSiblingIndex(i);
+            }
         }
     }
 }

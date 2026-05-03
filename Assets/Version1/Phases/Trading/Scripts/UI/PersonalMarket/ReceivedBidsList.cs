@@ -4,7 +4,7 @@ using UnityEngine;
 using Version1.Phases.Trading.Scripts.UI.Overlays;
 using Version1.Utilities;
 
-namespace Version1.Market
+namespace Version1.Phases.Trading.Scripts.UI.PersonalMarket
 {
     public class ReceivedBidsList : MonoBehaviour
     {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Version1.Market
 {
@@ -19,13 +20,18 @@ namespace Version1.Market
             ListerName = listerName;
             TimeStamp = timeStamp;
             Price = price;
-            Cards = cards;
+            Cards = cards.OrderByDescending(c => c).ToArray();
             BidRepository = new BidRepository();
         }
         
         public override string ToString()
         {
             return $"ListingId: {ListingId.ToString()}, ListerId: {Lister}, Timestamp: {TimeStamp}, Price: {Price}";
+        }
+
+        public int GetHighestCard()
+        {
+            return Cards.Max();
         }
     }
 }

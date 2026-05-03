@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Version1.Market;
 using Version1.Utilities;
 
-namespace Version1.Market
+namespace Version1.Phases.Trading.Scripts.UI.PersonalMarket
 {
     public class ReceivedBidDisplay : MonoBehaviour
     {
